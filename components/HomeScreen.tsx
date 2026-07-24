@@ -68,6 +68,7 @@ export default function HomeScreen({
   onPlay,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [wordsVisible, setWordsVisible] = useState(false);
   const [draft, setDraft] = useState("");
   const [pinDraft, setPinDraft] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -114,6 +115,12 @@ export default function HomeScreen({
   function toggle() {
     setOpen((prev) => !prev);
     setMessage(null);
+    setPendingDelete(null);
+    setWordsVisible(false);
+  }
+
+  function toggleWordsVisible() {
+    setWordsVisible((prev) => !prev);
     setPendingDelete(null);
   }
 
@@ -254,71 +261,86 @@ export default function HomeScreen({
 
             {message && <p className="notice">{message}</p>}
 
-            {status === "loading" ? (
-              <p className="empty-note">Učitavanje riječi…</p>
-            ) : words.length === 0 ? (
-              <p className="empty-note">Popis je prazan.</p>
-            ) : (
-              <ul className="word-list">
-                {words.map((word) => (
-                  <li className="word-list__item" key={word.id}>
-                    <span className="word-list__text">{word.text}</span>
-                    {!unlocked ? null : pendingDelete === word.id ? (
-                      <>
-                        <button
-                          className="confirm-btn"
-                          disabled={busy}
-                          onClick={() => void handleDelete(word.id)}
-                        >
-                          Obriši
-                        </button>
-                        <button
-                          className="icon-btn"
-                          onClick={() => setPendingDelete(null)}
-                          aria-label="Odustani"
-                        >
-                          <svg
-                            width="22"
-                            height="22"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            aria-hidden="true"
+            <button
+              className="btn btn--ghost btn--sm"
+              onClick={toggleWordsVisible}
+              aria-expanded={wordsVisible}
+              aria-controls="popis-rijeci"
+            >
+              {wordsVisible
+                ? "Sakrij riječi"
+                : `Prikaži riječi (${status === "loading" ? "…" : words.length})`}
+            </button>
+
+            {wordsVisible && (
+              <div id="popis-rijeci">
+                {status === "loading" ? (
+                  <p className="empty-note">Učitavanje riječi…</p>
+                ) : words.length === 0 ? (
+                  <p className="empty-note">Popis je prazan.</p>
+                ) : (
+                  <ul className="word-list">
+                    {words.map((word) => (
+                      <li className="word-list__item" key={word.id}>
+                        <span className="word-list__text">{word.text}</span>
+                        {!unlocked ? null : pendingDelete === word.id ? (
+                          <>
+                            <button
+                              className="confirm-btn"
+                              disabled={busy}
+                              onClick={() => void handleDelete(word.id)}
+                            >
+                              Obriši
+                            </button>
+                            <button
+                              className="icon-btn"
+                              onClick={() => setPendingDelete(null)}
+                              aria-label="Odustani"
+                            >
+                              <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                aria-hidden="true"
+                              >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                              </svg>
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            className="icon-btn icon-btn--danger"
+                            onClick={() => setPendingDelete(word.id)}
+                            aria-label={`Obriši riječ ${word.text}`}
                           >
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                          </svg>
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        className="icon-btn icon-btn--danger"
-                        onClick={() => setPendingDelete(word.id)}
-                        aria-label={`Obriši riječ ${word.text}`}
-                      >
-                        <svg
-                          width="22"
-                          height="22"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                        >
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                          <path d="M10 11v6M14 11v6" />
-                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                        </svg>
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                            <svg
+                              width="22"
+                              height="22"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                              <path d="M10 11v6M14 11v6" />
+                              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                            </svg>
+                          </button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             )}
           </div>
         )}
