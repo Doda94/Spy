@@ -34,11 +34,19 @@ export default function RevealScreen({ game, onNext }: Props) {
       >
         {revealed ? (
           spy ? (
-            <p className="reveal-card__word">Ti si špijun!</p>
+            <>
+              <p className="reveal-card__word">Ti si špijun!</p>
+              <p className="reveal-card__category">
+                Kategorija: <strong>{game.category}</strong>
+              </p>
+            </>
           ) : (
             <>
               <p className="reveal-card__eyebrow">Tajna riječ</p>
               <p className="reveal-card__word">{game.word}</p>
+              <p className="reveal-card__category">
+                Kategorija: <strong>{game.category}</strong>
+              </p>
             </>
           )
         ) : (

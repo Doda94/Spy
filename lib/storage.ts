@@ -33,7 +33,9 @@ export function loadCachedWords(): Word[] {
         w !== null &&
         typeof (w as Word).id === "number" &&
         typeof (w as Word).text === "string" &&
-        (w as Word).text.length > 0
+        (w as Word).text.length > 0 &&
+        typeof (w as Word).category === "string" &&
+        (w as Word).category.length > 0
     );
   } catch {
     return [];
@@ -74,7 +76,8 @@ export function clearPin(): void {
 /*  Stanje igre                                                               */
 /* -------------------------------------------------------------------------- */
 
-function hasValidSettings(value: unknown): boolean {
+/** Broj igrača i špijuna — zajedničko postavkama i spremljenoj partiji. */
+function hasValidCounts(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const s = value as Record<string, unknown>;
   return (
@@ -89,10 +92,18 @@ function hasValidSettings(value: unknown): boolean {
   );
 }
 
+function hasValidSettings(value: unknown): boolean {
+  if (!hasValidCounts(value)) return false;
+  const s = value as Record<string, unknown>;
+  if (s.categories === null) return true;
+  return Array.isArray(s.categories) && s.categories.every((c) => typeof c === "string");
+}
+
 function isValidGame(value: unknown): value is Game {
-  if (!hasValidSettings(value)) return false;
+  if (!hasValidCounts(value)) return false;
   const g = value as Record<string, unknown>;
   if (typeof g.word !== "string" || g.word.length === 0) return false;
+  if (typeof g.category !== "string" || g.category.length === 0) return false;
   if (!Array.isArray(g.spyIndices)) return false;
   const playerCount = g.playerCount as number;
   const spiesOk = g.spyIndices.every(

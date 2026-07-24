@@ -6,6 +6,8 @@ export type ApiErrorCode =
   | "duplicate"
   | "empty"
   | "too-long"
+  | "category-empty"
+  | "category-too-long"
   | "not_found"
   | "offline"
   | "server";
@@ -29,6 +31,8 @@ async function errorFrom(response: Response): Promise<ApiError> {
       "duplicate",
       "empty",
       "too-long",
+      "category-empty",
+      "category-too-long",
       "not_found",
     ];
     if (body.error && (known as string[]).includes(body.error)) {
@@ -66,13 +70,17 @@ export async function verifyPin(pin: string): Promise<void> {
   if (!response.ok) throw await errorFrom(response);
 }
 
-export async function addWord(text: string, pin: string): Promise<Word> {
+export async function addWord(
+  text: string,
+  category: string,
+  pin: string
+): Promise<Word> {
   let response: Response;
   try {
     response = await fetch("/api/words", {
       method: "POST",
       headers: pinHeaders(pin),
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, category }),
     });
   } catch {
     throw new ApiError("offline");

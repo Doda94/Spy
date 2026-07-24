@@ -6,7 +6,9 @@ istom uređaju, a zatim slijedi rasprava uživo. Sučelje je u cijelosti na hrva
 ## Pravila
 
 - Igra ima X igrača, od kojih je Y tajno špijun (Y < X).
-- Svi osim špijuna vide istu tajnu riječ. Špijuni vide samo "Ti si špijun!".
+- Prije početka bira se jedna ili više kategorija; riječ se izvlači iz njih.
+- Svi osim špijuna vide tajnu riječ. Špijun vidi "Ti si špijun!" i kategoriju —
+  to mu je jedini trag.
 - Kad svi pogledaju svoju ulogu, aplikacija otvara zaslon rasprave. Rasprava i
   glasanje odvijaju se uživo, izvan aplikacije.
 
@@ -46,9 +48,24 @@ Struktura koda:
 
 ## Riječi
 
-[`data/words.json`](data/words.json) je samo početni popis kojim se baza puni prvi
-put. Nakon toga se riječi dodaju i brišu kroz aplikaciju, a `words.json` više ne
-utječe na igru.
+Svaka riječ pripada jednoj kategoriji. Kategorije nisu zaseban popis nego se
+izvode iz riječi — nova kategorija nastaje čim joj dodaš prvu riječ, a nestane
+kad obrišeš zadnju. Pri dodavanju polje "Kategorija" nudi postojeće kategorije,
+ali možeš upisati i novu.
+
+Riječ je jedinstvena u cijeloj bazi, neovisno o kategoriji i o velikim slovima:
+"Mostar" i "mostar" su ista riječ. Isto vrijedi za nazive kategorija, pa
+upisivanje "mjesta" ne stvara drugu kategoriju uz "Mjesta".
+
+[`data/words.json`](data/words.json) je početni popis kojim se baza puni prvi
+put, grupiran po kategorijama:
+
+```json
+{
+  "Mjesta": ["Plaža", "Bolnica"],
+  "Zanimanja": ["Liječnik"]
+}
+```
 
 Ako u `words.json` dodaš nove riječi i želiš ih ubaciti u bazu:
 
@@ -59,6 +76,12 @@ npx wrangler d1 execute spy-words --remote --file=./seed.sql
 
 `seed.sql` koristi `INSERT OR IGNORE`, pa ponovno pokretanje ne stvara duplikate
 niti vraća riječi koje si u međuvremenu obrisao.
+
+Za čistu bazu od nule (briše sve riječi pa ponovno sije `words.json`):
+
+```bash
+npm run db:reset:remote
+```
 
 ## Prvo postavljanje
 
@@ -83,7 +106,7 @@ npm run db:local
 npm run preview
 ```
 
-`npm run preview` gradi statičke datoteke i pokreće `wrangler pages dev` na
+`npm run preview` gradi statičke datoteke i Worker pa pokreće `wrangler dev` na
 http://localhost:8788, s lokalnom kopijom baze. `npm run dev` pokreće samo Next.js
 (bez funkcija), pa aplikacija u tom načinu radi iz spremljenog popisa riječi.
 

@@ -1,12 +1,16 @@
 "use client";
 
 import { MAX_PLAYERS, MIN_PLAYERS, type Settings } from "@/lib/types";
+import { wordKey } from "@/lib/words";
 import type { WordsStatus } from "./HomeScreen";
 
 type Props = {
   settings: Settings;
   onChange: (settings: Settings) => void;
-  wordCount: number;
+  /** Sve kategorije koje postoje u bazi, s brojem riječi. */
+  categories: { name: string; count: number }[];
+  /** Broj riječi u odabranim kategorijama. */
+  poolSize: number;
   status: WordsStatus;
   onStart: () => void;
   onBack: () => void;
@@ -53,14 +57,20 @@ function Stepper({
 export default function SetupScreen({
   settings,
   onChange,
-  wordCount,
+  categories,
+  poolSize,
   status,
   onStart,
   onBack,
 }: Props) {
   const maxSpies = settings.playerCount - 1;
   const loading = status === "loading";
-  const noWords = !loading && wordCount === 0;
+  // Roditelj uvijek proslijedi razriješen popis; `?? []` je samo za tip.
+  const selected = settings.categories ?? [];
+  const selectedKeys = new Set(selected.map(wordKey));
+  const noneSelected = !loading && selectedKeys.size === 0;
+  const emptyPool = !loading && !noneSelected && poolSize === 0;
+  const noCategories = !loading && categories.length === 0;
 
   function setPlayerCount(next: number) {
     const playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, next));
@@ -73,6 +83,18 @@ export default function SetupScreen({
 
   function setSpyCount(next: number) {
     onChange({ ...settings, spyCount: Math.min(maxSpies, Math.max(1, next)) });
+  }
+
+  function toggleCategory(name: string) {
+    const key = wordKey(name);
+    const next = selectedKeys.has(key)
+      ? selected.filter((c) => wordKey(c) !== key)
+      : [...selected, name];
+    onChange({ ...settings, categories: next });
+  }
+
+  function selectAll() {
+    onChange({ ...settings, categories: categories.map((c) => c.name) });
   }
 
   return (
@@ -106,15 +128,67 @@ export default function SetupScreen({
       </div>
 
       <div className="field">
-        <span className="label">Riječi</span>
-        <p className="hint" style={{ textAlign: "center" }}>
-          {loading
-            ? "Učitavanje popisa…"
-            : `Na popisu ${wordCount === 1 ? "je" : "ih je"} ${wordCount}. Jedna se bira nasumično.`}
-        </p>
+        <div className="label-row">
+          <span className="label" style={{ marginBottom: 0 }}>
+            Kategorije
+          </span>
+          {categories.length > 1 && selectedKeys.size < categories.length && (
+            <button className="link-btn" onClick={selectAll}>
+              Odaberi sve
+            </button>
+          )}
+        </div>
+
+        {loading ? (
+          <p className="hint" style={{ textAlign: "center" }}>
+            Učitavanje…
+          </p>
+        ) : noCategories ? (
+          <p className="hint" style={{ textAlign: "center" }}>
+            Nema nijedne riječi u bazi.
+          </p>
+        ) : (
+          <div className="segmented" role="group" aria-label="Kategorije">
+            {categories.map(({ name, count }) => {
+              const active = selectedKeys.has(wordKey(name));
+              return (
+                <label
+                  key={name}
+                  className={`segmented__option${active ? " segmented__option--active" : ""}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={active}
+                    onChange={() => toggleCategory(name)}
+                  />
+                  <span className="segmented__box" aria-hidden="true" />
+                  <span>{name}</span>
+                  <span className="segmented__count">{count}</span>
+                </label>
+              );
+            })}
+          </div>
+        )}
+
+        {!loading && !noCategories && !noneSelected && (
+          <p className="hint" style={{ marginTop: 12, textAlign: "center" }}>
+            {poolSize === 1 ? "1 riječ u izboru" : `${poolSize} riječi u izboru`}.
+            Jedna se bira nasumično.
+          </p>
+        )}
       </div>
 
-      {noWords && (
+      {noneSelected && !noCategories && (
+        <p className="notice">Odaberi barem jednu kategoriju.</p>
+      )}
+
+      {emptyPool && (
+        <p className="notice">
+          Odabrane kategorije nemaju nijednu riječ. Odaberi drugu kategoriju.
+        </p>
+      )}
+
+      {noCategories && (
         <p className="notice">
           Popis riječi je prazan. Dodaj riječi na početnom zaslonu prije igre.
         </p>
@@ -126,7 +200,7 @@ export default function SetupScreen({
         <button
           className="btn btn--primary"
           onClick={onStart}
-          disabled={loading || noWords}
+          disabled={loading || noneSelected || emptyPool || noCategories}
         >
           Započni igru
         </button>

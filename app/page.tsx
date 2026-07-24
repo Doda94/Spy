@@ -11,7 +11,7 @@ import HomeScreen, {
 import RevealScreen from "@/components/RevealScreen";
 import SetupScreen from "@/components/SetupScreen";
 import * as api from "@/lib/api";
-import { createGame } from "@/lib/game";
+import { createGame, wordsInCategories } from "@/lib/game";
 import {
   clearPin,
   loadCachedWords,
@@ -22,10 +22,13 @@ import {
   saveState,
 } from "@/lib/storage";
 import { DEFAULT_SETTINGS, type Game, type Phase, type Settings } from "@/lib/types";
-import { checkWord, type Word } from "@/lib/words";
+import { categoriesOf, checkCategory, checkWord, wordKey, type Word } from "@/lib/words";
 
 function sortWords(words: Word[]): Word[] {
-  return [...words].sort((a, b) => a.text.localeCompare(b.text, "hr"));
+  return [...words].sort(
+    (a, b) =>
+      a.category.localeCompare(b.category, "hr") || a.text.localeCompare(b.text, "hr")
+  );
 }
 
 export default function Page() {
@@ -72,7 +75,30 @@ export default function Page() {
     saveState({ phase, settings, game });
   }, [hydrated, phase, settings, game]);
 
-  const wordTexts = useMemo(() => words.map((w) => w.text), [words]);
+  const allCategories = useMemo(() => categoriesOf(words), [words]);
+
+  // Kategorije koje su nestale (npr. zadnja riječ obrisana) ne smiju ostati
+  // odabrane; prvi put, kad ništa nije birano, igra se sa svime.
+  const selectedCategories = useMemo(() => {
+    if (allCategories.length === 0) return [];
+    if (settings.categories === null) return allCategories;
+    const known = new Set(allCategories.map(wordKey));
+    return settings.categories.filter((c) => known.has(wordKey(c)));
+  }, [settings.categories, allCategories]);
+
+  const categoryOptions = useMemo(
+    () =>
+      allCategories.map((name) => ({
+        name,
+        count: words.filter((w) => wordKey(w.category) === wordKey(name)).length,
+      })),
+    [allCategories, words]
+  );
+
+  const pool = useMemo(
+    () => wordsInCategories(words, selectedCategories),
+    [words, selectedCategories]
+  );
 
   function lock() {
     clearPin();
@@ -95,12 +121,18 @@ export default function Page() {
     }
   }
 
-  async function addWord(raw: string): Promise<AddResult> {
-    const check = checkWord(raw);
-    if (!check.ok) return check.reason;
+  async function addWord(rawText: string, rawCategory: string): Promise<AddResult> {
+    const word = checkWord(rawText);
+    if (!word.ok) return word.reason;
+    const category = checkCategory(rawCategory);
+    if (!category.ok) return category.reason;
+
+    // Ista riječ u drugoj kategoriji i dalje je duplikat — javi to bez čekanja.
+    const key = wordKey(word.text);
+    if (words.some((w) => wordKey(w.text) === key)) return "duplicate";
 
     try {
-      const created = await api.addWord(check.text, pin);
+      const created = await api.addWord(word.text, category.text, pin);
       const next = sortWords([...words, created]);
       setWords(next);
       saveCachedWords(next);
@@ -108,7 +140,13 @@ export default function Page() {
     } catch (error) {
       const code = error instanceof api.ApiError ? error.code : "server";
       if (code === "unauthorized") lock();
-      if (code === "duplicate" || code === "unauthorized" || code === "offline") {
+      if (
+        code === "duplicate" ||
+        code === "unauthorized" ||
+        code === "offline" ||
+        code === "category-empty" ||
+        code === "category-too-long"
+      ) {
         return code;
       }
       return "error";
@@ -135,8 +173,8 @@ export default function Page() {
   }
 
   function startGame() {
-    if (wordTexts.length === 0) return;
-    setGame(createGame(settings, wordTexts));
+    if (pool.length === 0) return;
+    setGame(createGame(settings, pool));
     setPhase("reveal");
   }
 
@@ -163,15 +201,22 @@ export default function Page() {
   }
 
   if (phase === "discussion" && game) {
-    return <DiscussionScreen spyCount={game.spyCount} onNewGame={newGame} />;
+    return (
+      <DiscussionScreen
+        spyCount={game.spyCount}
+        category={game.category}
+        onNewGame={newGame}
+      />
+    );
   }
 
   if (phase === "setup") {
     return (
       <SetupScreen
-        settings={settings}
+        settings={{ ...settings, categories: selectedCategories }}
         onChange={setSettings}
-        wordCount={words.length}
+        categories={categoryOptions}
+        poolSize={pool.length}
         status={status}
         onStart={startGame}
         onBack={() => setPhase("home")}

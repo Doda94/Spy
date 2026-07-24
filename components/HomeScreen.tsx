@@ -1,12 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
-import type { Word } from "@/lib/words";
+import { useMemo, useRef, useState } from "react";
+import { categoriesOf, type Word } from "@/lib/words";
 
 export type AddResult =
   | "ok"
   | "empty"
   | "too-long"
+  | "category-empty"
+  | "category-too-long"
   | "duplicate"
   | "unauthorized"
   | "offline"
@@ -27,7 +29,7 @@ type Props = {
   unlocked: boolean;
   onUnlock: (pin: string) => Promise<UnlockResult>;
   onLock: () => void;
-  onAddWord: (text: string) => Promise<AddResult>;
+  onAddWord: (text: string, category: string) => Promise<AddResult>;
   onDeleteWord: (id: number) => Promise<DeleteResult>;
   onRetry: () => void;
   onPlay: () => void;
@@ -36,6 +38,8 @@ type Props = {
 const ADD_MESSAGES: Record<Exclude<AddResult, "ok">, string> = {
   empty: "Upiši riječ prije dodavanja.",
   "too-long": "Riječ je predugačka.",
+  "category-empty": "Upiši kategoriju.",
+  "category-too-long": "Naziv kategorije je predugačak.",
   duplicate: "Ta riječ već postoji na popisu.",
   unauthorized: "PIN više ne vrijedi. Otključaj ponovno.",
   offline: "Nema veze sa serverom. Riječ nije spremljena.",
@@ -70,20 +74,35 @@ export default function HomeScreen({
   const [open, setOpen] = useState(false);
   const [wordsVisible, setWordsVisible] = useState(false);
   const [draft, setDraft] = useState("");
+  const [categoryDraft, setCategoryDraft] = useState("");
   const [pinDraft, setPinDraft] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const categories = useMemo(() => categoriesOf(words), [words]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, Word[]>();
+    for (const category of categories) map.set(category, []);
+    for (const word of words) {
+      const bucket = map.get(word.category);
+      if (bucket) bucket.push(word);
+      else map.set(word.category, [word]);
+    }
+    return [...map.entries()];
+  }, [words, categories]);
+
   async function handleAdd() {
     if (busy) return;
     setBusy(true);
-    const result = await onAddWord(draft);
+    const result = await onAddWord(draft, categoryDraft);
     setBusy(false);
     if (result === "ok") {
       setMessage(null);
       setDraft("");
+      // Kategorija ostaje da se lakše dodaje više riječi zaredom.
       inputRef.current?.focus();
     } else {
       setMessage(ADD_MESSAGES[result]);
@@ -191,19 +210,35 @@ export default function HomeScreen({
 
             {unlocked ? (
               <>
-                <div className="row">
+                <div className="stack">
                   <input
                     ref={inputRef}
                     className="input"
                     type="text"
                     value={draft}
                     placeholder="Nova riječ"
-                    enterKeyHint="done"
+                    enterKeyHint="next"
                     autoCapitalize="sentences"
                     autoCorrect="off"
                     disabled={busy}
                     onChange={(e) => {
                       setDraft(e.target.value);
+                      if (message) setMessage(null);
+                    }}
+                    aria-label="Nova riječ"
+                  />
+                  <input
+                    className="input"
+                    type="text"
+                    list="kategorije"
+                    value={categoryDraft}
+                    placeholder="Kategorija"
+                    enterKeyHint="done"
+                    autoCapitalize="sentences"
+                    autoCorrect="off"
+                    disabled={busy}
+                    onChange={(e) => {
+                      setCategoryDraft(e.target.value);
                       if (message) setMessage(null);
                     }}
                     onKeyDown={(e) => {
@@ -212,14 +247,19 @@ export default function HomeScreen({
                         void handleAdd();
                       }
                     }}
-                    aria-label="Nova riječ"
+                    aria-label="Kategorija"
                   />
+                  <datalist id="kategorije">
+                    {categories.map((category) => (
+                      <option key={category} value={category} />
+                    ))}
+                  </datalist>
                   <button
-                    className="btn btn--primary btn--sm"
+                    className="btn btn--primary"
                     onClick={() => void handleAdd()}
                     disabled={busy}
                   >
-                    Dodaj
+                    Dodaj riječ
                   </button>
                 </div>
                 <button className="btn btn--ghost btn--sm" onClick={onLock}>
@@ -280,62 +320,72 @@ export default function HomeScreen({
                   <p className="empty-note">Popis je prazan.</p>
                 ) : (
                   <ul className="word-list">
-                    {words.map((word) => (
-                      <li className="word-list__item" key={word.id}>
-                        <span className="word-list__text">{word.text}</span>
-                        {!unlocked ? null : pendingDelete === word.id ? (
-                          <>
-                            <button
-                              className="confirm-btn"
-                              disabled={busy}
-                              onClick={() => void handleDelete(word.id)}
-                            >
-                              Obriši
-                            </button>
-                            <button
-                              className="icon-btn"
-                              onClick={() => setPendingDelete(null)}
-                              aria-label="Odustani"
-                            >
-                              <svg
-                                width="22"
-                                height="22"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                aria-hidden="true"
-                              >
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                              </svg>
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            className="icon-btn icon-btn--danger"
-                            onClick={() => setPendingDelete(word.id)}
-                            aria-label={`Obriši riječ ${word.text}`}
-                          >
-                            <svg
-                              width="22"
-                              height="22"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              aria-hidden="true"
-                            >
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                              <path d="M10 11v6M14 11v6" />
-                              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                            </svg>
-                          </button>
-                        )}
+                    {grouped.map(([category, items]) => (
+                      <li key={category}>
+                        <p className="word-list__group">
+                          {category}
+                          <span className="segmented__count">{items.length}</span>
+                        </p>
+                        <ul className="word-list__nested">
+                          {items.map((word) => (
+                            <li className="word-list__item" key={word.id}>
+                              <span className="word-list__text">{word.text}</span>
+                              {!unlocked ? null : pendingDelete === word.id ? (
+                                <>
+                                  <button
+                                    className="confirm-btn"
+                                    disabled={busy}
+                                    onClick={() => void handleDelete(word.id)}
+                                  >
+                                    Obriši
+                                  </button>
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() => setPendingDelete(null)}
+                                    aria-label="Odustani"
+                                  >
+                                    <svg
+                                      width="22"
+                                      height="22"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      aria-hidden="true"
+                                    >
+                                      <line x1="18" y1="6" x2="6" y2="18" />
+                                      <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  className="icon-btn icon-btn--danger"
+                                  onClick={() => setPendingDelete(word.id)}
+                                  aria-label={`Obriši riječ ${word.text}`}
+                                >
+                                  <svg
+                                    width="22"
+                                    height="22"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    aria-hidden="true"
+                                  >
+                                    <polyline points="3 6 5 6 21 6" />
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                    <path d="M10 11v6M14 11v6" />
+                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                  </svg>
+                                </button>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
                       </li>
                     ))}
                   </ul>

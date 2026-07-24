@@ -2,6 +2,7 @@
 
 type Props = {
   spyCount: number;
+  category: string;
   onNewGame: () => void;
 };
 
@@ -12,7 +13,7 @@ function spyPhrase(n: number): string {
   return `je ${n} špijuna`;
 }
 
-export default function DiscussionScreen({ spyCount, onNewGame }: Props) {
+export default function DiscussionScreen({ spyCount, category, onNewGame }: Props) {
   return (
     <main className="screen screen--center">
       <div className="spacer" />
@@ -24,6 +25,9 @@ export default function DiscussionScreen({ spyCount, onNewGame }: Props) {
       <h1 className="screen-title">Rasprava je počela</h1>
       <p className="subtitle">
         Razgovarajte i glasajte za špijuna! Među vama {spyPhrase(spyCount)}.
+      </p>
+      <p className="player-badge" style={{ marginTop: 4 }}>
+        Kategorija: {category}
       </p>
 
       <div className="spacer" />
