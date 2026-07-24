@@ -1,6 +1,12 @@
 name = "spy"
 compatibility_date = "2026-07-01"
-pages_build_output_dir = "out"
+
+# functions/ se prevodi u ovu datoteku prije deploya (vidi "build" u package.json).
+main = ".worker-build/index.js"
+
+[assets]
+directory = "out"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"

@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && wrangler pages functions build --build-output-directory=out --outdir=.worker-build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "next build && wrangler pages dev --port 8788",
+    "preview": "npm run build && wrangler dev --port 8788",
     "seed:generate": "node scripts/generate-seed.mjs",
     "db:local": "wrangler d1 execute spy-words --local --file=./schema.sql && wrangler d1 execute spy-words --local --file=./seed.sql",
     "db:remote": "wrangler d1 execute spy-words --remote --file=./schema.sql && wrangler d1 execute spy-words --remote --file=./seed.sql"
