@@ -1,44 +1,119 @@
 "use client";
 
 import { useRef, useState } from "react";
+import type { Word } from "@/lib/words";
+
+export type AddResult =
+  | "ok"
+  | "empty"
+  | "too-long"
+  | "duplicate"
+  | "unauthorized"
+  | "offline"
+  | "error";
+export type DeleteResult = "ok" | "not_found" | "unauthorized" | "offline" | "error";
+export type UnlockResult =
+  | "ok"
+  | "unauthorized"
+  | "pin_not_configured"
+  | "offline"
+  | "error";
+
+export type WordsStatus = "loading" | "ready" | "offline";
 
 type Props = {
-  customWords: string[];
-  onAddWord: (word: string) => "ok" | "empty" | "duplicate";
-  onDeleteWord: (word: string) => void;
+  words: Word[];
+  status: WordsStatus;
+  unlocked: boolean;
+  onUnlock: (pin: string) => Promise<UnlockResult>;
+  onLock: () => void;
+  onAddWord: (text: string) => Promise<AddResult>;
+  onDeleteWord: (id: number) => Promise<DeleteResult>;
+  onRetry: () => void;
   onPlay: () => void;
 };
 
+const ADD_MESSAGES: Record<Exclude<AddResult, "ok">, string> = {
+  empty: "Upiši riječ prije dodavanja.",
+  "too-long": "Riječ je predugačka.",
+  duplicate: "Ta riječ već postoji na popisu.",
+  unauthorized: "PIN više ne vrijedi. Otključaj ponovno.",
+  offline: "Nema veze sa serverom. Riječ nije spremljena.",
+  error: "Greška na serveru. Pokušaj ponovno.",
+};
+
+const DELETE_MESSAGES: Record<Exclude<DeleteResult, "ok">, string> = {
+  not_found: "Ta je riječ već obrisana.",
+  unauthorized: "PIN više ne vrijedi. Otključaj ponovno.",
+  offline: "Nema veze sa serverom. Riječ nije obrisana.",
+  error: "Greška na serveru. Pokušaj ponovno.",
+};
+
+const UNLOCK_MESSAGES: Record<Exclude<UnlockResult, "ok">, string> = {
+  unauthorized: "Pogrešan PIN.",
+  pin_not_configured: "PIN nije postavljen na serveru.",
+  offline: "Nema veze sa serverom.",
+  error: "Greška na serveru. Pokušaj ponovno.",
+};
+
 export default function HomeScreen({
-  customWords,
+  words,
+  status,
+  unlocked,
+  onUnlock,
+  onLock,
   onAddWord,
   onDeleteWord,
+  onRetry,
   onPlay,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [pinDraft, setPinDraft] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleAdd() {
-    const result = onAddWord(draft);
-    if (result === "empty") {
-      setError("Upiši riječ prije dodavanja.");
-      return;
+  async function handleAdd() {
+    if (busy) return;
+    setBusy(true);
+    const result = await onAddWord(draft);
+    setBusy(false);
+    if (result === "ok") {
+      setMessage(null);
+      setDraft("");
+      inputRef.current?.focus();
+    } else {
+      setMessage(ADD_MESSAGES[result]);
     }
-    if (result === "duplicate") {
-      setError("Ta riječ već postoji na popisu.");
-      return;
+  }
+
+  async function handleDelete(id: number) {
+    if (busy) return;
+    setBusy(true);
+    const result = await onDeleteWord(id);
+    setBusy(false);
+    setPendingDelete(null);
+    setMessage(result === "ok" ? null : DELETE_MESSAGES[result]);
+  }
+
+  async function handleUnlock() {
+    if (busy) return;
+    setBusy(true);
+    const result = await onUnlock(pinDraft);
+    setBusy(false);
+    if (result === "ok") {
+      setMessage(null);
+      setPinDraft("");
+    } else {
+      setMessage(UNLOCK_MESSAGES[result]);
     }
-    setError(null);
-    setDraft("");
-    inputRef.current?.focus();
   }
 
   function toggle() {
     setOpen((prev) => !prev);
-    setError(null);
+    setMessage(null);
     setPendingDelete(null);
   }
 
@@ -67,7 +142,9 @@ export default function HomeScreen({
           aria-controls="upravljanje-rijecima"
         >
           <span>Upravljaj riječima</span>
-          <span className="segmented__count">{customWords.length}</span>
+          <span className="segmented__count">
+            {status === "loading" ? "…" : words.length}
+          </span>
           <svg
             className={`accordion__chevron${open ? " accordion__chevron--open" : ""}`}
             width="20"
@@ -86,54 +163,112 @@ export default function HomeScreen({
 
         {open && (
           <div className="accordion__body" id="upravljanje-rijecima">
-            <p className="hint">
-              Ovdje su samo tvoje riječi. Ugrađene riječi ostaju nepromijenjene.
-            </p>
+            {status === "offline" ? (
+              <div className="notice">
+                <p style={{ margin: 0 }}>
+                  Nema veze sa serverom — prikazane su zadnje spremljene riječi.
+                </p>
+                <button
+                  className="btn btn--ghost btn--sm"
+                  style={{ marginTop: 12 }}
+                  onClick={onRetry}
+                >
+                  Pokušaj ponovno
+                </button>
+              </div>
+            ) : (
+              <p className="hint">
+                Popis je zajednički za sve uređaje. Promjene vide svi igrači.
+              </p>
+            )}
 
-            <div className="row">
-              <input
-                ref={inputRef}
-                className="input"
-                type="text"
-                value={draft}
-                placeholder="Nova riječ"
-                enterKeyHint="done"
-                autoCapitalize="sentences"
-                autoCorrect="off"
-                onChange={(e) => {
-                  setDraft(e.target.value);
-                  if (error) setError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAdd();
-                  }
-                }}
-                aria-label="Nova riječ"
-              />
-              <button className="btn btn--primary btn--sm" onClick={handleAdd}>
-                Dodaj
-              </button>
-            </div>
+            {unlocked ? (
+              <>
+                <div className="row">
+                  <input
+                    ref={inputRef}
+                    className="input"
+                    type="text"
+                    value={draft}
+                    placeholder="Nova riječ"
+                    enterKeyHint="done"
+                    autoCapitalize="sentences"
+                    autoCorrect="off"
+                    disabled={busy}
+                    onChange={(e) => {
+                      setDraft(e.target.value);
+                      if (message) setMessage(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        void handleAdd();
+                      }
+                    }}
+                    aria-label="Nova riječ"
+                  />
+                  <button
+                    className="btn btn--primary btn--sm"
+                    onClick={() => void handleAdd()}
+                    disabled={busy}
+                  >
+                    Dodaj
+                  </button>
+                </div>
+                <button className="btn btn--ghost btn--sm" onClick={onLock}>
+                  Zaključaj uređivanje
+                </button>
+              </>
+            ) : (
+              <div className="row">
+                <input
+                  className="input"
+                  type="password"
+                  inputMode="numeric"
+                  value={pinDraft}
+                  placeholder="PIN za uređivanje"
+                  enterKeyHint="go"
+                  autoComplete="off"
+                  disabled={busy || status === "offline"}
+                  onChange={(e) => {
+                    setPinDraft(e.target.value);
+                    if (message) setMessage(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      void handleUnlock();
+                    }
+                  }}
+                  aria-label="PIN za uređivanje"
+                />
+                <button
+                  className="btn btn--primary btn--sm"
+                  onClick={() => void handleUnlock()}
+                  disabled={busy || status === "offline"}
+                >
+                  Otključaj
+                </button>
+              </div>
+            )}
 
-            {error && <p className="notice">{error}</p>}
+            {message && <p className="notice">{message}</p>}
 
-            {customWords.length === 0 ? (
-              <p className="empty-note">Još nema tvojih riječi.</p>
+            {status === "loading" ? (
+              <p className="empty-note">Učitavanje riječi…</p>
+            ) : words.length === 0 ? (
+              <p className="empty-note">Popis je prazan.</p>
             ) : (
               <ul className="word-list">
-                {customWords.map((word) => (
-                  <li className="word-list__item" key={word}>
-                    <span className="word-list__text">{word}</span>
-                    {pendingDelete === word ? (
+                {words.map((word) => (
+                  <li className="word-list__item" key={word.id}>
+                    <span className="word-list__text">{word.text}</span>
+                    {!unlocked ? null : pendingDelete === word.id ? (
                       <>
                         <button
                           className="confirm-btn"
-                          onClick={() => {
-                            onDeleteWord(word);
-                            setPendingDelete(null);
-                          }}
+                          disabled={busy}
+                          onClick={() => void handleDelete(word.id)}
                         >
                           Obriši
                         </button>
@@ -160,8 +295,8 @@ export default function HomeScreen({
                     ) : (
                       <button
                         className="icon-btn icon-btn--danger"
-                        onClick={() => setPendingDelete(word)}
-                        aria-label={`Obriši riječ ${word}`}
+                        onClick={() => setPendingDelete(word.id)}
+                        aria-label={`Obriši riječ ${word.text}`}
                       >
                         <svg
                           width="22"

@@ -1,29 +1,4 @@
-import builtInWords from "@/data/words.json";
-import type { Game, Settings, WordSource } from "./types";
-
-export const BUILT_IN_WORDS: string[] = builtInWords as string[];
-
-/** Riječi iz odabranog izvora, bez duplikata i praznih unosa. */
-export function buildWordPool(source: WordSource, customWords: string[]): string[] {
-  const parts =
-    source === "builtin"
-      ? BUILT_IN_WORDS
-      : source === "custom"
-        ? customWords
-        : [...BUILT_IN_WORDS, ...customWords];
-
-  const seen = new Set<string>();
-  const pool: string[] = [];
-  for (const raw of parts) {
-    const word = raw.trim();
-    if (!word) continue;
-    const key = word.toLocaleLowerCase("hr");
-    if (seen.has(key)) continue;
-    seen.add(key);
-    pool.push(word);
-  }
-  return pool;
-}
+import type { Game, Settings } from "./types";
 
 function pickRandom<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
@@ -40,18 +15,15 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /**
- * Nova igra: nasumična riječ iz bazena i nasumično raspoređene uloge.
+ * Nova igra: nasumična riječ s popisa i nasumično raspoređene uloge.
  * Redoslijed igrača ostaje 1..N, a nasumičnost dolazi iz miješanja uloga.
  */
-export function createGame(settings: Settings, pool: string[]): Game {
-  const seats = shuffle(
-    Array.from({ length: settings.playerCount }, (_, i) => i)
-  );
+export function createGame(settings: Settings, words: string[]): Game {
+  const seats = shuffle(Array.from({ length: settings.playerCount }, (_, i) => i));
   return {
     playerCount: settings.playerCount,
     spyCount: settings.spyCount,
-    wordSource: settings.wordSource,
-    word: pickRandom(pool),
+    word: pickRandom(words),
     spyIndices: seats.slice(0, settings.spyCount).sort((a, b) => a - b),
     currentPlayer: 0,
   };

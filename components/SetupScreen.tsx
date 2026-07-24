@@ -1,21 +1,16 @@
 "use client";
 
-import { MAX_PLAYERS, MIN_PLAYERS, type Settings, type WordSource } from "@/lib/types";
+import { MAX_PLAYERS, MIN_PLAYERS, type Settings } from "@/lib/types";
+import type { WordsStatus } from "./HomeScreen";
 
 type Props = {
   settings: Settings;
   onChange: (settings: Settings) => void;
-  /** Broj riječi po izvoru, nakon uklanjanja duplikata. */
-  poolSizes: Record<WordSource, number>;
+  wordCount: number;
+  status: WordsStatus;
   onStart: () => void;
   onBack: () => void;
 };
-
-const SOURCE_LABELS: { value: WordSource; label: string }[] = [
-  { value: "builtin", label: "Ugrađene riječi" },
-  { value: "custom", label: "Moje riječi" },
-  { value: "all", label: "Sve riječi" },
-];
 
 function Stepper({
   value,
@@ -58,13 +53,14 @@ function Stepper({
 export default function SetupScreen({
   settings,
   onChange,
-  poolSizes,
+  wordCount,
+  status,
   onStart,
   onBack,
 }: Props) {
   const maxSpies = settings.playerCount - 1;
-  const poolSize = poolSizes[settings.wordSource];
-  const poolEmpty = poolSize === 0;
+  const loading = status === "loading";
+  const noWords = !loading && wordCount === 0;
 
   function setPlayerCount(next: number) {
     const playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, next));
@@ -76,10 +72,7 @@ export default function SetupScreen({
   }
 
   function setSpyCount(next: number) {
-    onChange({
-      ...settings,
-      spyCount: Math.min(maxSpies, Math.max(1, next)),
-    });
+    onChange({ ...settings, spyCount: Math.min(maxSpies, Math.max(1, next)) });
   }
 
   return (
@@ -113,43 +106,28 @@ export default function SetupScreen({
       </div>
 
       <div className="field">
-        <span className="label">Izvor riječi</span>
-        <div className="segmented" role="radiogroup" aria-label="Izvor riječi">
-          {SOURCE_LABELS.map(({ value, label }) => {
-            const active = settings.wordSource === value;
-            return (
-              <label
-                key={value}
-                className={`segmented__option${active ? " segmented__option--active" : ""}`}
-              >
-                <input
-                  type="radio"
-                  name="wordSource"
-                  value={value}
-                  checked={active}
-                  onChange={() => onChange({ ...settings, wordSource: value })}
-                />
-                <span className="segmented__dot" aria-hidden="true" />
-                <span>{label}</span>
-                <span className="segmented__count">{poolSizes[value]}</span>
-              </label>
-            );
-          })}
-        </div>
+        <span className="label">Riječi</span>
+        <p className="hint" style={{ textAlign: "center" }}>
+          {loading
+            ? "Učitavanje popisa…"
+            : `Na popisu ${wordCount === 1 ? "je" : "ih je"} ${wordCount}. Jedna se bira nasumično.`}
+        </p>
       </div>
 
-      {poolEmpty && (
+      {noWords && (
         <p className="notice">
-          {settings.wordSource === "custom"
-            ? "Nemaš još nijednu svoju riječ. Dodaj riječi na početnom zaslonu ili odaberi drugi izvor."
-            : "Odabrani izvor nema nijednu riječ. Odaberi drugi izvor."}
+          Popis riječi je prazan. Dodaj riječi na početnom zaslonu prije igre.
         </p>
       )}
 
       <div className="spacer" />
 
       <div className="stack">
-        <button className="btn btn--primary" onClick={onStart} disabled={poolEmpty}>
+        <button
+          className="btn btn--primary"
+          onClick={onStart}
+          disabled={loading || noWords}
+        >
           Započni igru
         </button>
         <button className="btn btn--ghost" onClick={onBack}>

@@ -10,36 +10,93 @@ istom uređaju, a zatim slijedi rasprava uživo. Sučelje je u cijelosti na hrva
 - Kad svi pogledaju svoju ulogu, aplikacija otvara zaslon rasprave. Rasprava i
   glasanje odvijaju se uživo, izvan aplikacije.
 
-## Pokretanje
+## Kako je složeno
 
-```bash
-npm install
-npm run dev
-```
+Next.js (App Router) + TypeScript, obični CSS. Stranica se gradi kao statički izvoz
+(`output: "export"`), a popis riječi živi u Cloudflare D1 bazi iza tri Cloudflare
+Pages funkcije. Nema računa ni prijave — uređivanje čuva jedan zajednički PIN.
 
-Aplikacija je dostupna na http://localhost:3000.
+| Ruta                   | Tko smije            | Što radi                     |
+| ---------------------- | -------------------- | ---------------------------- |
+| `GET /api/words`       | svi                  | vraća cijeli popis riječi    |
+| `POST /api/words`      | samo s ispravnim PIN-om | dodaje riječ              |
+| `DELETE /api/words/:id`| samo s ispravnim PIN-om | briše riječ               |
+| `POST /api/auth`       | samo s ispravnim PIN-om | provjera PIN-a pri otključavanju |
 
-## Riječi
+PIN se šalje u zaglavlju `x-spy-pin`, a provjerava ga [`functions/api/_middleware.ts`](functions/api/_middleware.ts)
+za svaki zahtjev koji nije `GET`.
 
-- Ugrađene riječi: [`data/words.json`](data/words.json) — obično polje stringova.
-  Popis se slobodno proširuje.
-- Vlastite riječi: dodaju se i brišu na početnom zaslonu ("Upravljaj riječima") i
-  spremaju se u `localStorage`, odvojeno od ugrađenog popisa.
-- Na zaslonu postavki bira se izvor riječi za tu partiju: ugrađene, vlastite ili sve.
+U `localStorage` ostaje samo ono što je vezano uz taj uređaj:
 
-## Tehnički detalji
-
-Next.js (App Router) + TypeScript, obični CSS, bez backenda. Sve se odvija na
-klijentu; stanje igre i vlastite riječi žive u `localStorage`:
-
-| Ključ              | Sadržaj                                                     |
-| ------------------ | ----------------------------------------------------------- |
-| `spy.gameState`    | faza, postavke i tekuća igra (preživljava osvježavanje)      |
-| `spy.customWords`  | popis vlastitih riječi                                      |
+| Ključ             | Sadržaj                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `spy.gameState`   | faza, postavke i tekuća partija (preživljava osvježavanje)      |
+| `spy.wordsCache`  | zadnji dohvaćeni popis — da se može igrati i bez mreže          |
+| `spy.pin`         | PIN, da ga ne treba upisivati svaki put                         |
 
 Struktura koda:
 
-- [`app/page.tsx`](app/page.tsx) — orkestracija faza igre
+- [`app/page.tsx`](app/page.tsx) — orkestracija faza igre i poziva prema API-ju
 - [`components/`](components) — zasloni (početna, postavke, otkrivanje, rasprava)
-- [`lib/game.ts`](lib/game.ts) — bazen riječi, nasumična riječ i podjela uloga
+- [`functions/api/`](functions/api) — Cloudflare Pages funkcije
+- [`lib/words.ts`](lib/words.ts) — pravila za riječi, zajednička klijentu i serveru
+- [`lib/api.ts`](lib/api.ts) — klijent prema API-ju
+- [`lib/game.ts`](lib/game.ts) — nasumična riječ i podjela uloga
 - [`lib/storage.ts`](lib/storage.ts) — čitanje/pisanje i provjera spremljenog stanja
+
+## Riječi
+
+[`data/words.json`](data/words.json) je samo početni popis kojim se baza puni prvi
+put. Nakon toga se riječi dodaju i brišu kroz aplikaciju, a `words.json` više ne
+utječe na igru.
+
+Ako u `words.json` dodaš nove riječi i želiš ih ubaciti u bazu:
+
+```bash
+npm run seed:generate
+npx wrangler d1 execute spy-words --remote --file=./seed.sql
+```
+
+`seed.sql` koristi `INSERT OR IGNORE`, pa ponovno pokretanje ne stvara duplikate
+niti vraća riječi koje si u međuvremenu obrisao.
+
+## Prvo postavljanje
+
+```bash
+npm install
+npx wrangler d1 create spy-words
+```
+
+Zadnja naredba ispiše `database_id` — upiši ga u [`wrangler.toml`](wrangler.toml).
+Zatim napuni bazu i postavi PIN:
+
+```bash
+npm run db:remote
+npx wrangler pages secret put ADMIN_PIN
+```
+
+## Lokalni rad
+
+```bash
+printf 'ADMIN_PIN=1234\n' > .dev.vars
+npm run db:local
+npm run preview
+```
+
+`npm run preview` gradi statičke datoteke i pokreće `wrangler pages dev` na
+http://localhost:8788, s lokalnom kopijom baze. `npm run dev` pokreće samo Next.js
+(bez funkcija), pa aplikacija u tom načinu radi iz spremljenog popisa riječi.
+
+## Objava na Cloudflare Pages
+
+U Cloudflare nadzornoj ploči: Workers & Pages → Create → Pages → poveži repozitorij.
+
+| Postavka                | Vrijednost      |
+| ----------------------- | --------------- |
+| Build command           | `npm run build` |
+| Build output directory  | `out`           |
+| Framework preset        | Next.js (Static HTML Export) |
+
+Dodaj varijablu okoline `NODE_VERSION` = `20` (ili novije) jer Next 16 traži Node 20+.
+U postavkama projekta poveži D1 bazu `spy-words` na binding `DB` i postavi secret
+`ADMIN_PIN`. Nakon toga svaki `git push` na `main` objavljuje novu verziju.

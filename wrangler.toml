@@ -1,0 +1,9 @@
+name = "spy"
+compatibility_date = "2026-07-01"
+pages_build_output_dir = "out"
+
+# ID popuni onime što ispiše `npx wrangler d1 create spy-words`.
+[[d1_databases]]
+binding = "DB"
+database_name = "spy-words"
+database_id = "POPUNI_NAKON_KREIRANJA"

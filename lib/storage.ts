@@ -6,40 +6,67 @@ import {
   type Phase,
   type SavedState,
   type Settings,
-  type WordSource,
 } from "./types";
+import type { Word } from "./words";
 
-export const CUSTOM_WORDS_KEY = "spy.customWords";
 export const GAME_STATE_KEY = "spy.gameState";
+/** Zadnji uspješno dohvaćen popis — da se može igrati i bez mreže. */
+export const WORDS_CACHE_KEY = "spy.wordsCache";
+export const PIN_KEY = "spy.pin";
 
 const PHASES: Phase[] = ["home", "setup", "reveal", "discussion"];
-const SOURCES: WordSource[] = ["builtin", "custom", "all"];
 
 /* -------------------------------------------------------------------------- */
-/*  Vlastite riječi                                                           */
+/*  Spremljeni popis riječi                                                   */
 /* -------------------------------------------------------------------------- */
 
-export function loadCustomWords(): string[] {
+export function loadCachedWords(): Word[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(CUSTOM_WORDS_KEY);
+    const raw = window.localStorage.getItem(WORDS_CACHE_KEY);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed.filter(
-      (w): w is string => typeof w === "string" && w.trim().length > 0
+      (w): w is Word =>
+        typeof w === "object" &&
+        w !== null &&
+        typeof (w as Word).id === "number" &&
+        typeof (w as Word).text === "string" &&
+        (w as Word).text.length > 0
     );
   } catch {
     return [];
   }
 }
 
-export function saveCustomWords(words: string[]): void {
+export function saveCachedWords(words: Word[]): void {
+  writeKey(WORDS_CACHE_KEY, JSON.stringify(words));
+}
+
+/* -------------------------------------------------------------------------- */
+/*  PIN                                                                       */
+/* -------------------------------------------------------------------------- */
+
+export function loadPin(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.localStorage.getItem(PIN_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function savePin(pin: string): void {
+  writeKey(PIN_KEY, pin);
+}
+
+export function clearPin(): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(CUSTOM_WORDS_KEY, JSON.stringify(words));
+    window.localStorage.removeItem(PIN_KEY);
   } catch {
-    /* npr. pun localStorage ili privatni način rada — igra i dalje radi */
+    /* ignoriramo */
   }
 }
 
@@ -47,7 +74,6 @@ export function saveCustomWords(words: string[]): void {
 /*  Stanje igre                                                               */
 /* -------------------------------------------------------------------------- */
 
-/** Provjerava polja postavki na bilo kojem objektu (i na spremljenoj igri). */
 function hasValidSettings(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const s = value as Record<string, unknown>;
@@ -59,9 +85,7 @@ function hasValidSettings(value: unknown): boolean {
     typeof s.spyCount === "number" &&
     Number.isInteger(s.spyCount) &&
     s.spyCount >= 1 &&
-    s.spyCount < s.playerCount &&
-    typeof s.wordSource === "string" &&
-    SOURCES.includes(s.wordSource as WordSource)
+    s.spyCount < (s.playerCount as number)
   );
 }
 
@@ -113,10 +137,14 @@ export function loadState(): SavedState | null {
 }
 
 export function saveState(state: SavedState): void {
+  writeKey(GAME_STATE_KEY, JSON.stringify(state));
+}
+
+function writeKey(key: string, value: string): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(GAME_STATE_KEY, JSON.stringify(state));
+    window.localStorage.setItem(key, value);
   } catch {
-    /* ignoriramo — stanje se čuva barem u memoriji */
+    /* npr. pun localStorage ili privatni način rada — igra i dalje radi */
   }
 }
