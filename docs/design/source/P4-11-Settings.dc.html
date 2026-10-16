@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P2 11 Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1860px; height: 3461px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P2 · 11</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Settings</h1>
+    <span style="font-size: 18px; color: #A39C94">Defaults for new games, reveal behaviour, senses. Admin editing of built-in dictionaries sits at the bottom of "O aplikaciji", behind a PIN — invisible to normal use.</span>
+  </div>
+
+  <!-- a · MAIN -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">a</span><span style="font-size: 26px; font-weight: 800">Settings</span><span style="font-size: 16px; color: #A39C94">grouped list; scrolls under the tab bar</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <h2 style="position: absolute; left: 20px; top: {{ v.titleTop }}px; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; font-weight: 800; letter-spacing: -0.02em">Postavke</h2>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL }}px; display: flex; flex-direction: column; gap: 8px">
+              <sc-for list="{{ v.groups }}" as="g" hint-placeholder-count="4">
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 10px 4px 0">{{ g.title }}</span>
+                <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                  <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; min-height: 52px; border-top: {{ r.sep }}">
+                      <span style="flex: 1; font-size: 17px">{{ r.label }}</span>
+                      <sc-if value="{{ r.isValue }}" hint-placeholder-val="{{ true }}">
+                        <span style="font-size: 15px; color: {{ v.t.muted }}">{{ r.value }}</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ r.isSwitch }}" hint-placeholder-val="{{ false }}">
+                        <span role="switch" aria-checked="{{ r.on }}" style="position: relative; width: 52px; height: 32px; box-sizing: border-box; border-radius: 16px; background: {{ r.track }}; border: {{ r.trackBorder }}"><span style="position: absolute; top: {{ r.thumbTop }}px; left: {{ r.thumbLeft }}px; width: {{ r.thumb }}px; height: {{ r.thumb }}px; border-radius: 14px; background: {{ r.thumbBg }}"></span></span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: {{ v.fade }}"></div>
+            <sc-if value="{{ v.ios }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; height: 64px; border-radius: 32px; background: {{ v.t.glass }}; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid {{ v.t.glassLine }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; padding: 0 6px">
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Igraj</span>
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Rječnici</span>
+                <span style="height: 54px; border-radius: 27px; background: {{ v.t.tabSel }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Postavke</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ v.android }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; padding-bottom: 8px; box-sizing: border-box; background: {{ v.t.surf }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center">
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Igraj</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Rječnici</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; font-weight: 700"><span style="width: 56px; height: 32px; border-radius: 16px; background: {{ v.t.tabSel }}"></span>Postavke</span>
+              </div>
+            </sc-if>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- b · REVEAL OPTIONS -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">b</span><span style="font-size: 26px; font-weight: 800">Reveal options</span><span style="font-size: 16px; color: #A39C94">mechanic + auto-hide; respects Reduce Motion</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+              <span style="flex: 1; text-align: {{ v.navAlign }}; padding-left: {{ v.navPad }}px; font-size: {{ v.navTitleSize }}px; font-weight: 600">Otkrivanje uloge</span>
+              <span style="width: {{ v.navSpacer }}px"></span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopC }}px; display: flex; flex-direction: column; gap: 12px">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 6px 4px 0">NAČIN</span>
+              <div role="radiogroup" style="display: flex; flex-direction: column; gap: 10px">
+                <div role="radio" aria-checked="true" style="border-radius: 20px; background: {{ v.t.surf }}; box-shadow: inset 0 0 0 2px {{ v.t.text }}; padding: 14px 16px; display: flex; gap: 14px; align-items: center">
+                  <span style="width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 11px; border: 7px solid {{ v.t.text }}"></span>
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Dodirni za okretanje</span><span style="font-size: 14px; line-height: 1.35; color: {{ v.t.muted }}">Karta se okrene i sama se vrati. Preporučeno.</span></span>
+                  <svg aria-hidden="true" width="40" height="52" viewBox="0 0 40 52"><rect x="6" y="2" width="28" height="40" rx="3" fill="#2A221C"></rect><path d="M20 30v14M14 38l6 6 6-6" stroke="{{ v.t.text }}" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>
+                </div>
+                <div role="radio" aria-checked="false" style="border-radius: 20px; background: {{ v.t.surf }}; padding: 14px 16px; display: flex; gap: 14px; align-items: center">
+                  <span style="width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 11px; border: 2px solid {{ v.t.box }}"></span>
+                  <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Drži za pogled</span><span style="font-size: 14px; line-height: 1.35; color: {{ v.t.muted }}">Vidi se samo dok držiš prst na karti.</span></span>
+                  <svg aria-hidden="true" width="40" height="52" viewBox="0 0 40 52"><rect x="6" y="2" width="28" height="40" rx="3" fill="#2A221C"></rect><circle cx="20" cy="40" r="7" fill="none" stroke="{{ v.t.text }}" stroke-width="2"></circle><circle cx="20" cy="40" r="2.5" fill="{{ v.t.text }}"></circle></svg>
+                </div>
+              </div>
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 10px 4px 0">AUTOMATSKO SKRIVANJE</span>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 28px; background: {{ v.t.surf }}">
+                <span style="height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600">5 s</span>
+                <span style="height: 48px; border-radius: 24px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">8 s</span>
+                <span style="height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600">Isključeno</span>
+              </div>
+              <span style="font-size: 14px; line-height: 1.45; color: {{ v.t.muted }}; padding: 0 4px">Karta se sama okrene nakon 8 sekundi, da tajna ne ostane na ekranu.</span>
+              <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 6px; padding: 14px 16px; border-radius: 18px; background: {{ v.t.surf2 }}; font-size: 14px; line-height: 1.45"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.5"></path></svg>Uključeno je „Smanji pokrete“ — karta se pojavljuje bez okretanja i stol se ne vrti.</div>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- c · ADMIN PIN -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">c</span><span style="font-size: 26px; font-weight: 800">Admin · PIN sheet</span><span style="font-size: 16px; color: #A39C94">from the last row of "O aplikaciji"; wrong PIN shakes; today's shared-PIN backend unchanged</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopC }}px; display: flex; flex-direction: column; gap: 10px">
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; padding: 0 16px; height: 52px"><span style="flex: 1; font-size: 17px">Verzija</span><span style="font-size: 15px; color: {{ v.t.muted }}">1.0 (42)</span></div>
+                <div style="display: flex; align-items: center; padding: 0 16px; height: 52px; border-top: 1px solid {{ v.t.line }}"><span style="flex: 1; font-size: 17px">Licence</span></div>
+                <div style="display: flex; align-items: center; padding: 0 16px; height: 52px; border-top: 1px solid {{ v.t.line }}"><span style="flex: 1; font-size: 15px; color: {{ v.t.muted }}">Uređivanje ugrađenih rječnika</span></div>
+              </div>
+            </div>
+            <div style="position: absolute; inset: 0; background: {{ v.t.scrim }}"></div>
+            <div style="position: absolute; left: {{ v.sheetIn }}px; right: {{ v.sheetIn }}px; bottom: {{ v.sheetIn }}px; border-radius: {{ v.sheetR }}px {{ v.sheetR }}px {{ v.sheetBR }}px {{ v.sheetBR }}px; background: {{ v.sheetBg }}; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 10px 24px {{ v.sheetPadBot }}px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center">
+              <span style="width: 36px; height: 5px; border-radius: 3px; background: {{ v.t.off }}"></span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; padding-top: 6px">Administrator</span>
+              <span style="font-size: 15px; line-height: 1.4; color: {{ v.t.muted }}">Unesi PIN za uređivanje ugrađenih rječnika. Izmjene vide svi igrači.</span>
+              <div aria-label="PIN, 4 znamenke, pogreška" style="display: flex; gap: 16px; padding: 8px 0">
+                <span style="width: 18px; height: 18px; border-radius: 9px; background: {{ v.t.danger }}"></span><span style="width: 18px; height: 18px; border-radius: 9px; background: {{ v.t.danger }}"></span><span style="width: 18px; height: 18px; border-radius: 9px; background: {{ v.t.danger }}"></span><span style="width: 18px; height: 18px; border-radius: 9px; background: {{ v.t.danger }}"></span>
+              </div>
+              <span role="alert" style="font-size: 15px; font-weight: 600; color: {{ v.t.danger }}">Pogrešan PIN. Pokušaj ponovno.</span>
+              <button style="width: 100%; height: 48px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.text }}; font-size: 17px; font-weight: 600">Odustani</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":3461}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', pri: '#F3EDE2', priInk: '#121110', ok: '#4CC38A', danger: '#FF6B78', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', off: '#4A443F', box: '#6B645C', scrim: 'rgba(0,0,0,0.6)', tabSel: 'rgba(255,255,255,0.14)' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', pri: '#1A1714', priInk: '#F3EDE2', ok: '#1E7A4F', danger: '#C42B3A', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', off: '#C9C2B9', box: '#A39C94', scrim: 'rgba(26,23,20,0.35)', tabSel: 'rgba(26,23,20,0.08)' };
+    const mk = function (ios, dark) {
+      const t = dark ? D : L;
+      const sw = function (on) {
+        if (ios) return { track: on ? (dark ? '#4CC38A' : '#34A06A') : t.surf2, trackBorder: 'none', thumb: 28, thumbTop: 2, thumbLeft: on ? 22 : 2, thumbBg: '#FFFFFF' };
+        return { track: on ? t.pri : 'transparent', trackBorder: on ? 'none' : ('2px solid ' + t.box), thumb: on ? 24 : 16, thumbTop: on ? 4 : 6, thumbLeft: on ? 24 : 6, thumbBg: on ? t.priInk : t.box };
+      };
+      const row = function (label, value, i) { return { label: label, value: value, isValue: true, isSwitch: false, sep: i === 0 ? 'none' : ('1px solid ' + t.line) }; };
+      const srow = function (label, on, i) { return Object.assign({ label: label, isValue: false, isSwitch: true, on: on ? 'true' : 'false', sep: i === 0 ? 'none' : ('1px solid ' + t.line) }, sw(on)); };
+      const groups = [
+        { title: 'OPĆENITO', rows: [row('Jezik', 'Hrvatski', 0), row('Tema', 'Kao sustav', 1)] },
+        { title: 'NOVA IGRA · ZADANO', rows: [row('Igrači i špijuni', '6 · 1', 0), row('Timer', '5 min', 1), row('Glasanje', 'U aplikaciji', 2)] },
+        { title: 'OTKRIVANJE', rows: [row('Način', 'Dodir', 0), row('Automatsko skrivanje', '8 s', 1)] },
+        { title: 'OSJETILA', rows: [srow('Vibracija', true, 0), srow('Zvukovi', true, 1), srow('Zaslon uvijek upaljen', false, 2)] }
+      ];
+      return { ios: ios, android: !ios, t: t, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36,
+        navTop: ios ? 58 : 48, titleTop: ios ? 116 : 112, titleSize: ios ? 34 : 30, contentTopL: ios ? 160 : 156, contentTopC: ios ? 118 : 112,
+        nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent',
+        backPath: ios ? 'M15 5l-7 7 7 7' : 'M19 12H5M11 6l-6 6 6 6',
+        navAlign: ios ? 'center' : 'left', navPad: ios ? 0 : 12, navTitleSize: ios ? 17 : 22, navSpacer: ios ? 48 : 0,
+        sheetIn: ios ? 8 : 0, sheetR: ios ? 34 : 28, sheetBR: ios ? 40 : 0, sheetPadBot: ios ? 24 : 32,
+        sheetBg: ios ? (dark ? 'rgba(38,35,32,0.92)' : 'rgba(255,255,255,0.92)') : t.surf,
+        fade: 'linear-gradient(to bottom, transparent, ' + t.bg + ')',
+        groups: groups,
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    return { V: [mk(true, true), mk(true, false), mk(false, true), mk(false, false)] };
+  }
+}
+</script>
+</body>
+</html>

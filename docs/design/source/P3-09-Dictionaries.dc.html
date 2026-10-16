@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 09 Dictionaries</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button,input{font:inherit}
+</style>
+</helmet>
+<div style="width: 1860px; height: 7729px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 09</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Dictionaries</h1>
+    <span style="font-size: 18px; color: #A39C94">Dictionary → categories → words. Built-in ones are read-only (copy to edit). Custom ones live only on this phone. Admin editing of built-ins stays hidden in Settings.</span>
+  </div>
+
+  <!-- a · LIST -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">a</span><span style="font-size: 26px; font-weight: 800">List</span><span style="font-size: 16px; color: #A39C94">built-in vs custom, language, counts</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center; justify-content: flex-end; gap: 8px">
+              <button aria-label="Uvezi rječnik" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg></button>
+              <button aria-label="Novi rječnik" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+            </div>
+            <h2 style="position: absolute; left: 20px; top: {{ v.titleTop }}px; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; font-weight: 800; letter-spacing: -0.02em">Rječnici</h2>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL }}px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 0 4px">UGRAĐENI</span>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px">
+                  <span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">HR</span>
+                  <div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Hrvatski</span><span style="font-size: 14px; color: {{ v.t.muted }}">3 kategorije · 50 riječi</span></div>
+                  <span style="height: 26px; padding: 0 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px {{ v.t.off }}; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: {{ v.t.muted }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Ugrađen</span>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 74px"></div>
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px">
+                  <span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">EN</span>
+                  <div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">English</span><span style="font-size: 14px; color: {{ v.t.muted }}">3 kategorije · 48 riječi</span></div>
+                  <span style="height: 26px; padding: 0 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px {{ v.t.off }}; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: {{ v.t.muted }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Ugrađen</span>
+                </div>
+              </div>
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 12px 4px 0">MOJI · SAMO NA OVOM UREĐAJU</span>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px">
+                  <span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">EN</span>
+                  <div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Party pack</span><span style="font-size: 14px; color: {{ v.t.muted }}">6 kategorija · 212 riječi</span></div>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 74px"></div>
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 16px">
+                  <span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">HR</span>
+                  <div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Obiteljski</span><span style="font-size: 14px; color: {{ v.t.warnText }}">2 kategorije · još nema riječi</span></div>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ v.ios }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; height: 64px; border-radius: 32px; background: {{ v.t.glass }}; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid {{ v.t.glassLine }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; padding: 0 6px">
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Igraj</span>
+                <span style="height: 54px; border-radius: 27px; background: {{ v.t.tabSel }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Rječnici</span>
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Postavke</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ v.android }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; padding-bottom: 8px; box-sizing: border-box; background: {{ v.t.surf }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center">
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Igraj</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; font-weight: 700"><span style="width: 56px; height: 32px; border-radius: 16px; background: {{ v.t.tabSel }}"></span>Rječnici</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Postavke</span>
+              </div>
+            </sc-if>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- b · CUSTOM DETAIL -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">b</span><span style="font-size: 26px; font-weight: 800">Custom dictionary · categories</span><span style="font-size: 16px; color: #A39C94">share = export sheet (P2) · ⋯ = rename, language, duplicate, delete</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center; gap: 8px">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+              <span style="flex: 1"></span>
+              <button aria-label="Podijeli rječnik" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7"></path></svg></button>
+              <button aria-label="Više opcija" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}; font-size: 20px; font-weight: 800">⋯</button>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 4px">
+              <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Party pack</h2>
+              <span style="font-size: 15px; color: {{ v.t.muted }}">English · 6 kategorija · 212 riječi</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL2 }}px; display: flex; flex-direction: column; gap: 10px">
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+                  <div style="display: flex; align-items: center; gap: 12px; padding: 0 14px 0 18px; height: 54px; border-top: {{ c.sep }} {{ v.t.line }}">
+                    <span style="flex: 1; font-size: 17px">{{ c.name }}</span><span style="font-size: 15px; color: {{ v.t.muted }}">{{ c.n }}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                  </div>
+                </sc-for>
+              </div>
+              <button style="height: 54px; border: none; border-radius: 22px; background: transparent; box-shadow: inset 0 0 0 1.5px {{ v.t.line }}; color: {{ v.t.text }}; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nova kategorija</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- c · WORDS -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">c</span><span style="font-size: 26px; font-weight: 800">Category · words</span><span style="font-size: 16px; color: #A39C94">add field on top, duplicate check (case-insensitive), search for long lists; iOS swipe / Android long-press to delete</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+              <span style="flex: 1; text-align: {{ v.navAlign }}; padding-left: {{ v.navPad }}px; font-size: {{ v.navTitleSize }}px; font-weight: 600">Filmovi · 40</span>
+              <span style="width: {{ v.navSpacer }}px"></span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopC }}px; display: flex; flex-direction: column; gap: 12px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; gap: 8px">
+                  <label for="addw" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Nova riječ</label>
+                  <input id="addw" value="titanic" style="flex: 1; min-width: 0; height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 2px solid {{ v.t.danger }}; background: {{ v.t.surf }}; color: {{ v.t.text }}; font-size: 17px">
+                  <button disabled style="height: 52px; padding: 0 16px; border: none; border-radius: 12px; background: {{ v.t.surf2 }}; color: {{ v.t.elim }}; font-size: 16px; font-weight: 700">Dodaj</button>
+                </div>
+                <span role="alert" style="font-size: 14px; color: {{ v.t.danger }}; padding: 0 4px">„Titanic“ već postoji u ovoj kategoriji.</span>
+              </div>
+              <div style="height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: {{ v.t.muted }}; font-size: 16px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>Traži u 40 riječi</div>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column; overflow: hidden">
+                <sc-for list="{{ words }}" as="w" hint-placeholder-count="8">
+                  <div style="position: relative; height: 50px; border-top: {{ w.sep }} {{ v.t.line }}">
+                    <div style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; padding: 0 18px; box-sizing: border-box; display: flex; align-items: center; background: {{ v.t.surf }}; transform: translateX({{ w.dx }}px); font-size: 17px">{{ w.w }}</div>
+                    <sc-if value="{{ w.swiped }}" hint-placeholder-val="{{ false }}">
+                      <span style="position: absolute; right: 0; top: 0; bottom: 0; width: 88px; background: {{ v.t.dangerFill }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">Izbriši</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- d · CREATE SHEET -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">d</span><span style="font-size: 26px; font-weight: 800">Create / rename dictionary</span><span style="font-size: 16px; color: #A39C94">sheet; same form for rename and language change</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <h2 style="position: absolute; left: 20px; top: {{ v.titleTop }}px; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; font-weight: 800">Rječnici</h2>
+            <div style="position: absolute; inset: 0; background: {{ v.t.scrim }}"></div>
+            <div style="position: absolute; left: {{ v.sheetIn }}px; right: {{ v.sheetIn }}px; bottom: {{ v.sheetIn }}px; top: {{ v.sheetTop }}px; border-radius: {{ v.sheetR }}px {{ v.sheetR }}px {{ v.sheetBR }}px {{ v.sheetBR }}px; background: {{ v.sheetBg }}; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 10px 20px; display: flex; flex-direction: column; gap: 18px">
+              <span style="align-self: center; width: 36px; height: 5px; border-radius: 3px; background: {{ v.t.off }}"></span>
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <button style="height: 44px; padding: 0 4px; border: none; background: transparent; color: {{ v.t.text }}; font-size: 17px">Odustani</button>
+                <span style="font-size: 17px; font-weight: 700">Novi rječnik</span>
+                <button style="height: 44px; padding: 0 14px; border: none; border-radius: 22px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 16px; font-weight: 700">Spremi</button>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="dname" style="font-size: 13px; font-weight: 600; color: {{ v.t.text }}">Naziv</label>
+                <input id="dname" value="Ljeto na Visu" style="height: 56px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 2px solid {{ v.t.text }}; background: {{ v.t.surf }}; color: {{ v.t.text }}; font-size: 18px">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <span style="font-size: 13px; font-weight: 600">Jezik riječi</span>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 28px; background: {{ v.t.surf2 }}">
+                  <span style="height: 48px; border-radius: 24px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Hrvatski</span>
+                  <span style="height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600">English</span>
+                </div>
+              </div>
+              <span style="font-size: 14px; line-height: 1.45; color: {{ v.t.muted }}; display: flex; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; margin-top: 2px"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Sprema se samo na ovaj telefon. U igru putuje samo izvučena riječ.</span>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- e · DELETE CONFIRM -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">e</span><span style="font-size: 26px; font-weight: 800">Delete confirmation</span><span style="font-size: 16px; color: #A39C94">iOS confirmationDialog (action sheet) · Android AlertDialog — native on both</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; font-weight: 800">Party pack</h2><span style="font-size: 15px; color: {{ v.t.muted }}">English · 6 kategorija · 212 riječi</span></div>
+            <div style="position: absolute; inset: 0; background: {{ v.t.scrim }}"></div>
+            <sc-if value="{{ v.ios }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; left: 10px; right: 10px; bottom: 30px; display: flex; flex-direction: column; gap: 8px">
+                <div style="border-radius: 22px; background: {{ v.sheetBg }}; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); overflow: hidden; display: flex; flex-direction: column">
+                  <div style="padding: 16px 20px; text-align: center; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; font-weight: 700; color: {{ v.t.muted }}">Izbrisati „Party pack“?</span><span style="font-size: 13px; line-height: 1.4; color: {{ v.t.muted }}">6 kategorija i 212 riječi trajno će se obrisati s ovog telefona.</span></div>
+                  <button style="height: 58px; border: none; border-top: 1px solid {{ v.t.line }}; background: transparent; color: {{ v.t.danger }}; font-size: 19px; font-weight: 600">Izbriši rječnik</button>
+                </div>
+                <button style="height: 58px; border: none; border-radius: 22px; background: {{ v.sheetBg }}; color: {{ v.t.text }}; font-size: 19px; font-weight: 700">Odustani</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ v.android }}" hint-placeholder-val="{{ false }}">
+              <div role="alertdialog" style="position: absolute; left: 36px; right: 36px; top: 300px; border-radius: 28px; background: {{ v.t.surf2 }}; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.danger }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="align-self: center"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>
+                <span style="font-size: 24px; line-height: 1.2; text-align: center">Izbrisati „Party pack“?</span>
+                <span style="font-size: 15px; line-height: 1.45; color: {{ v.t.muted }}">6 kategorija i 212 riječi trajno će se obrisati s ovog telefona. Ovo se ne može poništiti.</span>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; padding-top: 8px">
+                  <button style="height: 48px; padding: 0 16px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.text }}; font-size: 15px; font-weight: 700">Odustani</button>
+                  <button style="height: 48px; padding: 0 16px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.danger }}; font-size: 15px; font-weight: 700">Izbriši</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- f · EMPTY -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">f</span><span style="font-size: 26px; font-weight: 800">No custom dictionaries yet</span><span style="font-size: 16px; color: #A39C94">first visit; built-ins stay listed above</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <h2 style="position: absolute; left: 20px; top: {{ v.titleTop }}px; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; font-weight: 800; letter-spacing: -0.02em">Rječnici</h2>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL }}px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 0 4px">UGRAĐENI</span>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px"><span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">HR</span><div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">Hrvatski</span><span style="font-size: 14px; color: {{ v.t.muted }}">50 riječi</span></div></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 74px"></div>
+                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px"><span style="width: 44px; height: 44px; border-radius: 12px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">EN</span><div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">English</span><span style="font-size: 14px; color: {{ v.t.muted }}">48 riječi</span></div></div>
+              </div>
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}; padding: 12px 4px 0">MOJI</span>
+              <div style="border-radius: 22px; box-shadow: inset 0 0 0 1.5px {{ v.t.line }}; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+                <svg aria-hidden="true" width="36" height="48" viewBox="0 0 56 76" fill="none" stroke="{{ v.t.box }}" stroke-width="3"><polygon points="28,3 53,38 28,73 3,38"></polygon></svg>
+                <span style="font-size: 19px; font-weight: 700">Još nemaš vlastitih rječnika</span>
+                <span style="font-size: 15px; line-height: 1.45; color: {{ v.t.muted }}">Napravi svoj s riječima vaše ekipe ili uvezi datoteku od prijatelja.</span>
+                <div style="display: flex; gap: 10px; margin-top: 6px">
+                  <button style="height: 48px; padding: 0 18px; border: none; border-radius: {{ v.brSm }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 16px; font-weight: 700">Novi rječnik</button>
+                  <button style="height: 48px; padding: 0 18px; border: none; border-radius: {{ v.brSm }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 16px; font-weight: 700">Uvezi</button>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ v.ios }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; height: 64px; border-radius: 32px; background: {{ v.t.glass }}; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid {{ v.t.glassLine }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; padding: 0 6px">
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Igraj</span>
+                <span style="height: 54px; border-radius: 27px; background: {{ v.t.tabSel }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">Rječnici</span>
+                <span style="text-align: center; font-size: 12px; color: {{ v.t.muted }}">Postavke</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ v.android }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; padding-bottom: 8px; box-sizing: border-box; background: {{ v.t.surf }}; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center">
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Igraj</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; font-weight: 700"><span style="width: 56px; height: 32px; border-radius: 16px; background: {{ v.t.tabSel }}"></span>Rječnici</span>
+                <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: {{ v.t.muted }}"><span style="width: 56px; height: 32px"></span>Postavke</span>
+              </div>
+            </sc-if>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- g · BUILT-IN READ-ONLY -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">g</span><span style="font-size: 26px; font-weight: 800">Built-in · read-only</span><span style="font-size: 16px; color: #A39C94">server-synced, cached offline; "copy to edit" makes a custom dictionary</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 4px">
+              <div style="display: flex; align-items: center; gap: 10px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Hrvatski</h2><span style="height: 26px; padding: 0 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px {{ v.t.off }}; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: {{ v.t.muted }}">Ugrađen</span></div>
+              <span style="font-size: 15px; color: {{ v.t.muted }}">3 kategorije · 50 riječi · ažurirano 3. 10.</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL2 }}px; display: flex; flex-direction: column; gap: 12px">
+              <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 18px; background: {{ v.t.surf2 }}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0; margin-top: 1px"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+                <span style="flex: 1; font-size: 15px; line-height: 1.4">Ugrađeni rječnik ne možeš mijenjati. Kopiraj ga i uredi kopiju.</span>
+              </div>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 14px 0 18px; height: 54px"><span style="flex: 1; font-size: 17px">Mjesta</span><span style="font-size: 15px; color: {{ v.t.muted }}">22</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 18px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 14px 0 18px; height: 54px"><span style="flex: 1; font-size: 17px">Zanimanja</span><span style="font-size: 15px; color: {{ v.t.muted }}">14</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 18px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 14px 0 18px; height: 54px"><span style="flex: 1; font-size: 17px">Predmeti</span><span style="font-size: 15px; color: {{ v.t.muted }}">14</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ v.t.box }}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+              </div>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px"><button style="width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Napravi kopiju</button></div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":7729}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', elim: '#8F8880', pri: '#F3EDE2', priInk: '#121110', warnText: '#F5B83D', danger: '#FF6B78', dangerFill: '#C42B3A', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', off: '#4A443F', box: '#6B645C', scrim: 'rgba(0,0,0,0.6)', tabSel: 'rgba(255,255,255,0.14)' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', elim: '#716A62', pri: '#1A1714', priInk: '#F3EDE2', warnText: '#8A5A00', danger: '#C42B3A', dangerFill: '#C42B3A', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', off: '#C9C2B9', box: '#A39C94', scrim: 'rgba(26,23,20,0.35)', tabSel: 'rgba(26,23,20,0.08)' };
+    const mk = function (ios, dark) {
+      const t = dark ? D : L;
+      return { ios: ios, android: !ios, t: t, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36,
+        navTop: ios ? 58 : 48, titleTop: ios ? 116 : 112, titleSize: ios ? 34 : 30, contentTopL: ios ? 176 : 170, contentTopL2: ios ? 200 : 196, contentTopC: ios ? 118 : 112,
+        nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent',
+        backPath: ios ? 'M15 5l-7 7 7 7' : 'M19 12H5M11 6l-6 6 6 6',
+        navAlign: ios ? 'center' : 'left', navPad: ios ? 0 : 12, navTitleSize: ios ? 17 : 22, navSpacer: ios ? 48 : 0,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, brSm: ios ? 24 : 14, bot: ios ? 34 : 24,
+        sheetIn: ios ? 8 : 0, sheetR: ios ? 34 : 28, sheetBR: ios ? 40 : 0, sheetTop: ios ? 300 : 340,
+        sheetBg: ios ? (dark ? 'rgba(38,35,32,0.92)' : 'rgba(255,255,255,0.92)') : t.surf,
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    const cats = [['Filmovi', 40], ['Sportaši', 31], ['Bendovi', 28], ['Hrana', 45], ['Gradovi', 38], ['Serije', 30]].map(function (c, i) { return { name: c[0], n: c[1], sep: i === 0 ? 'none' : '1px solid' }; });
+    const words = ['Avatar', 'Casablanca', 'Gladijator', 'Inception', 'Matrix', 'Shrek', 'Titanic', 'Up'].map(function (w, i) { return { w: w, sep: i === 0 ? 'none' : '1px solid', dx: i === 5 ? -88 : 0, swiped: i === 5 }; });
+    return { V: [mk(true, true), mk(true, false), mk(false, true), mk(false, false)], cats: cats, words: words };
+  }
+}
+</script>
+</body>
+</html>

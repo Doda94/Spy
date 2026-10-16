@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>B Pomrčina — Android — spy reveal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400..800&amp;family=Onest:wght@400..700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FFC46B}a:hover{color:#FFD99E}
+button{font:inherit;cursor:pointer;touch-action:none}
+@keyframes corona{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.035);opacity:1}}
+</style>
+</helmet>
+<div style="width: 412px; height: 915px; box-sizing: border-box; position: relative; overflow: hidden; background: #0B0915; color: #F6EFE4; font-family: 'Onest', sans-serif; display: flex; flex-direction: column; padding: 40px 0 24px">
+
+  <div style="height: 64px; display: flex; align-items: center; gap: 4px; padding: 0 16px 0 4px">
+    <button aria-label="Prekini igru" style="width: 48px; height: 48px; border: none; border-radius: 24px; background: transparent; color: #F6EFE4; display: flex; align-items: center; justify-content: center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+    <span style="flex: 1; padding-left: 4px; font-size: 20px; font-weight: 600">Igrač 3 od 8</span>
+  </div>
+  <div aria-label="Igrač 3 od 8" style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; padding: 0 20px">
+    <div style="height: 6px; border-radius: 3px; background: #F6EFE4"></div>
+    <div style="height: 6px; border-radius: 3px; background: #F6EFE4"></div>
+    <div style="height: 6px; border-radius: 3px; background: #FFB547"></div>
+    <div style="height: 6px; border-radius: 3px; background: #2A2446"></div>
+    <div style="height: 6px; border-radius: 3px; background: #2A2446"></div>
+    <div style="height: 6px; border-radius: 3px; background: #2A2446"></div>
+    <div style="height: 6px; border-radius: 3px; background: #2A2446"></div>
+    <div style="height: 6px; border-radius: 3px; background: #2A2446"></div>
+  </div>
+
+  <sc-if value="{{ revealed }}" hint-placeholder-val="{{ true }}">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; padding: 0 24px">
+      <div style="position: relative; width: 312px; height: 312px; display: flex; align-items: center; justify-content: center">
+        <div aria-hidden="true" style="position: absolute; inset: -24px; border-radius: 50%; background: radial-gradient(circle, rgba(255,181,71,0) 0 38%, rgba(255,196,107,0.75) 40.5%, rgba(255,140,66,0.28) 50%, rgba(255,110,60,0.08) 62%, rgba(11,9,21,0) 72%); animation: corona 2.4s ease-in-out infinite"></div>
+        <div style="position: relative; width: 242px; height: 242px; border-radius: 50%; background: radial-gradient(circle at 42% 38%, #181430 0%, #07060D 70%); box-shadow: 0 0 0 2px #FFD08A, inset 0 0 40px rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A79FBF">Kategorija</span>
+          <span style="font-family: 'Unbounded', sans-serif; font-size: 34px; font-weight: 600">Mjesta</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: center">
+        <h1 style="margin: 0; font-family: 'Unbounded', sans-serif; font-size: 44px; line-height: 1.08; font-weight: 700; letter-spacing: -0.02em">Ti si špijun.</h1>
+        <p style="margin: 0; font-size: 17px; line-height: 1.4; color: #A79FBF; max-width: 320px">Riječ ti je zaklonjena. Blefiraj s onim što znaš.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 16px; background: #17132A">
+        <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 50%; background: #07060D; box-shadow: 0 0 0 1.5px #FFD08A, 0 0 10px 2px rgba(255,181,71,0.45)"></div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #A79FBF">U sjeni s tobom</span>
+          <span style="font-size: 20px; font-weight: 700">Ana</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hidden }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; padding: 0 24px">
+      <div style="width: 312px; height: 312px; display: flex; align-items: center; justify-content: center">
+        <div style="width: 242px; height: 242px; border-radius: 50%; background: #13102A; box-shadow: 0 0 0 1.5px rgba(246,239,228,0.14); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #A79FBF">Na redu je</span>
+          <span style="font-family: 'Unbounded', sans-serif; font-size: 42px; font-weight: 600">Luka</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: center">
+        <h1 style="margin: 0; font-family: 'Unbounded', sans-serif; font-size: 28px; line-height: 1.15; font-weight: 600">Dodaj telefon Luki</h1>
+        <p style="margin: 0; font-size: 17px; line-height: 1.4; color: #A79FBF">Neka nitko drugi ne gleda u ekran.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; padding: 0 24px 8px">
+    <sc-if value="{{ revealed }}" hint-placeholder-val="{{ true }}">
+      <span style="font-size: 14px; color: #A79FBF">Uloga je vidljiva samo dok držiš.</span>
+    </sc-if>
+    <sc-if value="{{ revealed }}" hint-placeholder-val="{{ true }}">
+      <button onPointerUp="{{ hide }}" onPointerLeave="{{ hide }}" style="width: 100%; height: 88px; border: none; border-radius: 44px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 19px; font-weight: 700; color: #1A1206; background: #FFC46B; box-shadow: 0 0 0 8px rgba(255,181,71,0.16)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle></svg>
+        Pusti za skrivanje
+      </button>
+    </sc-if>
+    <sc-if value="{{ hidden }}" hint-placeholder-val="{{ false }}">
+      <button onPointerDown="{{ show }}" style="width: 100%; height: 88px; border: none; border-radius: 24px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 19px; font-weight: 700; color: #F6EFE4; background: #2A2446">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle></svg>
+        Drži za prikaz
+      </button>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startHidden":{"editor":"boolean","default":false},"$preview":{"width":412,"height":915}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const revealed = st.revealed !== undefined ? st.revealed : !(this.props.startHidden ?? false);
+    return {
+      revealed: revealed,
+      hidden: !revealed,
+      show: () => this.setState({ revealed: true }),
+      hide: () => { if (this.state && this.state.revealed === false) return; this.setState({ revealed: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>H 01 Tokens to Compose</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 2300px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 40px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">PHASE 4 · H·01 · TOKENS</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">One token set → SpyTheme</h1>
+    <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #C9C2B9; max-width: 1080px">Everything below exists in code: <span style="font-family: 'JetBrains Mono', monospace; color: #F3EDE2">SpyTheme.kt</span> (Compose), <span style="font-family: 'JetBrains Mono', monospace; color: #F3EDE2">tokens.json</span> (W3C design tokens) and the string resources in the handoff package <span style="font-family: 'JetBrains Mono', monospace; color: #F3EDE2">spijun-handoff/</span>. Read colours as <span style="font-family: 'JetBrains Mono', monospace; color: #F3EDE2">Spy.colors.spy</span>, type as <span style="font-family: 'JetBrains Mono', monospace; color: #F3EDE2">Spy.type.wordDisplay</span>.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SEMANTIC COLOUR · SpyColors</span>
+    <div style="display: grid; grid-template-columns: 220px 1fr 1fr 1.6fr; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+      <span style="padding: 11px 16px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Compose</span>
+      <span style="padding: 11px 16px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Dark</span>
+      <span style="padding: 11px 16px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Light</span>
+      <span style="padding: 11px 16px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Use · M3 role</span>
+      <sc-for list="{{ colors }}" as="r" hint-placeholder-count="20">
+        <span style="padding: 9px 16px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">{{ r.k }}</span>
+        <span style="padding: 7px 16px; border-top: 1px solid #34302C; display: flex; align-items: center; gap: 10px"><span style="width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); background: {{ r.d }}"></span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ r.d }}</span></span>
+        <span style="padding: 7px 16px; border-top: 1px solid #34302C; display: flex; align-items: center; gap: 10px; background: #F6F2EA; color: #1A1714"><span style="width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); background: {{ r.l }}"></span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ r.l }}</span></span>
+        <span style="padding: 9px 16px; border-top: 1px solid #34302C; font-size: 14px; color: #C9C2B9">{{ r.u }}</span>
+      </sc-for>
+    </div>
+    <span style="font-size: 14px; color: #A39C94">Card faces are theme-independent: cardSpyFace #0F0D0B · cardCitizenFace #F3EDE2 · cardCitizenInk #1F3FA8 · cardBack #2A221C · lattice Vermilion @ 22%. Dynamic colour is off.</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">TYPE · SpyType → M3 Typography</span>
+      <div style="display: grid; grid-template-columns: 150px 1fr 150px; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+        <sc-for list="{{ type }}" as="r" hint-placeholder-count="11">
+          <span style="padding: 9px 14px; border-bottom: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ r.k }}</span>
+          <span style="padding: 9px 14px; border-bottom: 1px solid #34302C; font-size: 14px; color: #C9C2B9">{{ r.s }}</span>
+          <span style="padding: 9px 14px; border-bottom: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A39C94">{{ r.m }}</span>
+        </sc-for>
+      </div>
+      <span style="font-size: 14px; line-height: 1.5; color: #A39C94">Display styles cap at 1.3× font scale (DisplayMaxFontScale); body styles scale to 200%. wordDisplay auto-fits 56 → 52 → 48 → 44 → 40 sp, max 2 lines, breaks only between words. Countdown uses "tnum" — verify Hanken Grotesk ships tabular figures; fallback: monospaced digit glyph widths via fixed-width Box per digit.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 22px">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SHAPE · SpyShape</span>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{ shapes }}" as="r" hint-placeholder-count="8">
+            <div style="border-radius: 14px; background: #1C1A18; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ r.k }}</span><span style="font-size: 12px; color: #A39C94">{{ r.v }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SPACE · SpySpace</span>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{ space }}" as="r" hint-placeholder-count="12">
+            <div style="border-radius: 14px; background: #1C1A18; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ r.k }}</span><span style="font-size: 12px; color: #A39C94">{{ r.v }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-radius: 18px; background: #0F0D0B; border: 1px solid #34302C; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #C9C2B9; white-space: pre-wrap">{{ code }}</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = [
+      ['bg', '#121110', '#F6F2EA', 'Screen background · surface, background'],
+      ['surface', '#1C1A18', '#FFFFFF', 'Panels, rows · surfaceContainer'],
+      ['surface2', '#262320', '#EEE8DE', 'Sheets, secondary buttons, steppers · surfaceContainerHigh'],
+      ['line', '#34302C', '#DDD5C8', 'Hairlines, outlines · outline'],
+      ['text', '#F3EDE2', '#1A1714', 'Primary text · onSurface'],
+      ['textMuted', '#A39C94', '#6B645C', 'Labels, counts, hints · onSurfaceVariant'],
+      ['eliminated', '#8F8880', '#716A62', 'Spectators, knocked-out names (+ strikethrough)'],
+      ['primary', '#F3EDE2', '#1A1714', 'The one main action · primary'],
+      ['onPrimary', '#121110', '#F3EDE2', 'Text on primary · onPrimary'],
+      ['spy', '#FF6B3D', '#C2410C', 'Spy role + brand mark only · tertiary ≈ T70 / T40'],
+      ['citizen', '#6E9BFF', '#2F5BD8', 'Citizen role only'],
+      ['success', '#4CC38A', '#1E7A4F', 'Joined, voted, imported'],
+      ['warning', '#F5B83D', '#F5B83D', 'Fill: banners, ≤30 s ring'],
+      ['onWarning', '#1A1206', '#1A1206', 'Text on warning fill'],
+      ['warningText', '#F5B83D', '#8A5A00', 'Warning as text on bg'],
+      ['danger', '#FF6B78', '#C42B3A', 'Delete, remove, errors · error'],
+      ['dangerFill', '#C42B3A', '#C42B3A', 'Destructive button / swipe fill (white text)'],
+      ['table', '#1A1816', '#E8E0D3', 'Round table felt'],
+      ['tableRing', '#34302C', '#D6CCBD', 'Table edge (≤30 s: warning)'],
+      ['glass', '#FFFFFF14', '#FFFFFFB8', 'Fallback only — real chrome is native Liquid Glass']
+    ].map(function (r) { return { k: r[0], d: r[1].length > 7 ? '#' + r[1].slice(1, 7) : r[1], l: r[2].length > 7 ? '#' + r[2].slice(1, 7) : r[2], u: r[3] }; });
+    const T = [
+      ['wordDisplay', 'Bricolage 800 · 56/56 · −3% · auto-fit', 'displayMedium'],
+      ['roleDisplay', 'Bricolage 800 · 64/64 · −3%', 'displayLarge'],
+      ['countdown', 'Hanken 700 · 96/96 · −2% · tnum', '—'],
+      ['titleLarge', 'Bricolage 800 · 34/40 · −2%', 'headlineLarge'],
+      ['titleMedium', 'Bricolage 700 · 24/30', 'headlineMedium'],
+      ['headline', 'Hanken 700 · 20/26', 'headlineSmall'],
+      ['bodyLarge', 'Hanken 500 · 17/24', 'bodyLarge'],
+      ['body', 'Hanken 400 · 15/22', 'bodyMedium'],
+      ['label', 'Hanken 700 · 13/18 · +8% caps', 'labelMedium'],
+      ['caption', 'Hanken 500 · 12/16', 'bodySmall'],
+      ['button', 'Hanken 700 · 17/22', 'labelLarge']
+    ].map(function (r) { return { k: r[0], s: r[1], m: r[2] }; });
+    const SH = [['xs', '6 · tags'], ['sm', '10 · inputs'], ['md', '16 · Android btn'], ['lg', '22 · panels'], ['xl', '28 · sheets'], ['full', 'iOS btn, pills'], ['card()', 'CutCorner 22'], ['cardFrame()', 'CutCorner 14']].map(function (r) { return { k: r[0], v: r[1] }; });
+    const SP = [['s1', '4'], ['s2', '8'], ['s3', '12'], ['s4', '16'], ['s5', '20'], ['s6', '24'], ['s8', '32'], ['s14', '56'], ['gutter', '20'], ['minTarget', '48'], ['rowHeight', '52'], ['button', '56 iOS · 64 And.']].map(function (r) { return { k: r[0], v: r[1] }; });
+    const code = 'SpyTheme(\n  themeSetting = settings.theme,\n  displayFamily = bricolage(),\n  textFamily = hanken(),\n) {\n  Text("Špijun", style = Spy.type.roleDisplay,\n       color = Spy.colors.text)\n  Box(Modifier.clip(SpyShape.card())\n      .background(Spy.colors.cardSpyFace))\n}';
+    return { colors: C, type: T, shapes: SH, space: SP, code: code };
+  }
+}
+</script>
+</body>
+</html>

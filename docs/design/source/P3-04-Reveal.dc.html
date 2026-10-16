@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 04 Role reveal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1860px; height: 5595px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 04</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Role reveal</h1>
+    <span style="font-size: 18px; color: #A39C94">On the table (Phase 2 · boards 11–12). The current seat turns to the bottom, the camera pushes in 1.3×, the card lifts. Tap to flip; auto-hides after 8 s. Tab bar hidden — immersive.</span>
+  </div>
+
+  <!-- a · HANDOFF -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">a</span><span style="font-size: 26px; font-weight: 800">Handoff · card lifted, face down</span><span style="font-size: 16px; color: #A39C94">one phone · nothing secret on screen yet</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: {{ v.s.a.cam }}">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.s.a.seats }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}; opacity: {{ c.op }}">
+                  <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                  <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                  <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position: absolute; left: {{ v.cardL }}px; top: {{ v.cardT }}px; width: 300px; height: 420px; filter: {{ v.t.cardShadow }}">
+              <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#2A221C" stroke="#4A3D33" stroke-width="1.5"></polygon></svg>
+              <div style="position: absolute; inset: 20px 20px 84px; border-radius: 6px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 18px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 18px)"></div>
+              <div style="position: absolute; left: 0; right: 0; top: 108px; display: flex; justify-content: center"><span style="width: 120px; height: 120px; border-radius: 60px; background: #2A221C; box-shadow: 0 0 0 2px #FF6B3D, 0 0 0 10px #2A221C; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 66px; font-weight: 800; color: #FF6B3D">Š</span></div>
+              <span style="position: absolute; left: 0; right: 0; bottom: 26px; text-align: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800; color: #F3EDE2">Luka</span>
+            </div>
+            <p style="position: absolute; left: 30px; right: 30px; top: {{ v.hintT }}px; margin: 0; text-align: center; font-size: 16px; line-height: 1.4; color: {{ v.t.muted }}">Luka, dodirni kartu.<br>Neka nitko drugi ne gleda.</p>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Prekini igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Igrač 1 od 8</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px"><button style="width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Prikaži ulogu</button></div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- b · CITIZEN -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">b</span><span style="font-size: 26px; font-weight: 800">Revealed · citizen</span><span style="font-size: 16px; color: #A39C94">ivory face, whole diamond, single haptic; the longest words wrap to two lines</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: {{ v.s.b.cam }}">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.s.b.seats }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}; opacity: {{ c.op }}">
+                  <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                  <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div role="img" aria-label="Građanin. Tajna riječ: Svemirska postaja. Kategorija: Mjesta." style="position: absolute; left: {{ v.cardL }}px; top: {{ v.cardT }}px; width: 300px; height: 420px; filter: {{ v.t.cardShadow }}">
+              <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#F3EDE2" stroke="{{ v.t.cardLine }}" stroke-width="1"></polygon><polygon points="25,12 275,12 288,25 288,395 275,408 25,408 12,395 12,25" fill="none" stroke="#1F3FA8" stroke-opacity="0.45" stroke-width="1.5"></polygon></svg>
+              <svg aria-hidden="true" width="14" height="19" viewBox="0 0 56 76" style="position: absolute; left: 24px; top: 24px; color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+              <svg aria-hidden="true" width="14" height="19" viewBox="0 0 56 76" style="position: absolute; right: 24px; bottom: 24px; color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0 30px; text-align: center; color: #1A1714">
+                <svg aria-hidden="true" width="40" height="54" viewBox="0 0 56 76" style="color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: #6B645C">TAJNA RIJEČ</span>
+                <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Svemirska postaja</span>
+                <div style="width: 160px; border-top: 1.5px dashed #C9C2B9"></div>
+                <span style="font-size: 15px; color: #6B645C">Kategorija · <strong style="color: #1A1714">Mjesta</strong></span>
+              </div>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Prekini igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Igrač 3 od 8</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 10px; align-items: center">
+              <span style="font-size: 13px; color: {{ v.t.muted }}; font-variant-numeric: tabular-nums">Sakriva se za 6 s</span>
+              <button style="position: relative; width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700; overflow: hidden">Sakrij i dalje<span aria-hidden="true" style="position: absolute; left: 0; bottom: 0; height: 4px; width: 75%; background: {{ v.t.priInk }}; opacity: 0.35"></span></button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- c · SPY ALONE -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">c</span><span style="font-size: 26px; font-weight: 800">Revealed · spy, alone</span><span style="font-size: 16px; color: #A39C94">dark face in both themes, split diamond, double thud</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: {{ v.s.c.cam }}">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.s.c.seats }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}; opacity: {{ c.op }}">
+                  <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                  <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div role="img" aria-label="Špijun. Ne znaš riječ. Kategorija: Mjesta." style="position: absolute; left: {{ v.cardL }}px; top: {{ v.cardT }}px; width: 300px; height: 420px; filter: {{ v.t.cardShadow }}">
+              <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon><polygon points="25,12 275,12 288,25 288,395 275,408 25,408 12,395 12,25" fill="none" stroke="#FF6B3D" stroke-opacity="0.55" stroke-width="1.5"></polygon></svg>
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0 36px; text-align: center; color: #F3EDE2">
+                <svg aria-hidden="true" width="44" height="60" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+                <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: #A39C94">TI SI</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 62px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span></div>
+                <span style="font-size: 15px; color: #A39C94">Kategorija · <strong style="color: #FF6B3D">Mjesta</strong></span>
+                <div style="width: 180px; border-top: 1.5px dashed #34302C"></div>
+                <span style="font-size: 15px; line-height: 1.4; color: #A39C94">Sam si. Slušaj, blefiraj i ne odaj se.</span>
+              </div>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Prekini igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Igrač 6 od 8</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 10px; align-items: center">
+              <span style="font-size: 13px; color: {{ v.t.muted }}">Sakriva se za 6 s</span>
+              <button style="position: relative; width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700; overflow: hidden">Sakrij i dalje<span aria-hidden="true" style="position: absolute; left: 0; bottom: 0; height: 4px; width: 75%; background: {{ v.t.priInk }}; opacity: 0.35"></span></button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- d · SPY + OTHERS -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">d</span><span style="font-size: 26px; font-weight: 800">Revealed · spy with other spies</span><span style="font-size: 16px; color: #A39C94">3 spies of 8; names listed on the card, read last by VoiceOver/TalkBack</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: {{ v.s.d.cam }}">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.s.d.seats }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}; opacity: {{ c.op }}">
+                  <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                  <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div role="img" aria-label="Špijun. Kategorija: Mjesta. Ostali špijuni: Ana, Petar." style="position: absolute; left: {{ v.cardL }}px; top: {{ v.cardT }}px; width: 300px; height: 420px; filter: {{ v.t.cardShadow }}">
+              <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon><polygon points="25,12 275,12 288,25 288,395 275,408 25,408 12,395 12,25" fill="none" stroke="#FF6B3D" stroke-opacity="0.55" stroke-width="1.5"></polygon></svg>
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 34px; text-align: center; color: #F3EDE2">
+                <svg aria-hidden="true" width="36" height="50" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+                <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: #A39C94">TI SI</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span></div>
+                <span style="font-size: 15px; color: #A39C94">Kategorija · <strong style="color: #FF6B3D">Mjesta</strong></span>
+                <div style="width: 180px; border-top: 1.5px dashed #34302C"></div>
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #A39C94">OSTALI ŠPIJUNI</span>
+                <div style="display: flex; gap: 8px">
+                  <span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #262320; display: flex; align-items: center; gap: 6px; font-size: 17px; font-weight: 700"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>Ana</span>
+                  <span style="height: 36px; padding: 0 14px; border-radius: 18px; background: #262320; display: flex; align-items: center; gap: 6px; font-size: 17px; font-weight: 700"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>Petar</span>
+                </div>
+              </div>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Prekini igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Igrač 4 od 8</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 10px; align-items: center">
+              <span style="font-size: 13px; color: {{ v.t.muted }}">Sakriva se za 6 s</span>
+              <button style="position: relative; width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700; overflow: hidden">Sakrij i dalje<span aria-hidden="true" style="position: absolute; left: 0; bottom: 0; height: 4px; width: 75%; background: {{ v.t.priInk }}; opacity: 0.35"></span></button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- e · MULTI-DEVICE WAITING -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">e</span><span style="font-size: 26px; font-weight: 800">Own phone · waiting for others</span><span style="font-size: 16px; color: #A39C94">your seat is always at the bottom; neutral ticks show who has looked — never what they are</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: {{ v.s.e.cam }}">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.s.e.seats }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                  <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="{{ c.stroke }}" stroke-width="{{ c.sw }}"></polygon></svg>
+                  <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                  <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                  <sc-if value="{{ c.tick }}" hint-placeholder-val="{{ false }}">
+                    <span aria-label="pogledao" style="position: absolute; right: -6px; top: -6px; width: 20px; height: 20px; border-radius: 10px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center">
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums">4 / 8</span>
+              <span style="font-size: 14px; color: {{ v.t.muted }}">pogledalo kartu</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Napusti igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Soba K7QX</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.topText }}px; display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center">
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800">Čeka se još 4 igrača</span>
+              <span style="font-size: 15px; color: {{ v.t.muted }}">Rasprava počinje kad svi pogledaju.</span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 10px">
+              <span style="text-align: center; font-size: 14px; color: {{ v.t.muted }}">Tvoja karta je dolje. Dodirni je ako trebaš ponovno pogledati.</span>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 18px; font-weight: 700">Pogledaj ponovno</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":5595}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', pri: '#F3EDE2', priInk: '#121110', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', table: '#1A1816', tableRing: '#34302C', cardLine: '#F3EDE2', cardShadow: 'drop-shadow(0 24px 40px rgba(0,0,0,0.6))' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', pri: '#1A1714', priInk: '#F3EDE2', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', table: '#E8E0D3', tableRing: '#D6CCBD', cardLine: '#DDD5C8', cardShadow: 'drop-shadow(0 18px 30px rgba(26,23,20,0.28))' };
+    const names = ['Luka', 'Ana', 'Marko', 'Iva', 'Petar', 'Nina', 'Marta', 'Ivan'];
+    const mk = function (ios, dark) {
+      const t = dark ? D : L;
+      const w = ios ? 390 : 412, cy = ios ? 430 : 470, cx = w / 2;
+      const table = function (cur, focus, ticks, me) {
+        const seats = names.map(function (n, i) {
+          const th = (90 + 45 * i) * Math.PI / 180, r = 130;
+          const x = r * Math.cos(th), y = r * Math.sin(th);
+          const tick = !!ticks && ticks.indexOf(i) !== -1;
+          return { name: n, l: (cx + x - 28).toFixed(1), t: (cy + y - 39).toFixed(1), tf: 'rotate(' + (45 * i) + 'deg)',
+            op: focus ? (i === cur ? 0 : 0.4) : 1, tick: tick,
+            stroke: (me === i) ? (dark ? '#F3EDE2' : '#1A1714') : '#4A3D33', sw: (me === i) ? 2.5 : 1 };
+        });
+        return { seats: seats, cam: 'rotate(' + (-45 * cur) + 'deg) scale(' + (focus ? 1.3 : 1) + ')' };
+      };
+      return { ios: ios, t: t, w: w, h: ios ? 844 : 915, pr: ios ? 48 : 36, cy: cy,
+        origin: cx + 'px ' + cy + 'px', tableL: cx - 172, tableT: cy - 172,
+        cardL: (w - 300) / 2, cardT: ios ? 124 : 132, hintT: ios ? 562 : 572, topText: ios ? 124 : 120,
+        navTop: ios ? 58 : 48, nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent', pillBg: ios ? t.glass : t.surf2,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 34 : 24,
+        s: { a: table(0, true), b: table(2, true), c: table(5, true), d: table(3, true), e: table(3, false, [0, 1, 3, 6], 3) },
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    return { V: [mk(true, true), mk(true, false), mk(false, true), mk(false, false)] };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>09 Accessibility — Špijun design language</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 40px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">09 · ACCESSIBILITY</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Readable tipsy, in the dark, by everyone.</h1>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">ROLES WITHOUT COLOUR · greyscale check</span>
+      <div style="display: flex; gap: 18px; filter: grayscale(1)">
+        <div style="position: relative; width: 140px; height: 192px">
+          <svg width="140" height="192" viewBox="0 0 140 192" style="position: absolute; inset: 0"><polygon points="12,0 128,0 140,12 140,180 128,192 12,192 0,180 0,12" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px"><svg aria-hidden="true" width="24" height="32" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800">Špijun</span></div>
+        </div>
+        <div style="position: relative; width: 140px; height: 192px">
+          <svg width="140" height="192" viewBox="0 0 140 192" style="position: absolute; inset: 0"><polygon points="12,0 128,0 140,12 140,180 128,192 12,192 0,180 0,12" fill="#F3EDE2"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #1A1714"><svg aria-hidden="true" width="24" height="32" viewBox="0 0 56 76" style="color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">Bolnica</span></div>
+        </div>
+      </div>
+      <span style="font-size: 15px; line-height: 1.5; color: #C9C2B9">Four independent signals: card lightness (dark vs ivory), suit shape (split vs whole), wording ("Špijun" vs the word) and haptic (double thud vs single). Hue — vermilion vs blue — is the fifth, not the first.</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SCREEN READER · VoiceOver / TalkBack labels</span>
+      <div style="display: grid; grid-template-columns: 170px 1fr; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+        <sc-for list="{{ vo }}" as="v" hint-placeholder-count="8">
+          <span style="padding: 11px 16px; border-bottom: 1px solid #34302C; background: #1C1A18; font-size: 14px; font-weight: 700">{{ v.s }}</span>
+          <span style="padding: 11px 16px; border-bottom: 1px solid #34302C; font-size: 14px; line-height: 1.45; color: #C9C2B9">{{ v.l }}</span>
+        </sc-for>
+      </div>
+      <span style="font-size: 14px; line-height: 1.5; color: #A39C94">Privacy with a screen reader on: before the first reveal, ask once — "Uloga će se izgovoriti naglas. Stavi slušalice." — and offer to show the role silently with large text instead. Then announce once; never re-read on focus.</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 18px; font-weight: 800">Targets</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">48 pt/dp minimum for anything tapped during play; 8 pt between neighbours. Primary actions sit in the bottom third. The whole card is the flip target, not just the button.</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 18px; font-weight: 800">Text to 200%</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">Body and labels scale fully. Rows reflow: steppers drop under their label; chip rows wrap to 2 lines. Display sizes cap at 1.3× and rely on auto-fit; the card grows to full width.</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 18px; font-weight: 800">Transparency &amp; contrast</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">Reduce Transparency: glass chrome → solid surface-2 with a 1 pt line. Increase Contrast: line → n400, muted text → n700, card frame stroke 2 pt.</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 18px; font-weight: 800">Countdown speech</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">Polite live region at each full minute, at 30 s, 10 s and 0 — never every second. On focus it reads "Preostalo 4 minute i 32 sekunde".</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      vo: [
+        { s: 'Hidden card', l: '"Karta za igrača Luka. Dvaput dodirni za prikaz uloge." · "Card for Luka. Double-tap to show your role."' },
+        { s: 'Citizen', l: '"Građanin. Tajna riječ: Bolnica. Kategorija: Mjesta."' },
+        { s: 'Spy, alone', l: '"Špijun. Ne znaš riječ. Kategorija: Mjesta."' },
+        { s: 'Spy + others', l: '"Špijun. Kategorija: Mjesta. Ostali špijuni: Ana, Petar."' },
+        { s: 'After hide', l: '"Uloga skrivena. Dodaj telefon igraču Marta."' },
+        { s: 'Vote option', l: '"Ana, odabrano. Dvaput dodirni Glasaj za potvrdu." · own name: "Marta, to si ti, nije moguće."' },
+        { s: 'Waiting', l: '"Glas je predan. Čeka se još 3 igrača: Iva, Petar, Luka."' },
+        { s: 'Elimination', l: '"Marko ispada iz igre. Uloge se otkrivaju na kraju igre. Počinje runda 2."' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

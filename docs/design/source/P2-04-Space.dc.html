@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>05 Space, shape, elevation, icons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1160px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 44px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">05 · SPACE, SHAPE, ELEVATION, ICONS</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Rounded table, cut cards.</h1>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SPACING · 4 pt base</span>
+      <sc-for list="{{ space }}" as="s" hint-placeholder-count="10">
+        <div style="display: flex; align-items: center; gap: 16px; height: 22px">
+          <span style="width: 90px; font-family: 'JetBrains Mono', monospace; font-size: 13px">{{ s.name }}</span>
+          <span style="width: 40px; font-size: 13px; color: #A39C94">{{ s.v }}</span>
+          <span style="height: 12px; border-radius: 3px; background: #FF6B3D; width: {{ s.w }}"></span>
+          <span style="font-size: 13px; color: #A39C94">{{ s.use }}</span>
+        </div>
+      </sc-for>
+      <span style="font-size: 14px; color: #A39C94; line-height: 1.5; margin-top: 8px">Targets: 48 pt/dp minimum on both platforms during play (above iOS's 44); primary buttons 56 iOS / 64 Android; list rows 52; steppers 44 inside a 52 row.</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SHAPE</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 6px; background: #262320"></div><span style="font-size: 13px"><strong>xs 6</strong> · tags</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 10px; background: #262320"></div><span style="font-size: 13px"><strong>sm 10</strong> · inputs, chips</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 16px; background: #262320"></div><span style="font-size: 13px"><strong>md 16</strong> · Android button</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 22px; background: #262320"></div><span style="font-size: 13px"><strong>lg 22</strong> · grouped panel</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 28px; background: #262320"></div><span style="font-size: 13px"><strong>xl 28</strong> · sheet, hero panel</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 80px; border-radius: 40px; background: #262320"></div><span style="font-size: 13px"><strong>full</strong> · iOS button, pill</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2">
+          <svg width="100%" height="80" viewBox="0 0 260 80" preserveAspectRatio="none"><polygon points="14,0 246,0 260,14 260,66 246,80 14,80 0,66 0,14" fill="#0F0D0B" stroke="#FF6B3D" stroke-width="1.5"></polygon></svg>
+          <span style="font-size: 13px"><strong>card cut 22 / frame 14</strong> · the one non-round shape: cards only</span>
+        </div>
+      </div>
+      <span style="font-size: 14px; color: #A39C94; line-height: 1.5">Android buttons morph md 16 → full on press (M3 Expressive shape motion); iOS keeps the capsule.</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">ELEVATION · tone on the table, shadow on cards</span>
+      <div style="position: relative; height: 230px; border-radius: 22px; background: #121110; border: 1px solid #34302C; overflow: hidden">
+        <div style="position: absolute; left: 20px; top: 20px; width: 210px; height: 120px; border-radius: 22px; background: #1C1A18; padding: 14px; box-sizing: border-box; font-size: 13px">level 1 · surface<br><span style="color: #A39C94">panels, rows</span></div>
+        <div style="position: absolute; left: 60px; top: 100px; width: 230px; height: 150px; border-radius: 28px 28px 0 0; background: #262320; padding: 14px; box-sizing: border-box; font-size: 13px">level 2 · surface-2<br><span style="color: #A39C94">sheets, menus, over 60% scrim</span></div>
+        <div style="position: absolute; right: 50px; top: 30px; width: 120px; height: 168px; transform: rotate(-4deg); filter: drop-shadow(0 24px 40px rgba(0,0,0,0.55))">
+          <svg width="120" height="168" viewBox="0 0 120 168"><polygon points="10,0 110,0 120,10 120,158 110,168 10,168 0,158 0,10" fill="#F3EDE2"></polygon></svg>
+          <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; color: #1A1714; font-size: 12px; font-weight: 700; padding: 0 10px">shadow.card<br>0 24 40 / 55%</span>
+        </div>
+      </div>
+      <span style="font-size: 14px; color: #A39C94; line-height: 1.5">Light theme: card shadow 0 18 32 at 22% of n950 ink. Glass (iOS 26) is native chrome only — tab bar, nav bar, toolbar, floating buttons — never a content surface.</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">GAME GLYPHS · custom, Shared (Compose)</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="22" height="30" viewBox="0 0 56 76" style="color: #6E9BFF"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg><span style="font-size: 13px">Citizen</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="22" height="30" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg><span style="font-size: 13px">Spy</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="22" height="30" viewBox="0 0 56 76" fill="none" stroke="#8F8880" stroke-width="5"><polygon points="28,4 52,38 28,72 4,38"></polygon><path d="M6 70L50 6"></path></svg><span style="font-size: 13px">Eliminated</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <span style="width: 26px; height: 26px; border-radius: 13px; background: #F3EDE2; color: #121110; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center">D</span><span style="font-size: 13px">Host (dealer)</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <span style="width: 20px; height: 28px; border-radius: 4px; background-color: #2A221C; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.4) 0 1px, transparent 1px 5px)"></span><span style="font-size: 13px">Hidden role</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4CC38A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg><span style="font-size: 13px">Has voted</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F5B83D" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"><circle cx="12" cy="12" r="9"></circle></svg><span style="font-size: 13px">Dropped</span></div>
+        <div style="border-radius: 16px; background: #1C1A18; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F3EDE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span style="font-size: 13px">Timer</span></div>
+      </div>
+      <span style="font-size: 14px; color: #A39C94; line-height: 1.5">System actions use SF Symbols in native iOS chrome and Material Symbols Rounded (weight 500) on Android; shared Compose icons are drawn to match: 24 grid, 2 pt stroke, round caps. No emoji anywhere.</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      ['space.0_5', 2, 'hairline offsets'], ['space.1', 4, 'icon ↔ label'], ['space.2', 8, 'chip gaps'],
+      ['space.3', 12, 'row inner'], ['space.4', 16, 'panel padding'], ['space.5', 20, 'screen gutter'],
+      ['space.6', 24, 'between groups'], ['space.8', 32, 'section gap'], ['space.10', 40, 'hero spacing'], ['space.14', 56, 'top of reveal']
+    ];
+    return { space: rows.map(function (r) { return { name: r[0], v: r[1], w: (r[1] * 4) + 'px', use: r[2] }; }) };
+  }
+}
+</script>
+</body>
+</html>

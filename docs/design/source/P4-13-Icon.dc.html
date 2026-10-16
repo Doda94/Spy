@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>P3 13 App icon and splash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1500px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 44px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P3 · 13 · APP ICON &amp; SPLASH</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">The icon is the spy card.</h1>
+    <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #C9C2B9; max-width: 1000px">A dark cut-corner card, tilted as if just dealt, with the split diamond. Three flat layers — background, card, glyph — so iOS can float them in Liquid Glass and Android can separate foreground from background. No text, no trench coat.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">iOS 26 · LAYERED ICON (Icon Composer) · Native</span>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px">
+      <sc-for list="{{ ios }}" as="i" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px">
+          <div style="width: 220px; height: 220px; border-radius: 28px; background: {{ i.stage }}; display: flex; align-items: center; justify-content: center">
+            <div style="position: relative; width: 160px; height: 160px; border-radius: 36px; overflow: hidden; background: {{ i.bg }}; box-shadow: {{ i.shadow }}">
+              <div style="position: absolute; left: 44px; top: 22px; width: 72px; height: 116px; transform: rotate(-9deg)">
+                <svg width="72" height="116" viewBox="0 0 72 116" style="position: absolute; inset: 0"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="{{ i.card }}" stroke="{{ i.cardStroke }}" stroke-width="2"></polygon></svg>
+                <svg width="30" height="42" viewBox="0 0 56 76" style="position: absolute; left: 21px; top: 37px"><polygon points="25,0 0,36 25,72" fill="{{ i.glyph }}"></polygon><polygon points="31,4 56,40 31,76" fill="{{ i.glyph }}"></polygon></svg>
+              </div>
+              <div style="position: absolute; inset: 0; border-radius: 36px; box-shadow: {{ i.rim }}"></div>
+            </div>
+          </div>
+          <span style="font-size: 16px; font-weight: 700">{{ i.name }}</span>
+          <span style="font-size: 13px; color: #A39C94; text-align: center; line-height: 1.4">{{ i.note }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">ANDROID · ADAPTIVE ICON 108 dp · Native</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="position: relative; width: 140px; height: 140px; background: #FF6B3D; box-shadow: 0 0 0 1px #34302C">
+            <span style="position: absolute; left: 23px; top: 23px; width: 94px; height: 94px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(26,9,5,0.35)"></span>
+          </div>
+          <span style="font-size: 14px; font-weight: 700">Background</span><span style="font-size: 12px; color: #A39C94">#FF6B3D flat</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="position: relative; width: 140px; height: 140px; background-image: repeating-conic-gradient(#262320 0 25%, #1C1A18 0 50%); background-size: 14px 14px; box-shadow: 0 0 0 1px #34302C">
+            <div style="position: absolute; left: 43px; top: 30px; width: 54px; height: 80px; transform: rotate(-9deg)"><svg width="54" height="80" viewBox="0 0 72 116"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="#0F0D0B" stroke="#3A322B" stroke-width="2"></polygon><g transform="translate(21 37)"><polygon points="13.4,0 0,19.3 13.4,38.6" fill="#FF6B3D"></polygon><polygon points="16.6,2.1 30,21.4 16.6,40.7" fill="#FF6B3D"></polygon></g></svg></div>
+            <span style="position: absolute; left: 23px; top: 23px; width: 94px; height: 94px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(243,237,226,0.4)"></span>
+          </div>
+          <span style="font-size: 14px; font-weight: 700">Foreground</span><span style="font-size: 12px; color: #A39C94">inside 72 dp safe zone</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; overflow: hidden; background: #FF6B3D">
+            <div style="position: absolute; left: 43px; top: 30px; width: 54px; height: 80px; transform: rotate(-9deg)"><svg width="54" height="80" viewBox="0 0 72 116"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="#0F0D0B" stroke="#3A322B" stroke-width="2"></polygon><g transform="translate(21 37)"><polygon points="13.4,0 0,19.3 13.4,38.6" fill="#FF6B3D"></polygon><polygon points="16.6,2.1 30,21.4 16.6,40.7" fill="#FF6B3D"></polygon></g></svg></div>
+          </div>
+          <span style="font-size: 14px; font-weight: 700">Circle mask</span><span style="font-size: 12px; color: #A39C94">launcher shape varies</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+          <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; overflow: hidden; background: #2F3A33">
+            <div style="position: absolute; left: 43px; top: 30px; width: 54px; height: 80px; transform: rotate(-9deg)"><svg width="54" height="80" viewBox="0 0 72 116"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="none" stroke="#C9E4D2" stroke-width="5"></polygon><g transform="translate(21 37)"><polygon points="13.4,0 0,19.3 13.4,38.6" fill="#C9E4D2"></polygon><polygon points="16.6,2.1 30,21.4 16.6,40.7" fill="#C9E4D2"></polygon></g></svg></div>
+          </div>
+          <span style="font-size: 14px; font-weight: 700">Themed (monochrome)</span><span style="font-size: 12px; color: #A39C94">outline card + glyph, system tint</span>
+        </div>
+      </div>
+      <span style="font-size: 14px; line-height: 1.5; color: #A39C94">The app UI keeps its fixed brand colours; only the launcher icon follows the user's themed-icon setting, which is the system's job, not ours.</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SPLASH · follows system theme</span>
+      <div style="display: flex; gap: 20px">
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center">
+          <div style="position: relative; width: 200px; height: 420px; border-radius: 30px; background: #121110; box-shadow: 0 0 0 1.5px #34302C; display: flex; align-items: center; justify-content: center">
+            <div style="width: 66px; height: 100px; transform: rotate(-9deg)"><svg width="66" height="100" viewBox="0 0 72 116"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="#0F0D0B" stroke="#4A443F" stroke-width="2"></polygon><g transform="translate(21 37)"><polygon points="13.4,0 0,19.3 13.4,38.6" fill="#FF6B3D"></polygon><polygon points="16.6,2.1 30,21.4 16.6,40.7" fill="#FF6B3D"></polygon></g></svg></div>
+          </div>
+          <span style="font-size: 13px; color: #A39C94">iOS launch · dark</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center">
+          <div style="position: relative; width: 200px; height: 420px; border-radius: 30px; background: #F6F2EA; box-shadow: 0 0 0 1.5px #DDD5C8; display: flex; align-items: center; justify-content: center">
+            <div style="width: 110px; height: 110px; border-radius: 55px; background: #FF6B3D; display: flex; align-items: center; justify-content: center"><div style="width: 50px; height: 76px; transform: rotate(-9deg)"><svg width="50" height="76" viewBox="0 0 72 116"><polygon points="8,0 64,0 72,8 72,108 64,116 8,116 0,108 0,8" fill="#0F0D0B"></polygon><g transform="translate(21 37)"><polygon points="13.4,0 0,19.3 13.4,38.6" fill="#FF6B3D"></polygon><polygon points="16.6,2.1 30,21.4 16.6,40.7" fill="#FF6B3D"></polygon></g></svg></div></div>
+          </div>
+          <span style="font-size: 13px; color: #A39C94">Android SplashScreen · light</span>
+        </div>
+      </div>
+      <span style="font-size: 14px; line-height: 1.5; color: #A39C94">iOS: static storyboard, no text. Android 12+: SplashScreen API, icon in the circle, the card does one 300 ms flip as the exit animation, then the table deals in.</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      ios: [
+        { name: 'Default', note: 'vermilion field, dark card', stage: '#DDD5C8', bg: '#FF6B3D', card: '#0F0D0B', cardStroke: '#3A322B', glyph: '#FF6B3D', shadow: '0 10px 24px rgba(26,23,20,0.25)', rim: 'inset 0 1px 0 rgba(255,255,255,0.35)' },
+        { name: 'Dark', note: 'charcoal field, glyph stays vermilion', stage: '#1C1A18', bg: '#1E1B19', card: '#0F0D0B', cardStroke: '#FF6B3D', glyph: '#FF6B3D', shadow: '0 10px 24px rgba(0,0,0,0.5)', rim: 'inset 0 1px 0 rgba(255,255,255,0.12)' },
+        { name: 'Tinted', note: 'system tint over greyscale layers', stage: '#2B3340', bg: '#3D4757', card: '#1E242D', cardStroke: '#8FA3BF', glyph: '#C7D4E8', shadow: '0 10px 24px rgba(0,0,0,0.4)', rim: 'inset 0 1px 0 rgba(255,255,255,0.15)' },
+        { name: 'Clear · light', note: 'Liquid Glass; card and glyph float', stage: '#C9C2B9', bg: 'rgba(255,255,255,0.35)', card: 'rgba(255,255,255,0.55)', cardStroke: 'rgba(255,255,255,0.9)', glyph: 'rgba(26,23,20,0.75)', shadow: '0 10px 24px rgba(26,23,20,0.2)', rim: 'inset 0 0 0 1px rgba(255,255,255,0.7)' },
+        { name: 'Clear · dark', note: 'same layers, dark glass', stage: '#262320', bg: 'rgba(255,255,255,0.08)', card: 'rgba(255,255,255,0.14)', cardStroke: 'rgba(255,255,255,0.4)', glyph: 'rgba(243,237,226,0.9)', shadow: '0 10px 24px rgba(0,0,0,0.5)', rim: 'inset 0 0 0 1px rgba(255,255,255,0.22)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

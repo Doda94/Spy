@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>03 Colour — Špijun design language</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1820px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 52px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">03 · COLOUR</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Warm neutrals. One loud colour.</h1>
+    <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #C9C2B9; max-width: 980px">The table is a warm grey ramp (brand hue 35°, chroma ≈ 2). Vermilion is the brand and means <strong style="color: #F3EDE2">spy</strong>; blue means <strong style="color: #F3EDE2">citizen</strong>. Orange vs blue survives every common colour-vision deficiency, and every role colour ships with its suit glyph. Material You wallpaper colour is switched off.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">BRAND · SEED</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+        <div style="border-radius: 20px; background: #FF6B3D; color: #1A0905; height: 200px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <svg aria-hidden="true" width="34" height="46" viewBox="0 0 56 76"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 22px; font-weight: 800">Vermilion · dark</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px">#FF6B3D · seed · spy</span></div>
+        </div>
+        <div style="border-radius: 20px; background: #C2410C; color: #FFFFFF; height: 200px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+          <svg aria-hidden="true" width="34" height="46" viewBox="0 0 56 76"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 22px; font-weight: 800">Vermilion · light</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px">#C2410C · 5.2:1 on white</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">CARD FACES · SAME IN BOTH THEMES</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="height: 150px; border-radius: 12px; background: #0F0D0B; border: 1.5px solid #3A322B; display: flex; align-items: center; justify-content: center; color: #FF6B3D"><svg aria-hidden="true" width="28" height="38" viewBox="0 0 56 76"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg></div>
+          <span style="font-size: 15px; font-weight: 700">Spy face</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">#0F0D0B</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="height: 150px; border-radius: 12px; background: #F3EDE2; display: flex; align-items: center; justify-content: center; color: #1F3FA8"><svg aria-hidden="true" width="28" height="38" viewBox="0 0 56 76"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg></div>
+          <span style="font-size: 15px; font-weight: 700">Citizen face</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">#F3EDE2 · ink #1F3FA8</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="height: 150px; border-radius: 12px; background-color: #2A221C; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px)"></div>
+          <span style="font-size: 15px; font-weight: 700">Card back</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">#2A221C + lattice 22%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">NEUTRAL RAMP · n0 → n1000</span>
+    <div style="display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: 0; border-radius: 16px; overflow: hidden; border: 1px solid #34302C">
+      <sc-for list="{{ ramp }}" as="s" hint-placeholder-count="15">
+        <div style="height: 120px; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; background: {{ s.hex }}; color: {{ s.fg }}">
+          <span style="font-size: 13px; font-weight: 700">{{ s.name }}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px">{{ s.hex }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <div style="border-radius: 24px; background: #121110; border: 1px solid #34302C; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 20px; font-weight: 800">Dark · default</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #121110; border: 1px solid #34302C"></div><span style="font-size: 13px">bg · n50</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #1C1A18"></div><span style="font-size: 13px">surface · n100</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #262320"></div><span style="font-size: 13px">surface-2 · n150</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #34302C"></div><span style="font-size: 13px">line · n200</span></div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center">
+        <span style="height: 48px; padding: 0 22px; border-radius: 24px; background: #F3EDE2; color: #121110; font-weight: 700; display: flex; align-items: center">Primary · 16.2:1</span>
+        <span style="height: 48px; padding: 0 22px; border-radius: 24px; background: #262320; color: #F3EDE2; font-weight: 700; display: flex; align-items: center">Secondary · 13.4:1</span>
+      </div>
+    </div>
+    <div style="border-radius: 24px; background: #F6F2EA; color: #1A1714; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 20px; font-weight: 800">Light</span>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #F6F2EA; border: 1px solid #DDD5C8"></div><span style="font-size: 13px">bg · n950</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #FFFFFF"></div><span style="font-size: 13px">surface · n1000</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #EEE8DE"></div><span style="font-size: 13px">surface-2 · n850</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 64px; border-radius: 12px; background: #DDD5C8"></div><span style="font-size: 13px">line · n800</span></div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center">
+        <span style="height: 48px; padding: 0 22px; border-radius: 24px; background: #1A1714; color: #F3EDE2; font-weight: 700; display: flex; align-items: center">Primary · 15.3:1</span>
+        <span style="height: 48px; padding: 0 22px; border-radius: 24px; background: #EEE8DE; color: #1A1714; font-weight: 700; display: flex; align-items: center">Secondary</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">SEMANTIC ROLES · contrast on bg (AA body ≥ 4.5, large / UI ≥ 3)</span>
+    <div style="display: grid; grid-template-columns: 200px 1fr 1fr 1.6fr; gap: 0; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Role</span>
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Dark</span>
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Light</span>
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Use</span>
+      <sc-for list="{{ roles }}" as="r" hint-placeholder-count="8">
+        <span style="padding: 14px 18px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 600">{{ r.name }}</span>
+        <span style="padding: 10px 18px; border-top: 1px solid #34302C; display: flex; align-items: center; gap: 12px">
+          <span style="width: 28px; height: 28px; border-radius: 8px; background: {{ r.dark }}"></span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: {{ r.dark }}">{{ r.dark }}</span>
+          <span style="font-size: 14px; color: #A39C94">{{ r.dc }}</span>
+        </span>
+        <span style="padding: 10px 18px; border-top: 1px solid #34302C; background: #F6F2EA; display: flex; align-items: center; gap: 12px">
+          <span style="width: 28px; height: 28px; border-radius: 8px; background: {{ r.light }}"></span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: {{ r.light }}">{{ r.light }}</span>
+          <span style="font-size: 14px; color: #6B645C">{{ r.lc }}</span>
+        </span>
+        <span style="padding: 14px 18px; border-top: 1px solid #34302C; font-size: 15px; color: #C9C2B9">{{ r.use }}</span>
+      </sc-for>
+    </div>
+    <span style="font-size: 14px; color: #A39C94">Fills with text: spy fill #FF6B3D + ink #1A0905 6.8:1 · danger fill #C42B3A + white 5.6:1 · warning fill #F5B83D + ink #1A1206 10.4:1 · on cards: ink on ivory 15.3:1, muted on ivory 5.0:1, ivory on spy face 16.7:1.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ramp = [
+      ['n0','#0F0D0B'],['n50','#121110'],['n100','#1C1A18'],['n150','#262320'],['n200','#34302C'],
+      ['n300','#4A443F'],['n400','#6B645C'],['n500','#8F8880'],['n600','#A39C94'],['n700','#C9C2B9'],
+      ['n800','#DDD5C8'],['n850','#EEE8DE'],['n900','#F3EDE2'],['n950','#F6F2EA'],['n1000','#FFFFFF']
+    ].map(function (p, i) { return { name: p[0], hex: p[1], fg: i < 7 ? '#F3EDE2' : '#1A1714' }; });
+    const roles = [
+      { name: 'text', dark: '#F3EDE2', dc: '16.2', light: '#1A1714', lc: '16.0', use: 'Primary text and icons' },
+      { name: 'text-muted', dark: '#A39C94', dc: '6.9', light: '#6B645C', lc: '5.2', use: 'Labels, counts, hints' },
+      { name: 'eliminated', dark: '#8F8880', dc: '5.4', light: '#716A62', lc: '4.8', use: 'Spectators — always with strikethrough and hollow glyph' },
+      { name: 'spy', dark: '#FF6B3D', dc: '6.7', light: '#C2410C', lc: '4.6', use: 'Spy role and brand mark — always with split glyph' },
+      { name: 'citizen', dark: '#6E9BFF', dc: '7.0', light: '#2F5BD8', lc: '5.2', use: 'Citizen role — always with whole glyph' },
+      { name: 'success', dark: '#4CC38A', dc: '8.5', light: '#1E7A4F', lc: '4.8', use: 'Joined, vote counted, imported' },
+      { name: 'warning', dark: '#F5B83D', dc: '10.6', light: '#8A5A00', lc: '5.3', use: 'Time almost up, reconnecting' },
+      { name: 'danger', dark: '#FF6B78', dc: '6.9', light: '#C42B3A', lc: '5.0', use: 'Delete, remove player, end game — never on a role' }
+    ];
+    return { ramp: ramp, roles: roles };
+  }
+}
+</script>
+</body>
+</html>

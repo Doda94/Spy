@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>01 Concept — Špijun design language</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 48px">
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">01 · CONCEPT</span>
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 80px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Mirni stol, glasne karte.</h1>
+      <span style="font-size: 24px; color: #A39C94">A calm table, loud cards.</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px">
+    <p style="margin: 0; font-size: 19px; line-height: 1.5; grid-column: span 2">The app is the <strong>table</strong>: quiet, neutral, legible and out of the way. Menus, setup, lobby, dictionaries, voting and settings all live here. The only things allowed to be loud are the <strong>cards</strong> — your role, an elimination, the final reveal. The mischief lives in the cards, never in the chrome.</p>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 13px; font-weight: 700; color: #A39C94; letter-spacing: 0.08em">PERSONALITY</span>
+      <span style="font-size: 19px; line-height: 1.45"><strong>Confident</strong> — big type, one decisive action per screen.</span>
+      <span style="font-size: 19px; line-height: 1.45"><strong>Mischievous</strong> — the spy card <em>is</em> the brand.</span>
+      <span style="font-size: 19px; line-height: 1.45"><strong>Discreet</strong> — a secret only ever lives on a card face.</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <div style="border-radius: 28px; background: #1C1A18; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-size: 28px; font-weight: 800">Table layer</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">from D · Klasik</span>
+      </div>
+      <span style="font-size: 17px; line-height: 1.5; color: #C9C2B9">Home · setup · lobby · join · round &amp; discussion · voting · round result · dictionaries · import/export · settings</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <span style="padding: 6px 12px; border-radius: 8px; background: #262320; font-size: 14px">Warm-neutral ramp</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #262320; font-size: 14px">Hanken Grotesk</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #262320; font-size: 14px">Ivory primary button</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #262320; font-size: 14px">28 px panels</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #262320; font-size: 14px">No shadows</span>
+      </div>
+    </div>
+    <div style="border-radius: 28px; background: #0F0D0B; border: 1.5px solid #34302C; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; color: #FF6B3D">Card layer</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">from C · Karta</span>
+      </div>
+      <span style="font-size: 17px; line-height: 1.5; color: #C9C2B9">Role reveal · elimination reveal · game over · app icon · splash</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <span style="padding: 6px 12px; border-radius: 8px; background: #2A221C; font-size: 14px">Card faces</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #2A221C; font-size: 14px">Bricolage Grotesque</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #2A221C; font-size: 14px">Suit glyphs</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #2A221C; font-size: 14px">Deal &amp; flip motion</span>
+        <span style="padding: 6px 12px; border-radius: 8px; background: #2A221C; font-size: 14px">Haptic thuds</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; color: #A39C94; letter-spacing: 0.08em">FOUR RULES</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="padding: 18px 20px; border-radius: 16px; border: 1px solid #34302C; font-size: 17px; line-height: 1.4"><strong>Vermilion means spy.</strong> Nowhere else, except the brand mark.</div>
+        <div style="padding: 18px 20px; border-radius: 16px; border: 1px solid #34302C; font-size: 17px; line-height: 1.4"><strong>One primary action</strong> per screen, always at the thumb.</div>
+        <div style="padding: 18px 20px; border-radius: 16px; border: 1px solid #34302C; font-size: 17px; line-height: 1.4"><strong>Only cards cast shadows.</strong> The table is flat.</div>
+        <div style="padding: 18px 20px; border-radius: 16px; border: 1px solid #34302C; font-size: 17px; line-height: 1.4"><strong>Secrets live on card faces</strong> — never in titles, toasts or the app switcher.</div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; color: #A39C94; letter-spacing: 0.08em">REJECTED</span>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.45; color: #C9C2B9">
+        <span><strong style="color: #F3EDE2">A · Cenzura</strong> — condensed caps read badly in a dim, noisy room; cold; drifts toward spy-file cliché.</span>
+        <span><strong style="color: #F3EDE2">B · Pomrčina</strong> — glow breaks down in the light theme; the wide face overflows long Croatian words; doesn't extend to lists.</span>
+        <span><strong style="color: #F3EDE2">C alone</strong> — cards everywhere turns settings and dictionaries into a casino.</span>
+        <span><strong style="color: #F3EDE2">D alone</strong> — correct, but anonymous: nothing says Špijun.</span>
+        <span><strong style="color: #F3EDE2">Kept from today's app</strong> — the flow, the copy, progress dots. Dropped: indigo, gradient title, emoji.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

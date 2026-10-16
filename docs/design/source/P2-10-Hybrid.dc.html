@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>02 The hybrid in practice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px 80px; display: flex; flex-direction: column; gap: 40px">
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">02 · THE HYBRID IN PRACTICE</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em">Same table, three moments.</h1>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; gap: 40px">
+
+    <!-- SETUP · table layer · iOS -->
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="width: 370px; height: 800px; box-sizing: border-box; border-radius: 48px; border: 1.5px solid #34302C; overflow: hidden; background: #121110; display: flex; flex-direction: column; padding: 56px 18px 24px; gap: 14px">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <button aria-label="Natrag" style="width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #F3EDE2; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(24px)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+          </button>
+        </div>
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Postavke igre</h2>
+
+        <div style="border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 12px 18px">
+            <span style="font-size: 17px; font-weight: 600">Igrači</span>
+            <div style="display: flex; align-items: center; gap: 4px">
+              <button aria-label="Manje igrača" style="width: 44px; height: 44px; border: none; border-radius: 22px; background: #262320; color: #F3EDE2; font-size: 22px">−</button>
+              <span style="width: 36px; text-align: center; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums">8</span>
+              <button aria-label="Više igrača" style="width: 44px; height: 44px; border: none; border-radius: 22px; background: #262320; color: #F3EDE2; font-size: 22px">+</button>
+            </div>
+          </div>
+          <div style="height: 1px; background: #34302C; margin-left: 18px"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 12px 18px">
+            <div style="display: flex; flex-direction: column">
+              <span style="font-size: 17px; font-weight: 600">Špijuni</span>
+              <span style="font-size: 13px; color: #A39C94">najviše 7</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px">
+              <button aria-label="Manje špijuna" style="width: 44px; height: 44px; border: none; border-radius: 22px; background: #262320; color: #F3EDE2; font-size: 22px">−</button>
+              <span style="width: 36px; text-align: center; font-size: 22px; font-weight: 700">2</span>
+              <button aria-label="Više špijuna" style="width: 44px; height: 44px; border: none; border-radius: 22px; background: #262320; color: #F3EDE2; font-size: 22px">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; padding: 0 6px">
+            <span style="font-size: 13px; font-weight: 700; color: #A39C94">KATEGORIJE · HRVATSKI</span>
+            <span style="font-size: 13px; font-weight: 600; color: #F3EDE2">Odaberi sve</span>
+          </div>
+          <div style="border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 0 18px; height: 52px">
+              <span style="width: 22px; height: 22px; border-radius: 7px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+              <span style="flex: 1; font-size: 17px">Mjesta</span><span style="font-size: 15px; color: #A39C94">22</span>
+            </div>
+            <div style="height: 1px; background: #34302C; margin-left: 52px"></div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 0 18px; height: 52px">
+              <span style="width: 22px; height: 22px; border-radius: 7px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+              <span style="flex: 1; font-size: 17px">Zanimanja</span><span style="font-size: 15px; color: #A39C94">14</span>
+            </div>
+            <div style="height: 1px; background: #34302C; margin-left: 52px"></div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 0 18px; height: 52px">
+              <span style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 7px; border: 2px solid #6B645C"></span>
+              <span style="flex: 1; font-size: 17px">Predmeti</span><span style="font-size: 15px; color: #A39C94">14</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 13px; font-weight: 700; color: #A39C94; padding: 0 6px">TIMER PO RUNDI</span>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+            <span style="height: 44px; border-radius: 22px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">Bez</span>
+            <span style="height: 44px; border-radius: 22px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">3 min</span>
+            <span style="height: 44px; border-radius: 22px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">5 min</span>
+            <span style="height: 44px; border-radius: 22px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">8 min</span>
+          </div>
+        </div>
+
+        <div style="flex: 1"></div>
+        <span style="text-align: center; font-size: 14px; color: #A39C94">36 riječi u odabiru</span>
+        <button style="height: 56px; border: none; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">Započni igru</button>
+      </div>
+      <span style="font-size: 15px; color: #A39C94"><strong style="color: #F3EDE2">Table</strong> · setup, iOS — grouped panels, one ivory action</span>
+    </div>
+
+    <!-- REVEAL · card layer · Android citizen -->
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="width: 370px; height: 800px; box-sizing: border-box; border-radius: 36px; border: 1.5px solid #34302C; overflow: hidden; background: #121110; display: flex; flex-direction: column; padding: 36px 0 20px">
+        <div style="height: 60px; display: flex; align-items: center; gap: 4px; padding: 0 12px 0 4px">
+          <button aria-label="Prekini igru" style="width: 48px; height: 48px; border: none; background: transparent; color: #F3EDE2; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+          <div style="display: flex; flex-direction: column"><span style="font-size: 19px; font-weight: 600">Igrač 4 od 8</span><span style="font-size: 13px; color: #A39C94">Marta</span></div>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center">
+          <div style="position: relative; width: 290px; height: 400px; transform: rotate(1.5deg); filter: drop-shadow(0 22px 36px rgba(0,0,0,0.6))">
+            <svg width="290" height="400" viewBox="0 0 290 400" style="position: absolute; inset: 0"><polygon points="20,0 270,0 290,20 290,380 270,400 20,400 0,380 0,20" fill="#F3EDE2"></polygon><polygon points="24,11 266,11 279,24 279,376 266,389 24,389 11,376 11,24" fill="none" stroke="#1F3FA8" stroke-opacity="0.45" stroke-width="1.5"></polygon></svg>
+            <div aria-hidden="true" style="position: absolute; left: 22px; top: 22px; color: #1F3FA8"><svg width="16" height="22" viewBox="0 0 56 76"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg></div>
+            <div aria-hidden="true" style="position: absolute; right: 22px; bottom: 22px; color: #1F3FA8"><svg width="16" height="22" viewBox="0 0 56 76"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg></div>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 0 30px; color: #1A1714">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: #6B645C">TAJNA RIJEČ</span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Svemirska postaja</span>
+              <div style="width: 160px; border-top: 1.5px dashed #C9C2B9"></div>
+              <span style="font-size: 15px; color: #6B645C">Kategorija · <strong style="color: #1A1714">Mjesta</strong></span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 7px; padding-bottom: 18px">
+          <span style="width: 12px; height: 17px; border-radius: 3px; background: #F3EDE2"></span><span style="width: 12px; height: 17px; border-radius: 3px; background: #F3EDE2"></span><span style="width: 12px; height: 17px; border-radius: 3px; background: #F3EDE2"></span><span style="width: 12px; height: 17px; border-radius: 3px; background: #F3EDE2; transform: translateY(-3px) rotate(-6deg); box-shadow: 0 0 0 2px #121110, 0 0 0 4px #F3EDE2"></span><span style="width: 12px; height: 17px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span><span style="width: 12px; height: 17px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span><span style="width: 12px; height: 17px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span><span style="width: 12px; height: 17px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span>
+        </div>
+        <div style="padding: 0 20px">
+          <button style="width: 100%; height: 64px; border: none; border-radius: 16px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">Okreni i dodaj dalje</button>
+        </div>
+      </div>
+      <span style="font-size: 15px; color: #A39C94"><strong style="color: #F3EDE2">Card</strong> · citizen reveal, Android — the word wraps on two lines</span>
+    </div>
+
+    <!-- GAME OVER · both · iOS -->
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="width: 370px; height: 800px; box-sizing: border-box; border-radius: 48px; border: 1.5px solid #34302C; overflow: hidden; background: #121110; display: flex; flex-direction: column; padding: 60px 18px 24px; gap: 18px">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 4px">
+          <span style="font-size: 14px; font-weight: 600; color: #A39C94">Kraj igre · 3 runde</span>
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 38px; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em">Građani pobjeđuju</h2>
+        </div>
+        <div style="position: relative; height: 230px">
+          <div style="position: absolute; left: 14px; top: 26px; width: 118px; height: 166px; transform: rotate(-10deg); filter: drop-shadow(0 12px 20px rgba(0,0,0,0.6))">
+            <svg width="118" height="166" viewBox="0 0 118 166" style="position: absolute; inset: 0"><polygon points="10,0 108,0 118,10 118,156 108,166 10,166 0,156 0,10" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon></svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+              <svg aria-hidden="true" width="22" height="30" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">Luka</span>
+              <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #FF6B3D">ŠPIJUN</span>
+            </div>
+          </div>
+          <div style="position: absolute; left: 96px; top: 6px; width: 118px; height: 166px; transform: rotate(-2deg); filter: drop-shadow(0 12px 20px rgba(0,0,0,0.6))">
+            <svg width="118" height="166" viewBox="0 0 118 166" style="position: absolute; inset: 0"><polygon points="10,0 108,0 118,10 118,156 108,166 10,166 0,156 0,10" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon></svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+              <svg aria-hidden="true" width="22" height="30" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800">Ana</span>
+              <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #FF6B3D">ŠPIJUN</span>
+            </div>
+          </div>
+          <div style="position: absolute; right: 8px; top: 30px; width: 130px; height: 182px; transform: rotate(7deg); filter: drop-shadow(0 14px 22px rgba(0,0,0,0.6))">
+            <svg width="130" height="182" viewBox="0 0 130 182" style="position: absolute; inset: 0"><polygon points="11,0 119,0 130,11 130,171 119,182 11,182 0,171 0,11" fill="#F3EDE2"></polygon></svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; text-align: center; color: #1A1714">
+              <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: #6B645C">TAJNA RIJEČ</span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; line-height: 1.02; font-weight: 800">Svemirska postaja</span>
+            </div>
+          </div>
+        </div>
+        <div style="border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94; width: 22px">R1</span>
+            <span style="flex: 1; font-size: 16px">Marko</span>
+            <span style="font-size: 13px; font-weight: 600; color: #6E9BFF; display: flex; align-items: center; gap: 5px"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>građanin</span>
+          </div>
+          <div style="height: 1px; background: #34302C; margin-left: 50px"></div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94; width: 22px">R2</span>
+            <span style="flex: 1; font-size: 16px">Ana</span>
+            <span style="font-size: 13px; font-weight: 600; color: #FF6B3D; display: flex; align-items: center; gap: 5px"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>špijun</span>
+          </div>
+          <div style="height: 1px; background: #34302C; margin-left: 50px"></div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94; width: 22px">R3</span>
+            <span style="flex: 1; font-size: 16px">Luka</span>
+            <span style="font-size: 13px; font-weight: 600; color: #FF6B3D; display: flex; align-items: center; gap: 5px"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>špijun</span>
+          </div>
+        </div>
+        <div style="flex: 1"></div>
+        <button style="height: 56px; border: none; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">Igraj ponovno</button>
+        <button style="height: 48px; border: none; border-radius: 24px; background: transparent; color: #F3EDE2; font-size: 17px; font-weight: 600">Nova igra</button>
+      </div>
+      <span style="font-size: 15px; color: #A39C94"><strong style="color: #F3EDE2">Both</strong> · game over, iOS — cards dealt onto the table</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

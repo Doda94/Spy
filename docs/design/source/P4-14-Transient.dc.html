@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P3 14 Transient UI</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+</style>
+</helmet>
+<div style="width: 1860px; height: 1300px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 40px">
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P3 · 14</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Transient UI</h1>
+    <span style="font-size: 18px; color: #A39C94">One frame each, platforms and themes mixed. Toasts never carry secrets; destructive actions always confirm; permissions are asked in context, with a way round them.</span>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start">
+
+    <!-- TOAST · iOS dark -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="position: relative; overflow: hidden; width: 390px; height: 844px; border-radius: 48px; background: #121110; color: #F3EDE2; box-shadow: 0 0 0 1.5px #34302C">
+        <div style="position: absolute; left: 16px; right: 16px; top: 58px; height: 48px; display: flex; align-items: center"><span style="width: 48px; height: 48px; border-radius: 24px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></span><span style="flex: 1; text-align: center; font-size: 17px; font-weight: 600">Filmovi · 41</span><span style="width: 48px"></span></div>
+        <div style="position: absolute; left: 16px; right: 16px; top: 120px; border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+          <span style="height: 50px; padding: 0 18px; display: flex; align-items: center; font-size: 17px">Avatar</span><span style="height: 50px; padding: 0 18px; display: flex; align-items: center; font-size: 17px; border-top: 1px solid #34302C">Casablanca</span><span style="height: 50px; padding: 0 18px; display: flex; align-items: center; font-size: 17px; border-top: 1px solid #34302C">Gladijator</span><span style="height: 50px; padding: 0 18px; display: flex; align-items: center; font-size: 17px; border-top: 1px solid #34302C">Inception</span><span style="height: 50px; padding: 0 18px; display: flex; align-items: center; font-size: 17px; border-top: 1px solid #34302C; background: #262320">Ko to tamo peva</span>
+        </div>
+        <div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 40px; border-radius: 20px; background: #F3EDE2; color: #121110; padding: 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 32px rgba(0,0,0,0.45)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E7A4F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>
+          <span style="flex: 1; font-size: 16px; font-weight: 600">Dodano: „Ko to tamo peva“</span>
+          <button style="height: 44px; padding: 0 10px; border: none; background: transparent; color: #121110; font-size: 16px; font-weight: 800">Poništi</button>
+        </div>
+      </div>
+      <span style="font-size: 15px; font-weight: 700">Toast / snackbar</span>
+      <span style="font-size: 14px; color: #A39C94; max-width: 380px">iOS dark · 4 s, swipe away, one action max. Never during a reveal.</span>
+    </div>
+
+    <!-- SKELETON · Android light -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="position: relative; overflow: hidden; width: 412px; height: 915px; border-radius: 36px; background: #F6F2EA; color: #1A1714; box-shadow: 0 0 0 1.5px #DDD5C8">
+        <h2 style="position: absolute; left: 20px; top: 112px; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800">Rječnici</h2>
+        <div style="position: absolute; left: 16px; right: 16px; top: 170px; display: flex; flex-direction: column; gap: 10px; animation: shimmer 1.4s ease-in-out infinite">
+          <span style="width: 90px; height: 12px; border-radius: 6px; background: #E4DCCF; margin: 4px"></span>
+          <div style="border-radius: 22px; background: #FFFFFF; display: flex; flex-direction: column; padding: 4px 0">
+            <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px"><span style="width: 44px; height: 44px; border-radius: 12px; background: #EEE8DE"></span><span style="display: flex; flex-direction: column; gap: 8px"><span style="width: 120px; height: 14px; border-radius: 7px; background: #EEE8DE"></span><span style="width: 170px; height: 11px; border-radius: 6px; background: #EEE8DE"></span></span></div>
+            <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px"><span style="width: 44px; height: 44px; border-radius: 12px; background: #EEE8DE"></span><span style="display: flex; flex-direction: column; gap: 8px"><span style="width: 100px; height: 14px; border-radius: 7px; background: #EEE8DE"></span><span style="width: 150px; height: 11px; border-radius: 6px; background: #EEE8DE"></span></span></div>
+          </div>
+          <span style="width: 120px; height: 12px; border-radius: 6px; background: #E4DCCF; margin: 14px 4px 4px"></span>
+          <div style="border-radius: 22px; background: #FFFFFF; display: flex; flex-direction: column; padding: 4px 0">
+            <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px"><span style="width: 44px; height: 44px; border-radius: 12px; background: #EEE8DE"></span><span style="display: flex; flex-direction: column; gap: 8px"><span style="width: 140px; height: 14px; border-radius: 7px; background: #EEE8DE"></span><span style="width: 120px; height: 11px; border-radius: 6px; background: #EEE8DE"></span></span></div>
+          </div>
+        </div>
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; padding-bottom: 8px; box-sizing: border-box; background: #FFFFFF; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; color: #6B645C; font-size: 12px">
+          <span style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 56px; height: 32px"></span>Igraj</span>
+          <span style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #1A1714; font-weight: 700"><span style="width: 56px; height: 32px; border-radius: 16px; background: rgba(26,23,20,0.08)"></span>Rječnici</span>
+          <span style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 56px; height: 32px"></span>Postavke</span>
+        </div>
+      </div>
+      <span style="font-size: 15px; font-weight: 700">Loading skeleton</span>
+      <span style="font-size: 14px; color: #A39C94; max-width: 400px">Android light · shapes match the real rows; shows only if loading passes 300 ms; pulse, no shimmer sweep under Reduce Motion.</span>
+    </div>
+
+    <!-- DESTRUCTIVE · iOS light -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="position: relative; overflow: hidden; width: 390px; height: 844px; border-radius: 48px; background: #F6F2EA; color: #1A1714; box-shadow: 0 0 0 1.5px #DDD5C8">
+        <div style="position: absolute; left: 23px; top: 268px; width: 344px; height: 344px; border-radius: 50%; background: #E8E0D3; box-shadow: inset 0 0 0 1.5px #D6CCBD"></div>
+        <span style="position: absolute; left: 0; right: 0; top: 412px; text-align: center; font-size: 56px; font-weight: 700; font-variant-numeric: tabular-nums">3:05</span>
+        <div style="position: absolute; inset: 0; background: rgba(26,23,20,0.35)"></div>
+        <div style="position: absolute; left: 10px; right: 10px; bottom: 30px; display: flex; flex-direction: column; gap: 8px">
+          <div style="border-radius: 22px; background: rgba(255,255,255,0.92); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); overflow: hidden; display: flex; flex-direction: column">
+            <div style="padding: 16px 20px; text-align: center; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; font-weight: 700; color: #6B645C">Prekinuti igru?</span><span style="font-size: 13px; line-height: 1.4; color: #6B645C">Igra završava za sve igrače u sobi. Uloge i riječ neće se otkriti.</span></div>
+            <button style="height: 58px; border: none; border-top: 1px solid #DDD5C8; background: transparent; color: #C42B3A; font-size: 19px; font-weight: 600">Prekini igru</button>
+          </div>
+          <button style="height: 58px; border: none; border-radius: 22px; background: rgba(255,255,255,0.92); color: #1A1714; font-size: 19px; font-weight: 700">Nastavi igrati</button>
+        </div>
+      </div>
+      <span style="font-size: 15px; font-weight: 700">Destructive confirmation</span>
+      <span style="font-size: 14px; color: #A39C94; max-width: 380px">iOS light · from ✕ during a round. Android: AlertDialog with the same copy. Safe action is the big one.</span>
+    </div>
+
+    <!-- CAMERA PERMISSION · Android dark -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="position: relative; overflow: hidden; width: 412px; height: 915px; border-radius: 36px; background: #121110; color: #F3EDE2; box-shadow: 0 0 0 1.5px #34302C">
+        <div style="position: absolute; left: 16px; top: 48px; height: 48px; display: flex; align-items: center"><span style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></span></div>
+        <div style="position: absolute; left: 32px; right: 32px; top: 220px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center">
+          <span aria-hidden="true" style="width: 96px; height: 96px; border-radius: 48px; background: #1C1A18; display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#F3EDE2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; line-height: 1.1; font-weight: 800">Kamera za QR kod</span>
+          <span style="font-size: 16px; line-height: 1.45; color: #A39C94">Koristimo je samo dok skeniraš kod sobe ili rječnika. Ništa se ne snima ni ne šalje.</span>
+        </div>
+        <div style="position: absolute; left: 24px; right: 24px; bottom: 24px; display: flex; flex-direction: column; gap: 8px">
+          <button style="height: 64px; border: none; border-radius: 16px; background: #F3EDE2; color: #121110; font-size: 18px; font-weight: 700">Dopusti kameru</button>
+          <button style="height: 52px; border: none; border-radius: 26px; background: transparent; color: #F3EDE2; font-size: 17px; font-weight: 600">Upiši kod ručno</button>
+        </div>
+      </div>
+      <span style="font-size: 15px; font-weight: 700">Camera permission</span>
+      <span style="font-size: 14px; color: #A39C94; max-width: 400px">Android dark · shown before the system prompt. If denied: same screen, button becomes "Otvori postavke".</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

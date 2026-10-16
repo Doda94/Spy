@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 03 Lobby and join</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button,input{font:inherit}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes dots{0%,100%{opacity:.25}50%{opacity:1}}
+</style>
+</helmet>
+<div style="width: 1860px; height: 7729px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 03</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Lobby &amp; join</h1>
+    <span style="font-size: 18px; color: #A39C94">"Each on own phone" mode. The room card stays ivory in both themes so the QR scans across a dim room. No accounts — a nickname per room.</span>
+  </div>
+
+  <!-- a · HOST LOBBY -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">a</span><span style="font-size: 26px; font-weight: 800">Host lobby · ready</span><span style="font-size: 16px; color: #A39C94">code + QR + share, live player list, ⋯ to remove a player</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Zatvori sobu" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="flex: 1; text-align: {{ v.navAlign }}; padding-left: {{ v.navPad }}px; font-size: {{ v.navTitleSize }}px; font-weight: 600">Soba</span>
+              <button aria-label="Postavke igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg></button>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopC }}px; bottom: 132px; overflow: hidden; display: flex; flex-direction: column; gap: 18px">
+              <div style="border-radius: 28px; background: #F3EDE2; color: #1A1714; box-shadow: 0 0 0 1px {{ v.t.cardLineL }}; padding: 18px; display: flex; gap: 16px; align-items: center">
+                <div role="img" aria-label="QR kod za ulazak u sobu K7QX" style="position: relative; width: 124px; height: 124px; flex-shrink: 0; border-radius: 12px; background-color: #FFFFFF; background-image: repeating-conic-gradient(#1A1714 0 25%, transparent 0 50%); background-size: 9px 9px; box-shadow: inset 0 0 0 8px #FFFFFF">
+                  <span style="position: absolute; left: 8px; top: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                  <span style="position: absolute; right: 8px; top: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                  <span style="position: absolute; left: 8px; bottom: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                  <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B645C">KOD SOBE</span>
+                  <span style="font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: 0.1em; font-variant-numeric: tabular-nums">K7QX</span>
+                  <button style="align-self: flex-start; height: 44px; padding: 0 14px; margin-top: 6px; border: none; border-radius: 22px; background: #1A1714; color: #F3EDE2; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7"></path></svg>Podijeli</button>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0 4px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}">IGRAČI</span><span style="font-size: 13px; font-weight: 600; color: {{ v.t.muted }}; font-variant-numeric: tabular-nums">4 od 12</span></div>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 8px 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">L</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Luka <span style="font-weight: 400; color: {{ v.t.muted }}">(ti)</span></span><span style="font-size: 13px; color: {{ v.t.muted }}">Domaćin</span></div>
+                  <span aria-label="Domaćin" style="width: 26px; height: 26px; margin-right: 12px; border-radius: 13px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">D</span>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 66px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 4px 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">A</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Ana</span><span style="font-size: 13px; color: {{ v.t.ok }}; display: flex; align-items: center; gap: 5px"><span style="width: 6px; height: 6px; border-radius: 3px; background: {{ v.t.ok }}"></span>Na vezi</span></div>
+                  <button aria-label="Opcije za Anu" style="width: 48px; height: 48px; border: none; background: transparent; color: {{ v.t.muted }}; font-size: 20px; font-weight: 800">⋯</button>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 66px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 4px 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">M</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Marko</span><span style="font-size: 13px; color: {{ v.t.ok }}; display: flex; align-items: center; gap: 5px"><span style="width: 6px; height: 6px; border-radius: 3px; background: {{ v.t.ok }}"></span>Na vezi</span></div>
+                  <button aria-label="Opcije za Marka" style="width: 48px; height: 48px; border: none; background: transparent; color: {{ v.t.muted }}; font-size: 20px; font-weight: 800">⋯</button>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 66px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 4px 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">I</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Iva</span><span style="font-size: 13px; color: {{ v.t.warnText }}; display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 5px; border: 2px solid {{ v.t.off }}; border-top-color: {{ v.t.warnText }}; animation: spin 0.8s linear infinite"></span>Povezuje se…</span></div>
+                  <button aria-label="Opcije za Ivu" style="width: 48px; height: 48px; border: none; background: transparent; color: {{ v.t.muted }}; font-size: 20px; font-weight: 800">⋯</button>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px; font-size: 14px; color: {{ v.t.muted }}"><span style="flex: 1">1 špijun · 3 min · glasanje u aplikaciji · 76 riječi</span><span style="font-weight: 700; color: {{ v.t.text }}">Uredi</span></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px {{ v.bot }}px; background: {{ v.t.bg }}; box-shadow: 0 -1px 0 {{ v.t.line }}; display: flex; flex-direction: column; gap: 10px">
+              <span style="text-align: center; font-size: 14px; color: {{ v.t.muted }}">Svi su tu? Možeš krenuti.</span>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Započni igru · 4 igrača</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- b · HOST BELOW MINIMUM -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">b</span><span style="font-size: 26px; font-weight: 800">Host lobby · below minimum</span><span style="font-size: 16px; color: #A39C94">needs 3 players; empty slots invite more</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Zatvori sobu" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="flex: 1; text-align: {{ v.navAlign }}; padding-left: {{ v.navPad }}px; font-size: {{ v.navTitleSize }}px; font-weight: 600">Soba</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopC }}px; bottom: 132px; overflow: hidden; display: flex; flex-direction: column; gap: 18px">
+              <div style="border-radius: 28px; background: #F3EDE2; color: #1A1714; box-shadow: 0 0 0 1px {{ v.t.cardLineL }}; padding: 18px; display: flex; gap: 16px; align-items: center">
+                <div role="img" aria-label="QR kod za ulazak u sobu K7QX" style="position: relative; width: 124px; height: 124px; flex-shrink: 0; border-radius: 12px; background-color: #FFFFFF; background-image: repeating-conic-gradient(#1A1714 0 25%, transparent 0 50%); background-size: 9px 9px; box-shadow: inset 0 0 0 8px #FFFFFF">
+                  <span style="position: absolute; left: 8px; top: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                  <span style="position: absolute; right: 8px; top: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                  <span style="position: absolute; left: 8px; bottom: 8px; width: 30px; height: 30px; box-sizing: border-box; border: 6px solid #1A1714; background: #FFFFFF; box-shadow: inset 0 0 0 4px #FFFFFF, inset 0 0 0 12px #1A1714"></span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px">
+                  <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B645C">KOD SOBE</span>
+                  <span style="font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: 0.1em">K7QX</span>
+                  <button style="align-self: flex-start; height: 44px; padding: 0 14px; margin-top: 6px; border: none; border-radius: 22px; background: #1A1714; color: #F3EDE2; font-size: 15px; font-weight: 700">Podijeli</button>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0 4px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}">IGRAČI</span><span style="font-size: 13px; font-weight: 600; color: {{ v.t.muted }}">2 od 12</span></div>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">L</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Luka <span style="font-weight: 400; color: {{ v.t.muted }}">(ti)</span></span><span style="font-size: 13px; color: {{ v.t.muted }}">Domaćin</span></div>
+                  <span style="width: 26px; height: 26px; border-radius: 13px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">D</span>
+                </div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 66px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 60px">
+                  <span style="width: 38px; height: 38px; border-radius: 19px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">A</span>
+                  <div style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Ana</span><span style="font-size: 13px; color: {{ v.t.ok }}">Na vezi</span></div>
+                </div>
+              </div>
+              <div style="height: 60px; box-sizing: border-box; border-radius: 22px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: center; gap: 12px; padding: 0 16px; color: {{ v.t.muted }}">
+                <span style="width: 38px; height: 38px; box-sizing: border-box; border-radius: 19px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: center; justify-content: center; animation: dots 1.6s ease-in-out infinite">+</span>
+                <span style="font-size: 16px">Čeka se treći igrač…</span>
+              </div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px {{ v.bot }}px; background: {{ v.t.bg }}; box-shadow: 0 -1px 0 {{ v.t.line }}; display: flex; flex-direction: column; gap: 10px">
+              <span style="text-align: center; font-size: 14px; font-weight: 600; color: {{ v.t.warnText }}">Treba još barem 1 igrač.</span>
+              <button disabled style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.elim }}; font-size: 18px; font-weight: 700">Započni igru</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- c · GUEST WAITING -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">c</span><span style="font-size: 26px; font-weight: 800">Guest · waiting for host</span><span style="font-size: 16px; color: #A39C94">joined as Iva; read-only settings; can still invite with the code</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Napusti sobu" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="flex: 1"></span>
+              <span style="height: 40px; padding: 0 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; background: {{ v.t.surf2 }}">K7QX<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7"></path></svg></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 6px">
+              <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">U sobi si</h2>
+              <span style="font-size: 16px; color: {{ v.t.muted }}">Lukina soba · igraš kao <strong style="color: {{ v.t.text }}">Iva</strong></span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.contentTopL }}px; bottom: 120px; overflow: hidden; display: flex; flex-direction: column; gap: 18px">
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 56px"><span style="width: 36px; height: 36px; border-radius: 18px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">L</span><span style="flex: 1; font-size: 17px; font-weight: 600">Luka</span><span style="width: 26px; height: 26px; border-radius: 13px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">D</span></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 64px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 56px"><span style="width: 36px; height: 36px; border-radius: 18px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">A</span><span style="flex: 1; font-size: 17px; font-weight: 600">Ana</span></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 64px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 56px"><span style="width: 36px; height: 36px; border-radius: 18px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center; font-weight: 800">M</span><span style="flex: 1; font-size: 17px; font-weight: 600">Marko</span></div>
+                <div style="height: 1px; background: {{ v.t.line }}; margin-left: 64px"></div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 56px"><span style="width: 36px; height: 36px; border-radius: 18px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; display: flex; align-items: center; justify-content: center; font-weight: 800">I</span><span style="flex: 1; font-size: 17px; font-weight: 600">Iva <span style="font-weight: 400; color: {{ v.t.muted }}">(ti)</span></span></div>
+              </div>
+              <div style="border-radius: 22px; box-shadow: inset 0 0 0 1px {{ v.t.line }}; padding: 18px; display: flex; flex-direction: column; gap: 8px">
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}">PRAVILA OVE IGRE</span>
+                <span style="font-size: 16px; line-height: 1.5">1 špijun · timer 3 min · glasanje u aplikaciji</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding-top: 8px; font-size: 16px; color: {{ v.t.muted }}">
+                <span style="display: flex; gap: 4px"><span style="width: 7px; height: 7px; border-radius: 4px; background: {{ v.t.text }}; animation: dots 1.2s ease-in-out infinite"></span><span style="width: 7px; height: 7px; border-radius: 4px; background: {{ v.t.text }}; animation: dots 1.2s ease-in-out 0.2s infinite"></span><span style="width: 7px; height: 7px; border-radius: 4px; background: {{ v.t.text }}; animation: dots 1.2s ease-in-out 0.4s infinite"></span></span>
+                Čeka se da Luka započne igru
+              </div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px {{ v.bot }}px; display: flex; flex-direction: column">
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 18px; font-weight: 700">Napusti sobu</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- d · ENTER CODE -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">d</span><span style="font-size: 26px; font-weight: 800">Join · enter code</span><span style="font-size: 16px; color: #A39C94">keyboard opens automatically (system keyboard not drawn); paste and room links fill it in</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 22px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Uđi u sobu</h2>
+                <span style="font-size: 16px; line-height: 1.4; color: {{ v.t.muted }}">Upiši kod od 4 znaka s domaćinova ekrana.</span>
+              </div>
+              <div role="group" aria-label="Kod sobe" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+                <span style="height: 76px; border-radius: 16px; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">K</span>
+                <span style="height: 76px; border-radius: 16px; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">7</span>
+                <span style="height: 76px; box-sizing: border-box; border-radius: 16px; border: 2px solid {{ v.t.text }}; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center"><span style="width: 2px; height: 36px; background: {{ v.t.text }}; animation: blink 1s steps(1) infinite"></span></span>
+                <span style="height: 76px; border-radius: 16px; background: {{ v.t.surf }}"></span>
+              </div>
+              <button disabled style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.elim }}; font-size: 18px; font-weight: 700">Dalje</button>
+              <div style="display: flex; align-items: center; gap: 12px; color: {{ v.t.muted }}; font-size: 14px"><span style="flex: 1; height: 1px; background: {{ v.t.line }}"></span>ili<span style="flex: 1; height: 1px; background: {{ v.t.line }}"></span></div>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"></path></svg>Skeniraj QR kod</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- e · NICKNAME -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">e</span><span style="font-size: 26px; font-weight: 800">Join · nickname</span><span style="font-size: 16px; color: #A39C94">remembered on this phone for next time, never sent anywhere else</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 22px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Kako da te zovemo?</h2>
+                <span style="font-size: 16px; color: {{ v.t.muted }}">Soba K7QX · domaćin Luka · 3 igrača</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="nick" style="font-size: 13px; font-weight: 600; color: {{ v.t.text }}">Nadimak</label>
+                <input id="nick" value="Iva" style="height: 56px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 2px solid {{ v.t.text }}; background: {{ v.t.surf }}; color: {{ v.t.text }}; font-size: 19px">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; color: {{ v.t.muted }}"><span>Vide ga samo igrači u ovoj sobi.</span><span>3 / 16</span></div>
+              </div>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Uđi u sobu</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- f · NOT FOUND -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">f</span><span style="font-size: 26px; font-weight: 800">Join · room not found</span><span style="font-size: 16px; color: #A39C94">cells shake 3×, error haptic; typing again clears it</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; height: 48px; display: flex; align-items: center">
+              <button aria-label="Natrag" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ v.backPath }}"></path></svg></button>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 22px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Uđi u sobu</h2>
+                <span style="font-size: 16px; line-height: 1.4; color: {{ v.t.muted }}">Upiši kod od 4 znaka s domaćinova ekrana.</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div role="group" aria-label="Kod sobe, pogreška" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+                  <span style="height: 76px; box-sizing: border-box; border-radius: 16px; border: 2px solid {{ v.t.danger }}; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">K</span>
+                  <span style="height: 76px; box-sizing: border-box; border-radius: 16px; border: 2px solid {{ v.t.danger }}; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">7</span>
+                  <span style="height: 76px; box-sizing: border-box; border-radius: 16px; border: 2px solid {{ v.t.danger }}; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">Q</span>
+                  <span style="height: 76px; box-sizing: border-box; border-radius: 16px; border: 2px solid {{ v.t.danger }}; background: {{ v.t.surf }}; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700">Z</span>
+                </div>
+                <span role="alert" style="font-size: 15px; line-height: 1.4; color: {{ v.t.danger }}; display: flex; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg>Soba K7QZ ne postoji. Provjeri kod ili skeniraj QR.</span>
+              </div>
+              <button disabled style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.elim }}; font-size: 18px; font-weight: 700">Dalje</button>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 18px; font-weight: 700">Skeniraj QR kod</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- g · CAN'T JOIN -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">g</span><span style="font-size: 26px; font-weight: 800">Join · game started / room full</span><span style="font-size: 16px; color: #A39C94">same sheet, two messages; full: "Soba je puna · 12 od 12 igrača."</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.titleTop }}px; display: flex; flex-direction: column; gap: 6px">
+              <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ v.titleSize }}px; line-height: 1.1; font-weight: 800">Kako da te zovemo?</h2>
+            </div>
+            <div style="position: absolute; inset: 0; background: {{ v.t.scrim }}"></div>
+            <div style="position: absolute; left: {{ v.sheetIn }}px; right: {{ v.sheetIn }}px; bottom: {{ v.sheetIn }}px; border-radius: {{ v.sheetR }}px {{ v.sheetR }}px {{ v.sheetBR }}px {{ v.sheetBR }}px; background: {{ v.sheetBg }}; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 10px 24px {{ v.sheetPadBot }}px; display: flex; flex-direction: column; gap: 16px">
+              <span style="align-self: center; width: 36px; height: 5px; border-radius: 3px; background: {{ v.t.off }}"></span>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding-top: 8px">
+                <span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 32px; background: {{ v.t.surf2 }}; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+                <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800">Igra je već počela</span>
+                <span style="font-size: 16px; line-height: 1.45; color: {{ v.t.muted }}; max-width: 300px">Uđi kad krene sljedeća — kod ostaje isti.</span>
+              </div>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Čekaj sljedeću igru</button>
+              <button style="height: 48px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.text }}; font-size: 17px; font-weight: 600">Natrag</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":7729}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', elim: '#8F8880', pri: '#F3EDE2', priInk: '#121110', ok: '#4CC38A', warn: '#F5B83D', warnInk: '#1A1206', warnText: '#F5B83D', danger: '#FF6B78', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', off: '#4A443F', box: '#6B645C', scrim: 'rgba(0,0,0,0.6)', cardLineL: 'transparent' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', elim: '#716A62', pri: '#1A1714', priInk: '#F3EDE2', ok: '#1E7A4F', warn: '#F5B83D', warnInk: '#1A1206', warnText: '#8A5A00', danger: '#C42B3A', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', off: '#C9C2B9', box: '#A39C94', scrim: 'rgba(26,23,20,0.35)', cardLineL: '#DDD5C8' };
+    const mk = function (ios, dark) {
+      const t = dark ? D : L;
+      return { ios: ios, android: !ios, t: t, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36,
+        navTop: ios ? 58 : 48, titleTop: ios ? 116 : 112, titleSize: ios ? 34 : 30, contentTopL: ios ? 210 : 204, contentTopC: ios ? 118 : 112,
+        nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent',
+        backPath: ios ? 'M15 5l-7 7 7 7' : 'M19 12H5M11 6l-6 6 6 6',
+        navAlign: ios ? 'center' : 'left', navPad: ios ? 0 : 12, navTitleSize: ios ? 17 : 22,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 34 : 24,
+        sheetIn: ios ? 8 : 0, sheetR: ios ? 34 : 28, sheetBR: ios ? 40 : 0, sheetPadBot: ios ? 26 : 32,
+        sheetBg: ios ? (dark ? 'rgba(38,35,32,0.9)' : 'rgba(255,255,255,0.9)') : t.surf,
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    return { V: [mk(true, true), mk(true, false), mk(false, true), mk(false, false)] };
+  }
+}
+</script>
+</body>
+</html>

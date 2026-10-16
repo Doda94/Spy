@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>H 08 Copy keys part 3</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1600px; min-height: 6600px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">PHASE 4 · H·08 · COPY KEYS 3 / 3 · incl. accessibility labels and plurals</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Copy · continued</h1>
+  </div>
+  <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px; color: #A39C94">Učitavanje…</span></sc-if>
+  <div style="display: grid; grid-template-columns: 250px 1fr 1fr 200px; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+    <span style="padding: 11px 14px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Key</span>
+    <span style="padding: 11px 14px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Hrvatski</span>
+    <span style="padding: 11px 14px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">English</span>
+    <span style="padding: 11px 14px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Note</span>
+    <sc-for list="{{ rows }}" as="r" hint-placeholder-count="20">
+      <span style="padding: 9px 14px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #FF8B68; word-break: break-all">{{ r.k }}</span>
+      <span style="padding: 9px 14px; border-top: 1px solid #34302C; font-size: 15px; line-height: 1.4">{{ r.hr }}</span>
+      <span style="padding: 9px 14px; border-top: 1px solid #34302C; font-size: 15px; line-height: 1.4; color: #C9C2B9">{{ r.en }}</span>
+      <span style="padding: 9px 14px; border-top: 1px solid #34302C; font-size: 13px; line-height: 1.4; color: #A39C94">{{ r.n }}</span>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":6600}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    fetch('/_blob/f5a22c66d4e4744f5dfd90ff3af06d73').then(function (r) { return r.json(); }).then((rows) => { this.setState({ rows: rows }); }).catch(() => { this.setState({ rows: [] }); });
+  }
+  renderVals() {
+    const st = this.state || {};
+    const all = st.rows || [];
+    return { rows: all.slice(192), loading: !st.rows };
+  }
+}
+</script>
+</body>
+</html>

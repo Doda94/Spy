@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 05 Round and discussion</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+@keyframes drift{from{transform:translateY(1px)}to{transform:translateY(-3px)}}
+@keyframes tremble{0%,100%{transform:translate(0,0)}25%{transform:translate(-1px,.6px)}50%{transform:translate(.8px,-.7px)}75%{transform:translate(-.5px,-.4px)}}
+@keyframes pulse{50%{transform:scale(1.06)}}
+</style>
+</helmet>
+<div style="width: 1860px; height: 5595px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 05</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Round &amp; discussion</h1>
+    <span style="font-size: 18px; color: #A39C94">The table is the "who's still in" list: face-down cards breathe, knocked-out seats stay empty. Countdown in the centre. Host controls at the thumb; guests get none.</span>
+  </div>
+
+  <!-- a · TIMER ON · HOST -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">a</span><span style="font-size: 26px; font-weight: 800">Timer on · host</span><span style="font-size: 16px; color: #A39C94">round 2, Marko knocked out in round 1 · calm drift</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+            <sc-for list="{{ v.seatsCalm }}" as="c" hint-placeholder-count="8">
+              <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                <sc-if value="{{ c.in }}" hint-placeholder-val="{{ true }}">
+                  <div style="width: 56px; height: 78px; position: relative; animation: {{ c.anim }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45))">
+                    <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                    <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                    <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.out }}" hint-placeholder-val="{{ false }}">
+                  <div aria-label="{{ c.name }}, izvan igre" style="width: 56px; height: 78px; box-sizing: border-box; border-radius: 5px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px"><span style="font-size: 10px; font-weight: 700; color: {{ v.t.elim }}; text-decoration: line-through">{{ c.name }}</span></div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: {{ v.t.muted }}">RUNDA 2</span>
+              <span role="timer" aria-label="Preostalo 4 minute i 32 sekunde" style="font-size: 56px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">4:32</span>
+              <span style="font-size: 13px; color: {{ v.t.muted }}">Tko ne zna riječ?</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Kategorija · Mjesta</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.infoT }}px; text-align: center; font-size: 15px; color: {{ v.t.muted }}">7 u igri · 1 izbačen</div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; gap: 10px">
+              <button style="height: {{ v.bh }}px; padding: 0 20px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 17px; font-weight: 700">+1 min</button>
+              <button style="flex: 1; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Završi raspravu</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- b · ALMOST UP -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">b</span><span style="font-size: 26px; font-weight: 800">Time almost up</span><span style="font-size: 16px; color: #A39C94">≤ 30 s amber, one warning haptic · ≤ 10 s cards tremble, digits pulse</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 2.5px {{ v.t.warn }}"></div>
+            <sc-for list="{{ v.seatsNervous }}" as="c" hint-placeholder-count="8">
+              <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                <sc-if value="{{ c.in }}" hint-placeholder-val="{{ true }}">
+                  <div style="width: 56px; height: 78px; position: relative; animation: {{ c.anim }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45))">
+                    <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                    <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                    <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.out }}" hint-placeholder-val="{{ false }}">
+                  <div style="width: 56px; height: 78px; box-sizing: border-box; border-radius: 5px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px"><span style="font-size: 10px; font-weight: 700; color: {{ v.t.elim }}; text-decoration: line-through">{{ c.name }}</span></div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{ v.t.warnText }}">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em">RUNDA 2</span>
+              <span role="timer" aria-label="Preostalo 8 sekundi" style="font-size: 56px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; animation: pulse 1s ease-in-out infinite">0:08</span>
+              <span style="font-size: 13px; font-weight: 600">Još malo!</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Kategorija · Mjesta</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.infoT }}px; text-align: center; font-size: 15px; color: {{ v.t.muted }}">Kad vrijeme istekne, otvara se glasanje.</div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; gap: 10px">
+              <button style="height: {{ v.bh }}px; padding: 0 20px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 17px; font-weight: 700">+1 min</button>
+              <button style="flex: 1; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Završi raspravu</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- c · TIMER OFF -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">c</span><span style="font-size: 26px; font-weight: 800">Timer off</span><span style="font-size: 16px; color: #A39C94">no countdown; the table still turns slowly; host opens the vote</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+            <sc-for list="{{ v.seatsCalm }}" as="c" hint-placeholder-count="8">
+              <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                <sc-if value="{{ c.in }}" hint-placeholder-val="{{ true }}">
+                  <div style="width: 56px; height: 78px; position: relative; animation: {{ c.anim }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45))">
+                    <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+                    <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                    <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ c.out }}" hint-placeholder-val="{{ false }}">
+                  <div style="width: 56px; height: 78px; box-sizing: border-box; border-radius: 5px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px"><span style="font-size: 10px; font-weight: 700; color: {{ v.t.elim }}; text-decoration: line-through">{{ c.name }}</span></div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: {{ v.t.muted }}">RUNDA 2</span>
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; line-height: 1.05; font-weight: 800">Razgovarajte</span>
+              <span style="font-size: 13px; color: {{ v.t.muted }}">bez timera</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Kategorija · Mjesta</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.infoT }}px; text-align: center; font-size: 15px; color: {{ v.t.muted }}">7 u igri · 1 izbačen</div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px">
+              <button style="width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Na glasanje</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- d · GUEST -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">d</span><span style="font-size: 26px; font-weight: 800">Guest · own phone</span><span style="font-size: 16px; color: #A39C94">synced countdown, no controls; own seat at the bottom, ringed; peek at own card any time</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; inset: 0; transform-origin: {{ v.origin }}; transform: rotate(-135deg)">
+              <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+              <sc-for list="{{ v.seatsGuest }}" as="c" hint-placeholder-count="8">
+                <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                  <sc-if value="{{ c.in }}" hint-placeholder-val="{{ true }}">
+                    <div style="width: 56px; height: 78px; position: relative; animation: {{ c.anim }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45))">
+                      <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="{{ c.stroke }}" stroke-width="{{ c.sw }}"></polygon></svg>
+                      <div style="position: absolute; inset: 5px 5px 18px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+                      <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ c.out }}" hint-placeholder-val="{{ false }}">
+                    <div style="width: 56px; height: 78px; box-sizing: border-box; border-radius: 5px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px"><span style="font-size: 10px; font-weight: 700; color: {{ v.t.elim }}; text-decoration: line-through">{{ c.name }}</span></div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: {{ v.t.muted }}">RUNDA 2</span>
+              <span role="timer" style="font-size: 56px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">2:47</span>
+              <span style="font-size: 13px; color: {{ v.t.muted }}">Vodi Luka</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Kategorija · Mjesta</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.infoT }}px; text-align: center; font-size: 15px; color: {{ v.t.muted }}">7 u igri · 1 izbačen</div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 10px">
+              <span style="text-align: center; font-size: 14px; color: {{ v.t.muted }}">Kad vrijeme istekne, glasanje se otvara samo.</span>
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.surf2 }}; color: {{ v.t.text }}; font-size: 18px; font-weight: 700">Pogledaj svoju kartu</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- e · OUT LOUD -->
+  <section style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">e</span><span style="font-size: 26px; font-weight: 800">Out-loud voting · host marks the result</span><span style="font-size: 16px; color: #A39C94">after the alarm: tap the card of whoever the group voted out, then confirm — two taps total</span></div>
+    <div style="display: flex; gap: 40px; align-items: flex-start">
+      <sc-for list="{{ V }}" as="v" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+            <div style="position: absolute; left: {{ v.tableL }}px; top: {{ v.tableT }}px; width: 344px; height: 344px; border-radius: 50%; background: {{ v.t.table }}; box-shadow: inset 0 0 0 1.5px {{ v.t.tableRing }}"></div>
+            <sc-for list="{{ v.seatsPick }}" as="c" hint-placeholder-count="8">
+              <div style="position: absolute; left: {{ c.l }}px; top: {{ c.t }}px; width: 56px; height: 78px; transform: {{ c.tf }}">
+                <sc-if value="{{ c.in }}" hint-placeholder-val="{{ true }}">
+                  <button aria-label="{{ c.name }}" style="width: 56px; height: 78px; padding: 0; border: none; background: transparent; position: relative; opacity: {{ c.op }}; transform: {{ c.lift }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45))">
+                    <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="{{ c.stroke }}" stroke-width="{{ c.sw }}"></polygon></svg>
+                    <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+                  </button>
+                </sc-if>
+                <sc-if value="{{ c.out }}" hint-placeholder-val="{{ false }}">
+                  <div style="width: 56px; height: 78px; box-sizing: border-box; border-radius: 5px; border: 1.5px dashed {{ v.t.off }}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px"><span style="font-size: 10px; font-weight: 700; color: {{ v.t.elim }}; text-decoration: line-through">{{ c.name }}</span></div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <div style="position: absolute; left: 0; right: 0; top: {{ v.cy }}px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center">
+              <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; line-height: 1; font-weight: 800; color: {{ v.t.warnText }}">Vrijeme!</span>
+              <span style="font-size: 13px; color: {{ v.t.muted }}">Glasajte naglas</span>
+            </div>
+            <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+              <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">Runda 2</span>
+              <span style="width: 48px"></span>
+            </div>
+            <div style="position: absolute; left: 20px; right: 20px; top: {{ v.infoT }}px; display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800">Koga ste izbacili?</span><span style="font-size: 14px; color: {{ v.t.muted }}">Dodirni njegovu kartu.</span></div>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px; display: flex; flex-direction: column; gap: 8px">
+              <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Izbaci · Ana</button>
+              <button style="height: 48px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.text }}; font-size: 17px; font-weight: 600">Nitko ne ispada</button>
+            </div>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":5595}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', elim: '#8F8880', pri: '#F3EDE2', priInk: '#121110', warn: '#F5B83D', warnText: '#F5B83D', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', table: '#1A1816', tableRing: '#34302C', off: '#4A443F' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', elim: '#716A62', pri: '#1A1714', priInk: '#F3EDE2', warn: '#F5B83D', warnText: '#8A5A00', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', table: '#E8E0D3', tableRing: '#D6CCBD', off: '#B5AC9F' };
+    const names = ['Luka', 'Ana', 'Marko', 'Iva', 'Petar', 'Nina', 'Marta', 'Ivan'];
+    const jit = [-3, 2, 0, -2, 3, -1, 2, -3];
+    const mk = function (ios, dark) {
+      const t = dark ? D : L;
+      const w = ios ? 390 : 412, cy = ios ? 440 : 480, cx = w / 2;
+      const seats = function (mode, me, pick) {
+        return names.map(function (n, i) {
+          const th = (90 + 45 * i) * Math.PI / 180, r = 130;
+          const x = r * Math.cos(th), y = r * Math.sin(th);
+          const out = i === 2;
+          let anim = 'drift ' + (3.2 + (i % 3) * 0.7).toFixed(1) + 's ease-in-out ' + (-i * 0.6).toFixed(1) + 's infinite alternate';
+          if (mode === 'nervous') anim = 'tremble ' + (0.26 + (i % 2) * 0.06).toFixed(2) + 's linear ' + (-i * 0.05).toFixed(2) + 's infinite';
+          const isMe = me === i, isPick = pick === i;
+          return { name: n, in: !out, out: out, l: (cx + x - 28).toFixed(1), t: (cy + y - 39).toFixed(1), tf: 'rotate(' + (45 * i + jit[i]) + 'deg)', anim: anim,
+            stroke: (isMe || isPick) ? (dark ? '#F3EDE2' : '#1A1714') : '#4A3D33', sw: (isMe || isPick) ? 3 : 1,
+            op: (pick === undefined || isPick) ? 1 : 0.55, lift: isPick ? 'translateY(-8px) scale(1.08)' : 'none' };
+        });
+      };
+      return { ios: ios, t: t, w: w, h: ios ? 844 : 915, pr: ios ? 48 : 36, cy: cy,
+        origin: cx + 'px ' + cy + 'px', tableL: cx - 172, tableT: cy - 172, infoT: ios ? 130 : 128,
+        navTop: ios ? 58 : 48, nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent', pillBg: ios ? t.glass : t.surf2,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 34 : 24,
+        seatsCalm: seats('calm'), seatsNervous: seats('nervous'), seatsGuest: seats('calm', 3), seatsPick: seats('calm', undefined, 1),
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    return { V: [mk(true, true), mk(true, false), mk(false, true), mk(false, false)] };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>D Klasik — Android — spy reveal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400..800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F3F3F1}a:hover{color:#ffffff}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 412px; height: 915px; box-sizing: border-box; position: relative; overflow: hidden; background: #101113; color: #F3F3F1; font-family: 'Hanken Grotesk', sans-serif; display: flex; flex-direction: column; padding: 40px 0 24px">
+
+  <div style="height: 64px; display: flex; align-items: center; gap: 4px; padding: 0 16px 0 4px">
+    <button aria-label="Prekini igru" style="width: 48px; height: 48px; border: none; border-radius: 24px; background: transparent; color: #F3F3F1; display: flex; align-items: center; justify-content: center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+    <span style="flex: 1; padding-left: 4px; font-size: 22px; font-weight: 600">Igrač 3 od 8</span>
+  </div>
+  <div aria-label="Igrač 3 od 8" style="display: flex; align-items: center; gap: 4px; padding: 0 20px">
+    <div style="width: 37.5%; height: 4px; border-radius: 2px; background: #F3F3F1"></div>
+    <div style="flex: 1; height: 4px; border-radius: 2px; background: #2A2C30"></div>
+    <div style="width: 4px; height: 4px; border-radius: 2px; background: #F3F3F1"></div>
+  </div>
+
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 0 20px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: #26282C; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700">L</div>
+      <div style="display: flex; flex-direction: column">
+        <span style="font-size: 20px; font-weight: 700; line-height: 1.2">Luka</span>
+        <span style="font-size: 14px; color: #9B9DA3">Samo ti gledaš u ekran</span>
+      </div>
+    </div>
+
+    <sc-if value="{{ revealed }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="border-radius: 28px; overflow: hidden; background: #1A1B1E">
+          <div style="background: #CF3036; color: #FFFFFF; padding: 24px 24px 26px; display: flex; flex-direction: column; gap: 14px">
+            <div aria-hidden="true" style="width: 52px; height: 52px; border-radius: 16px; background: rgba(0,0,0,0.22); display: flex; align-items: center; justify-content: center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"></path><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c5 0 9 4.5 10 7-.4 1-1.2 2.3-2.4 3.6"></path><path d="M6.6 6.6C4.4 8 2.9 10 2 12c1 2.5 5 7 10 7 1.9 0 3.6-.6 5.1-1.5"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <h1 style="margin: 0; font-size: 46px; line-height: 1.05; font-weight: 800; letter-spacing: -0.025em">Ti si špijun</h1>
+              <span style="font-size: 16px; font-weight: 500">Ne znaš tajnu riječ.</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 24px">
+            <span style="font-size: 13px; font-weight: 600; color: #9B9DA3">Kategorija</span>
+            <span style="font-size: 28px; font-weight: 700; letter-spacing: -0.01em">Mjesta</span>
+          </div>
+          <div style="height: 1px; background: #2A2C30; margin: 0 24px"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px 20px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 13px; font-weight: 600; color: #9B9DA3">Drugi špijun</span>
+              <span style="font-size: 22px; font-weight: 700">Ana</span>
+            </div>
+            <span style="height: 32px; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; background: #2B1416; color: #FF8A8E; font-size: 14px; font-weight: 600">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 3l18 18"></path><path d="M6.6 6.6C4.4 8 2.9 10 2 12c1 2.5 5 7 10 7 1.9 0 3.6-.6 5.1-1.5"></path></svg>
+              igrač 6
+            </span>
+          </div>
+        </div>
+        <p style="margin: 0; padding: 0 4px; font-size: 16px; line-height: 1.45; color: #9B9DA3">Blefiraj — pričaj kao da znaš riječ i pazi što govore drugi.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hidden }}" hint-placeholder-val="{{ false }}">
+      <div style="border-radius: 28px; border: 1.5px dashed #3A3C41; min-height: 360px; box-sizing: border-box; padding: 32px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center">
+        <div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 28px; background: #1F2023; display: flex; align-items: center; justify-content: center; color: #9B9DA3">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+        </div>
+        <span style="font-size: 16px; color: #9B9DA3">Dodaj telefon igraču</span>
+        <span style="font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Luka</span>
+        <span style="font-size: 17px; max-width: 260px">Neka nitko drugi ne gleda u ekran.</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="padding: 0 20px 8px">
+    <sc-if value="{{ revealed }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ hide }}" style="width: 100%; height: 64px; border: none; border-radius: 16px; background: #F3F3F1; color: #101113; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px">
+        Sakrij i sljedeći igrač
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </sc-if>
+    <sc-if value="{{ hidden }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ show }}" style="width: 100%; height: 64px; border: none; border-radius: 32px; background: #F3F3F1; color: #101113; font-size: 18px; font-weight: 700">Prikaži ulogu</button>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startHidden":{"editor":"boolean","default":false},"$preview":{"width":412,"height":915}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const revealed = st.revealed !== undefined ? st.revealed : !(this.props.startHidden ?? false);
+    return {
+      revealed: revealed,
+      hidden: !revealed,
+      show: () => this.setState({ revealed: true }),
+      hide: () => this.setState({ revealed: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

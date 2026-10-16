@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 08 Game over</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1860px; height: 2394px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 08</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Game over</h1>
+    <span style="font-size: 18px; color: #A39C94">The only moment roles are revealed: every card on the table flips where it sits (spies first), then spies and the word are dealt to the front. Recap shows each round's knock-out with its role.</span>
+  </div>
+
+  <sc-for list="{{ states }}" as="s" hint-placeholder-count="2">
+    <section style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">{{ s.key }}</span><span style="font-size: 26px; font-weight: 800">{{ s.title }}</span><span style="font-size: 16px; color: #A39C94">{{ s.note }}</span></div>
+      <div style="display: flex; gap: 40px; align-items: flex-start">
+        <sc-for list="{{ s.V }}" as="v" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}; display: flex; flex-direction: column; gap: 16px; padding: {{ v.top }}px 18px {{ v.bot }}px">
+              <div style="display: flex; flex-direction: column; gap: 6px; padding: 0 4px">
+                <span style="font-size: 14px; font-weight: 600; color: {{ v.t.muted }}">Kraj igre · {{ s.rounds }}</span>
+                <div style="display: flex; align-items: center; gap: 10px">
+                  <svg aria-hidden="true" width="22" height="30" viewBox="0 0 56 76" style="color: {{ v.win }}"><polygon points="{{ s.glyphA }}" fill="currentColor"></polygon><polygon points="{{ s.glyphB }}" fill="currentColor"></polygon></svg>
+                  <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em">{{ s.head }}</h2>
+                </div>
+                <span style="font-size: 15px; color: {{ v.t.muted }}">{{ s.sub }}</span>
+              </div>
+              <div style="position: relative; height: 220px; flex-shrink: 0">
+                <div style="position: absolute; left: 6px; top: 24px; width: 116px; height: 162px; transform: rotate(-11deg); filter: {{ v.t.cardShadow }}">
+                  <svg width="116" height="162" viewBox="0 0 116 162" style="position: absolute; inset: 0"><polygon points="9,0 107,0 116,9 116,153 107,162 9,162 0,153 0,9" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon></svg>
+                  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #F3EDE2"><svg aria-hidden="true" width="20" height="28" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; font-weight: 800">Ana</span><span style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #FF6B3D">ŠPIJUN</span></div>
+                </div>
+                <div style="position: absolute; left: 92px; top: 4px; width: 116px; height: 162px; transform: rotate(-2deg); filter: {{ v.t.cardShadow }}">
+                  <svg width="116" height="162" viewBox="0 0 116 162" style="position: absolute; inset: 0"><polygon points="9,0 107,0 116,9 116,153 107,162 9,162 0,153 0,9" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon></svg>
+                  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #F3EDE2"><svg aria-hidden="true" width="20" height="28" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; font-weight: 800">Nina</span><span style="font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #FF6B3D">ŠPIJUN</span></div>
+                </div>
+                <div style="position: absolute; right: 6px; top: 22px; width: 136px; height: 190px; transform: rotate(7deg); filter: {{ v.t.cardShadow }}">
+                  <svg width="136" height="190" viewBox="0 0 136 190" style="position: absolute; inset: 0"><polygon points="11,0 125,0 136,11 136,179 125,190 11,190 0,179 0,11" fill="#F3EDE2" stroke="{{ v.t.cardLine }}" stroke-width="1"></polygon></svg>
+                  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; text-align: center; color: #1A1714"><svg aria-hidden="true" width="14" height="19" viewBox="0 0 56 76" style="color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg><span style="font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: #6B645C">TAJNA RIJEČ</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 23px; line-height: 1.02; font-weight: 800">Svemirska postaja</span><span style="font-size: 11px; color: #6B645C">Mjesta</span></div>
+                </div>
+              </div>
+              <div style="border-radius: 22px; background: {{ v.t.surf }}; display: flex; flex-direction: column">
+                <sc-for list="{{ v.recap }}" as="r" hint-placeholder-count="4">
+                  <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-top: {{ r.sep }}">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{ v.t.muted }}; width: 24px">{{ r.r }}</span>
+                    <span style="flex: 1; font-size: 16px">{{ r.who }}</span>
+                    <span style="font-size: 13px; font-weight: 700; color: {{ r.ink }}; display: flex; align-items: center; gap: 5px"><svg aria-hidden="true" width="9" height="12" viewBox="0 0 56 76"><polygon points="{{ r.gA }}" fill="currentColor"></polygon><polygon points="{{ r.gB }}" fill="currentColor"></polygon></svg>{{ r.role }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex: 1"></div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <button style="height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">Igraj ponovno</button>
+                <span style="text-align: center; font-size: 13px; color: {{ v.t.muted }}">Iste postavke, nova riječ, nove uloge.</span>
+                <button style="height: 48px; border: none; border-radius: 24px; background: transparent; color: {{ v.t.text }}; font-size: 17px; font-weight: 600">Nova igra</button>
+              </div>
+            </div>
+            <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":2394}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', line: '#34302C', text: '#F3EDE2', muted: '#A39C94', pri: '#F3EDE2', priInk: '#121110', spy: '#FF6B3D', cit: '#6E9BFF', frame: '#34302C', cardLine: '#F3EDE2', cardShadow: 'drop-shadow(0 14px 22px rgba(0,0,0,0.6))' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', line: '#DDD5C8', text: '#1A1714', muted: '#6B645C', pri: '#1A1714', priInk: '#F3EDE2', spy: '#C2410C', cit: '#2F5BD8', frame: '#DDD5C8', cardLine: '#DDD5C8', cardShadow: 'drop-shadow(0 12px 20px rgba(26,23,20,0.25))' };
+    const SPLIT_A = '25,0 0,36 25,72', SPLIT_B = '31,4 56,40 31,76';
+    const WHOLE_A = '28,0 56,38 28,76 0,38', WHOLE_B = '28,38 28,38 28,38';
+    const mkV = function (ios, dark, rows, winSpy) {
+      const t = dark ? D : L;
+      const recap = rows.map(function (r, i) {
+        const spy = r[2] === 'spy';
+        return { r: 'R' + (i + 1), who: r[0], role: spy ? 'špijun' : 'građanin', ink: spy ? t.spy : t.cit,
+          gA: spy ? SPLIT_A : WHOLE_A, gB: spy ? SPLIT_B : WHOLE_B, sep: i === 0 ? 'none' : ('1px solid ' + t.line) };
+      });
+      return { ios: ios, t: t, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36, top: ios ? 64 : 52,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 30 : 22, recap: recap, win: winSpy ? t.spy : t.cit,
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    const vs = function (rows, winSpy) { return [mkV(true, true, rows, winSpy), mkV(true, false, rows, winSpy), mkV(false, true, rows, winSpy), mkV(false, false, rows, winSpy)]; };
+    const states = [
+      { key: 'a', title: 'Citizens win', note: 'all spies knocked out', rounds: '3 runde', head: 'Građani pobjeđuju', sub: 'Oba špijuna su otkrivena.',
+        glyphA: WHOLE_A, glyphB: WHOLE_B,
+        V: vs([['Marko', 'izbačen', 'cit'], ['Ana', 'izbačena', 'spy'], ['Nina', 'izbačena', 'spy']], false) },
+      { key: 'b', title: 'Spies win', note: 'spies now equal the remaining citizens (2 : 2)', rounds: '4 runde', head: 'Špijuni pobjeđuju', sub: 'Ana i Nina su ostale neotkrivene.',
+        glyphA: SPLIT_A, glyphB: SPLIT_B,
+        V: vs([['Marko', 'izbačen', 'cit'], ['Iva', 'izbačena', 'cit'], ['Luka', 'izbačen', 'cit'], ['Petar', 'izbačen', 'cit']], true) }
+    ];
+    return { states: states };
+  }
+}
+</script>
+</body>
+</html>

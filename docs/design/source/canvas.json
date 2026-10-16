@@ -1,0 +1,507 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A-Android.dc.html": {
+      "h": 915,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "A · Cenzura — Android",
+      "w": 412,
+      "x": 470,
+      "y": 300
+    },
+    "B-Android.dc.html": {
+      "h": 915,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "B · Pomrčina — Android",
+      "w": 412,
+      "x": 1532,
+      "y": 300
+    },
+    "B-iOS.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "B · Pomrčina — iOS",
+      "w": 390,
+      "x": 1062,
+      "y": 300
+    },
+    "C-Android.dc.html": {
+      "h": 915,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "C · Karta — Android",
+      "w": 412,
+      "x": 2594,
+      "y": 300
+    },
+    "C-iOS.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "C · Karta — iOS",
+      "w": 390,
+      "x": 2124,
+      "y": 300
+    },
+    "D-Android.dc.html": {
+      "h": 915,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "D · Klasik — Android",
+      "w": 412,
+      "x": 3656,
+      "y": 300
+    },
+    "D-iOS.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "D · Klasik — iOS",
+      "w": 390,
+      "x": 3186,
+      "y": 300
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "p1",
+      "title": "A · Cenzura — iOS",
+      "w": 390,
+      "x": 0,
+      "y": 300
+    },
+    "P2-01-Concept.dc.html": {
+      "h": 1000,
+      "page": "p2",
+      "title": "01 · Concept",
+      "w": 1440,
+      "x": 0,
+      "y": 300
+    },
+    "P2-02-Colour.dc.html": {
+      "h": 1820,
+      "page": "p2",
+      "title": "03 · Colour",
+      "w": 1440,
+      "x": 1560,
+      "y": 300
+    },
+    "P2-03-Type.dc.html": {
+      "h": 1560,
+      "page": "p2",
+      "title": "04 · Typography",
+      "w": 1440,
+      "x": 0,
+      "y": 2740
+    },
+    "P2-04-Space.dc.html": {
+      "h": 1160,
+      "page": "p2",
+      "title": "05 · Space, shape, elevation, icons",
+      "w": 1440,
+      "x": 1560,
+      "y": 2240
+    },
+    "P2-05-Motion.dc.html": {
+      "h": 1640,
+      "page": "p2",
+      "title": "06 · Motion, haptics, sound",
+      "w": 1440,
+      "x": 0,
+      "y": 4420
+    },
+    "P2-06-Controls.dc.html": {
+      "h": 2000,
+      "page": "p2",
+      "title": "07 · Components — table layer",
+      "w": 1440,
+      "x": 3120,
+      "y": 300
+    },
+    "P2-07-Game.dc.html": {
+      "h": 2100,
+      "page": "p2",
+      "title": "08 · Components — card & game layer",
+      "w": 1440,
+      "x": 3120,
+      "y": 2420
+    },
+    "P2-08-A11y.dc.html": {
+      "h": 1200,
+      "page": "p2",
+      "title": "09 · Accessibility",
+      "w": 1440,
+      "x": 1560,
+      "y": 3520
+    },
+    "P2-09-Platform.dc.html": {
+      "h": 1400,
+      "page": "p2",
+      "title": "10 · Platform mapping & tokens",
+      "w": 1440,
+      "x": 3120,
+      "y": 4640
+    },
+    "P2-10-Hybrid.dc.html": {
+      "h": 1200,
+      "page": "p2",
+      "title": "02 · The hybrid in practice",
+      "w": 1440,
+      "x": 0,
+      "y": 1420
+    },
+    "P2-11-Table.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "page": "p2",
+      "title": "11 · Table prototype — press Play",
+      "w": 390,
+      "x": 4680,
+      "y": 300
+    },
+    "P2-12-Storyboard.dc.html": {
+      "h": 1560,
+      "page": "p2",
+      "title": "12 · Table choreography",
+      "w": 1440,
+      "x": 5150,
+      "y": 300
+    },
+    "P3-01-Home.dc.html": {
+      "x": 0,
+      "y": 300,
+      "w": 1860,
+      "h": 3461,
+      "title": "P1·01 Home",
+      "page": "p3"
+    },
+    "P3-02-Setup.dc.html": {
+      "x": 1980,
+      "y": 300,
+      "w": 1860,
+      "h": 7729,
+      "title": "P1·02 Game setup",
+      "page": "p3"
+    },
+    "P3-03-Lobby.dc.html": {
+      "x": 3960,
+      "y": 300,
+      "w": 1860,
+      "h": 7729,
+      "title": "P1·03 Lobby & join",
+      "page": "p3"
+    },
+    "P3-04-Reveal.dc.html": {
+      "x": 5940,
+      "y": 300,
+      "w": 1860,
+      "h": 5595,
+      "title": "P1·04 Role reveal",
+      "page": "p3"
+    },
+    "P3-05-Round.dc.html": {
+      "x": 7920,
+      "y": 300,
+      "w": 1860,
+      "h": 5595,
+      "title": "P1·05 Round & discussion",
+      "page": "p3"
+    },
+    "P3-06-Vote.dc.html": {
+      "x": 9900,
+      "y": 300,
+      "w": 1860,
+      "h": 4528,
+      "title": "P1·06 Voting",
+      "page": "p3"
+    },
+    "P3-07-Result.dc.html": {
+      "x": 11880,
+      "y": 300,
+      "w": 1860,
+      "h": 3461,
+      "title": "P1·07 Round result",
+      "page": "p3"
+    },
+    "P3-08-GameOver.dc.html": {
+      "x": 13860,
+      "y": 300,
+      "w": 1860,
+      "h": 2394,
+      "title": "P1·08 Game over",
+      "page": "p3"
+    },
+    "P3-09-Dictionaries.dc.html": {
+      "x": 15840,
+      "y": 300,
+      "w": 1860,
+      "h": 7729,
+      "title": "P1·09 Dictionaries",
+      "page": "p3"
+    },
+    "P4-10-ImportExport.dc.html": {
+      "x": 0,
+      "y": 300,
+      "w": 1860,
+      "h": 6662,
+      "title": "P2·10 Import & export",
+      "page": "p4"
+    },
+    "P4-11-Settings.dc.html": {
+      "x": 1980,
+      "y": 300,
+      "w": 1860,
+      "h": 3461,
+      "title": "P2·11 Settings",
+      "page": "p4"
+    },
+    "P4-12-Connection.dc.html": {
+      "x": 3960,
+      "y": 300,
+      "w": 1860,
+      "h": 6662,
+      "title": "P2·12 Connection & edge states",
+      "page": "p4"
+    },
+    "P4-13-Icon.dc.html": {
+      "x": 5940,
+      "y": 300,
+      "w": 1440,
+      "h": 1500,
+      "title": "P3·13 App icon & splash",
+      "page": "p4"
+    },
+    "P4-14-Transient.dc.html": {
+      "x": 7500,
+      "y": 300,
+      "w": 1860,
+      "h": 1300,
+      "title": "P3·14 Transient UI",
+      "page": "p4"
+    },
+    "P4-15-Ideas.dc.html": {
+      "x": 9480,
+      "y": 300,
+      "w": 1440,
+      "h": 1000,
+      "title": "Ideas · outside the main flow",
+      "page": "p4"
+    },
+    "P5-01-Tokens.dc.html": {
+      "x": 0,
+      "y": 300,
+      "w": 1440,
+      "h": 2300,
+      "title": "H·01 Tokens → Compose",
+      "page": "p5"
+    },
+    "P5-02-Components.dc.html": {
+      "x": 1560,
+      "y": 300,
+      "w": 1600,
+      "h": 3200,
+      "title": "H·02 Component specs",
+      "page": "p5"
+    },
+    "P5-03-AnnotReveal.dc.html": {
+      "x": 3280,
+      "y": 300,
+      "w": 1860,
+      "h": 1300,
+      "title": "H·03 Annotated · role reveal",
+      "page": "p5"
+    },
+    "P5-04-AnnotSetup.dc.html": {
+      "x": 5260,
+      "y": 300,
+      "w": 1860,
+      "h": 1300,
+      "title": "H·04 Annotated · game setup",
+      "page": "p5"
+    },
+    "P5-05-Motion.dc.html": {
+      "x": 7240,
+      "y": 300,
+      "w": 1600,
+      "h": 1700,
+      "title": "H·05 Motion & haptics implementation",
+      "page": "p5"
+    },
+    "P5-06-CopyA.dc.html": {
+      "x": 8960,
+      "y": 300,
+      "w": 1600,
+      "h": 6600,
+      "title": "H·06 Copy keys 1/3",
+      "page": "p5"
+    },
+    "P5-07-CopyB.dc.html": {
+      "x": 10680,
+      "y": 300,
+      "w": 1600,
+      "h": 6600,
+      "title": "H·07 Copy keys 2/3",
+      "page": "p5"
+    },
+    "P5-08-CopyC.dc.html": {
+      "x": 12400,
+      "y": 300,
+      "w": 1600,
+      "h": 6600,
+      "title": "H·08 Copy keys 3/3",
+      "page": "p5"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-05T20:29:27Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "page": "p5",
+    "view": "canvas"
+  },
+  "notes": {
+    "titleA": {
+      "kind": "title1",
+      "maxW": 882,
+      "page": "p1",
+      "text": "A · Cenzura (Redacted)",
+      "w": 240,
+      "x": 0,
+      "y": 0
+    },
+    "titleB": {
+      "kind": "title1",
+      "maxW": 882,
+      "page": "p1",
+      "text": "B · Pomrčina (Eclipse)",
+      "w": 240,
+      "x": 1062,
+      "y": 0
+    },
+    "titleC": {
+      "kind": "title1",
+      "maxW": 882,
+      "page": "p1",
+      "text": "C · Karta (Dealt card)",
+      "w": 240,
+      "x": 2124,
+      "y": 0
+    },
+    "titleD": {
+      "kind": "title1",
+      "maxW": 882,
+      "page": "p1",
+      "text": "D · Klasik (Classic, refined)",
+      "w": 240,
+      "x": 3186,
+      "y": 0
+    },
+    "titleP2": {
+      "kind": "title1",
+      "maxW": 6590,
+      "page": "p2",
+      "text": "Phase 2 · Design language — Karta × Klasik",
+      "w": 240,
+      "x": 0,
+      "y": 0
+    },
+    "titleP3": {
+      "x": 0,
+      "y": 0,
+      "text": "Phase 3 · P1 screens — iOS dark · iOS light · Android dark · Android light",
+      "kind": "title1",
+      "maxW": 17700,
+      "page": "p3"
+    },
+    "titleP4": {
+      "x": 0,
+      "y": 0,
+      "text": "Phase 3 · P2 & P3 screens",
+      "kind": "title1",
+      "maxW": 10920,
+      "page": "p4"
+    },
+    "titleP5": {
+      "x": 0,
+      "y": 0,
+      "text": "Phase 4 · Handoff — tokens, components, motion, copy",
+      "kind": "title1",
+      "maxW": 14000,
+      "page": "p5"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "A-Android.dc.html",
+    "B-iOS.dc.html",
+    "B-Android.dc.html",
+    "C-iOS.dc.html",
+    "C-Android.dc.html",
+    "D-iOS.dc.html",
+    "D-Android.dc.html",
+    "P2-01-Concept.dc.html",
+    "P2-10-Hybrid.dc.html",
+    "P2-02-Colour.dc.html",
+    "P2-03-Type.dc.html",
+    "P2-04-Space.dc.html",
+    "P2-05-Motion.dc.html",
+    "P2-06-Controls.dc.html",
+    "P2-07-Game.dc.html",
+    "P2-08-A11y.dc.html",
+    "P2-09-Platform.dc.html",
+    "P2-11-Table.dc.html",
+    "P2-12-Storyboard.dc.html",
+    "P3-01-Home.dc.html",
+    "P3-02-Setup.dc.html",
+    "P3-03-Lobby.dc.html",
+    "P3-04-Reveal.dc.html",
+    "P3-05-Round.dc.html",
+    "P3-06-Vote.dc.html",
+    "P3-07-Result.dc.html",
+    "P3-08-GameOver.dc.html",
+    "P3-09-Dictionaries.dc.html",
+    "P4-10-ImportExport.dc.html",
+    "P4-11-Settings.dc.html",
+    "P4-12-Connection.dc.html",
+    "P4-13-Icon.dc.html",
+    "P4-14-Transient.dc.html",
+    "P4-15-Ideas.dc.html",
+    "P5-01-Tokens.dc.html",
+    "P5-02-Components.dc.html",
+    "P5-03-AnnotReveal.dc.html",
+    "P5-04-AnnotSetup.dc.html",
+    "P5-05-Motion.dc.html",
+    "P5-06-CopyA.dc.html",
+    "P5-07-CopyB.dc.html",
+    "P5-08-CopyC.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "p1",
+      "name": "Phase 1 · Directions"
+    },
+    {
+      "id": "p2",
+      "name": "Phase 2 · Design language"
+    },
+    {
+      "id": "p3",
+      "name": "Phase 3 · P1 screens"
+    },
+    {
+      "id": "p4",
+      "name": "Phase 3 · P2 & P3 screens"
+    },
+    {
+      "id": "p5",
+      "name": "Phase 4 · Handoff"
+    }
+  ],
+  "title": "Špijun — Design"
+}

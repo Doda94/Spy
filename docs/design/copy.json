@@ -1,0 +1,1898 @@
+{
+  "$description": "Špijun UI copy, Croatian (hr) + English (en). Source: design canvas H·06–H·08 copy table (287 keys, asset f5a22c66…), plus strings visible in mock-ups that had no key (marked status=proposed). EN is the default locale (composeResources/values), HR in values-hr.",
+  "format": {
+    "placeholders": "Positional only: %1$s, %1$d, %2$s …",
+    "plurals": "Use pluralStringResource. HR (CLDR): one · few · other (1, 21, 31… → one; 2–4, 22–24… → few; everything else → other). EN: one · other. Whole sentences are keyed — never concatenate a verb with a plural noun (the verb agrees: „je 1 špijun“, „su 3 špijuna“, „je 5 špijuna“).",
+    "names": "Player names are user input: strings NEVER inflect them (no vocative/dative/genitive). e.g. „Dodaj telefon Luki“ → „Telefon ide: %1$s“; „Glasaj za Anu“ → „Glasaj · %1$s“; „Izbaci Anu“ → „Izbaci · %1$s“; „između Ane i Luke“ → „%1$s ili %2$s“.",
+    "gender": "Nicknames carry no gender, so no gendered past participles about players: „Ana je izbačena“ → „Ana ispada iz igre“; „Povezan/a“ → „Na vezi“; „Dobrodošla natrag“ → „Opet si tu“; „Ispao si“ → „Izvan igre si“; stamp „IZBAČENA“ → „IZVAN IGRE“.",
+    "quotes": "HR uses „…“ quotes, EN “…”. Apostrophe in EN is typographic ’. Ellipsis is the single character … .",
+    "caps": "Keys whose value is in CAPS are labels (type token `label`, +8% tracking). Keep them uppercase in the resource; don't rely on textTransform for HR (ß-style issues don't apply, but consistency does)."
+  },
+  "strings": {
+    "common_back": {
+      "hr": "Natrag",
+      "en": "Back",
+      "screen": "Common"
+    },
+    "common_close": {
+      "hr": "Zatvori",
+      "en": "Close",
+      "screen": "Common"
+    },
+    "common_cancel": {
+      "hr": "Odustani",
+      "en": "Cancel",
+      "screen": "Common"
+    },
+    "common_save": {
+      "hr": "Spremi",
+      "en": "Save",
+      "screen": "Common"
+    },
+    "common_retry": {
+      "hr": "Pokušaj ponovno",
+      "en": "Try again",
+      "screen": "Common"
+    },
+    "common_ok": {
+      "hr": "U redu",
+      "en": "OK",
+      "screen": "Common"
+    },
+    "tab_play": {
+      "hr": "Igraj",
+      "en": "Play",
+      "screen": "Tab bar"
+    },
+    "tab_dictionaries": {
+      "hr": "Rječnici",
+      "en": "Dictionaries",
+      "screen": "Tab bar"
+    },
+    "tab_settings": {
+      "hr": "Postavke",
+      "en": "Settings",
+      "screen": "Tab bar"
+    },
+    "home_tagline": {
+      "hr": "Jedna tajna riječ i špijun među vama.",
+      "en": "One secret word, and a spy among you.",
+      "screen": "Home"
+    },
+    "home_new_game": {
+      "hr": "Nova igra",
+      "en": "New game",
+      "screen": "Home"
+    },
+    "home_join": {
+      "hr": "Uđi s kodom",
+      "en": "Join with code",
+      "screen": "Home"
+    },
+    "home_continue_label": {
+      "hr": "IGRA U TIJEKU",
+      "en": "GAME IN PROGRESS",
+      "note": "Caps label; never shows role or word",
+      "screen": "Home"
+    },
+    "home_continue": {
+      "hr": "Nastavi igru",
+      "en": "Continue game",
+      "screen": "Home"
+    },
+    "home_continue_end": {
+      "hr": "Završi",
+      "en": "End",
+      "screen": "Home"
+    },
+    "mode_title": {
+      "hr": "Kako igrate?",
+      "en": "How are you playing?",
+      "screen": "Mode chooser"
+    },
+    "mode_one_phone": {
+      "hr": "Jedan telefon",
+      "en": "One phone",
+      "screen": "Mode chooser"
+    },
+    "mode_one_phone_desc": {
+      "hr": "Telefon kruži, svatko pogleda svoju kartu.",
+      "en": "Pass the phone; everyone looks at their own card.",
+      "screen": "Mode chooser"
+    },
+    "mode_multi": {
+      "hr": "Svaki na svom telefonu",
+      "en": "Each on their own phone",
+      "screen": "Mode chooser"
+    },
+    "mode_multi_desc": {
+      "hr": "Domaćin otvara sobu, ostali ulaze kodom ili QR-om.",
+      "en": "The host opens a room; others join with a code or QR.",
+      "screen": "Mode chooser"
+    },
+    "mode_note": {
+      "hr": "Pravila su ista. Za drugi način treba internet.",
+      "en": "Same rules. The second mode needs internet.",
+      "screen": "Mode chooser"
+    },
+    "setup_title": {
+      "hr": "Postavke igre",
+      "en": "Game setup",
+      "screen": "Game setup"
+    },
+    "setup_players": {
+      "hr": "Igrači",
+      "en": "Players",
+      "screen": "Game setup"
+    },
+    "setup_player_names": {
+      "hr": "Imena igrača",
+      "en": "Player names",
+      "screen": "Game setup"
+    },
+    "setup_player_names_hint": {
+      "hr": "potrebna za glasanje u aplikaciji",
+      "en": "needed for in-app voting",
+      "screen": "Game setup"
+    },
+    "setup_names_filled": {
+      "hr": "%1$d od %2$d",
+      "en": "%1$d of %2$d",
+      "note": "Names entered / players",
+      "screen": "Game setup"
+    },
+    "setup_spies": {
+      "hr": "Špijuni",
+      "en": "Spies",
+      "screen": "Game setup"
+    },
+    "setup_spies_max": {
+      "hr": "najviše %1$d",
+      "en": "at most %1$d",
+      "note": "players − 1",
+      "screen": "Game setup"
+    },
+    "setup_players_from_room": {
+      "hr": "ulaze kodom kad otvoriš sobu · 3–12",
+      "en": "join with the code once you open the room · 3–12",
+      "note": "Host setup",
+      "screen": "Game setup"
+    },
+    "setup_timer": {
+      "hr": "TIMER PO RUNDI",
+      "en": "TIMER PER ROUND",
+      "screen": "Game setup"
+    },
+    "setup_timer_off": {
+      "hr": "Bez",
+      "en": "Off",
+      "screen": "Game setup"
+    },
+    "setup_timer_minutes": {
+      "hr": "%1$d min",
+      "en": "%1$d min",
+      "screen": "Game setup"
+    },
+    "setup_timer_custom": {
+      "hr": "Svoje…",
+      "en": "Custom…",
+      "screen": "Game setup"
+    },
+    "setup_timer_synced": {
+      "hr": "Isti timer na svim telefonima.",
+      "en": "Same timer on every phone.",
+      "screen": "Game setup"
+    },
+    "setup_voting": {
+      "hr": "GLASANJE",
+      "en": "VOTING",
+      "screen": "Game setup"
+    },
+    "setup_vote_app": {
+      "hr": "U aplikaciji",
+      "en": "In the app",
+      "screen": "Game setup"
+    },
+    "setup_vote_loud": {
+      "hr": "Naglas",
+      "en": "Out loud",
+      "screen": "Game setup"
+    },
+    "setup_vote_app_hint": {
+      "hr": "Tajno glasanje — rezultat se vidi kad svi glasaju.",
+      "en": "Secret vote — results show once everyone has voted.",
+      "screen": "Game setup"
+    },
+    "setup_dictionaries": {
+      "hr": "RJEČNICI",
+      "en": "DICTIONARIES",
+      "screen": "Game setup"
+    },
+    "setup_categories": {
+      "hr": "KATEGORIJE",
+      "en": "CATEGORIES",
+      "screen": "Game setup"
+    },
+    "setup_select_all": {
+      "hr": "Odaberi sve",
+      "en": "Select all",
+      "screen": "Game setup"
+    },
+    "setup_start": {
+      "hr": "Započni igru",
+      "en": "Start game",
+      "screen": "Game setup"
+    },
+    "setup_open_room": {
+      "hr": "Otvori sobu",
+      "en": "Open room",
+      "screen": "Game setup"
+    },
+    "setup_privacy_hint": {
+      "hr": "U sobu putuje samo izvučena riječ, ne tvoj rječnik.",
+      "en": "Only the drawn word goes to the room — never your dictionary.",
+      "screen": "Game setup"
+    },
+    "setup_none_selected": {
+      "hr": "Odaberi barem jednu kategoriju.",
+      "en": "Pick at least one category.",
+      "screen": "Game setup"
+    },
+    "setup_empty_pool": {
+      "hr": "U odabranim kategorijama nema riječi.",
+      "en": "The selected categories have no words.",
+      "screen": "Game setup"
+    },
+    "setup_add_words": {
+      "hr": "Dodaj riječi",
+      "en": "Add words",
+      "screen": "Game setup"
+    },
+    "setup_loading": {
+      "hr": "Učitavanje rječnika…",
+      "en": "Loading dictionaries…",
+      "screen": "Game setup"
+    },
+    "setup_offline": {
+      "hr": "Nema veze sa serverom. Igraš sa spremljenim rječnicima.",
+      "en": "No connection to the server. Playing with saved dictionaries.",
+      "screen": "Game setup"
+    },
+    "lobby_title": {
+      "hr": "Soba",
+      "en": "Room",
+      "screen": "Lobby"
+    },
+    "lobby_code_label": {
+      "hr": "KOD SOBE",
+      "en": "ROOM CODE",
+      "screen": "Lobby"
+    },
+    "lobby_share": {
+      "hr": "Podijeli",
+      "en": "Share",
+      "screen": "Lobby"
+    },
+    "lobby_players_count": {
+      "hr": "%1$d od %2$d",
+      "en": "%1$d of %2$d",
+      "screen": "Lobby"
+    },
+    "lobby_host": {
+      "hr": "Domaćin",
+      "en": "Host",
+      "screen": "Lobby"
+    },
+    "lobby_you": {
+      "hr": "(ti)",
+      "en": "(you)",
+      "screen": "Lobby"
+    },
+    "lobby_connected": {
+      "hr": "Na vezi",
+      "en": "Connected",
+      "note": "Gender-neutral on purpose",
+      "screen": "Lobby"
+    },
+    "lobby_connecting": {
+      "hr": "Povezuje se…",
+      "en": "Connecting…",
+      "screen": "Lobby"
+    },
+    "lobby_ready": {
+      "hr": "Svi su tu? Možeš krenuti.",
+      "en": "Everyone here? You can start.",
+      "screen": "Lobby"
+    },
+    "lobby_waiting_slot": {
+      "hr": "Čeka se igrač…",
+      "en": "Waiting for a player…",
+      "screen": "Lobby"
+    },
+    "lobby_waiting_host": {
+      "hr": "Čeka se da %1$s započne igru",
+      "en": "Waiting for %1$s to start",
+      "note": "Name in nominative",
+      "screen": "Lobby"
+    },
+    "lobby_in_room": {
+      "hr": "U sobi si",
+      "en": "You’re in",
+      "screen": "Lobby"
+    },
+    "lobby_rules": {
+      "hr": "PRAVILA OVE IGRE",
+      "en": "THIS GAME’S RULES",
+      "screen": "Lobby"
+    },
+    "lobby_leave": {
+      "hr": "Napusti sobu",
+      "en": "Leave room",
+      "screen": "Lobby"
+    },
+    "lobby_edit": {
+      "hr": "Uredi",
+      "en": "Edit",
+      "screen": "Lobby"
+    },
+    "join_title": {
+      "hr": "Uđi u sobu",
+      "en": "Join a room",
+      "screen": "Join"
+    },
+    "join_code_hint": {
+      "hr": "Upiši kod od 4 znaka s domaćinova ekrana.",
+      "en": "Enter the 4-character code from the host’s screen.",
+      "screen": "Join"
+    },
+    "join_or": {
+      "hr": "ili",
+      "en": "or",
+      "screen": "Join"
+    },
+    "join_next": {
+      "hr": "Dalje",
+      "en": "Next",
+      "screen": "Join"
+    },
+    "join_scan": {
+      "hr": "Skeniraj QR kod",
+      "en": "Scan QR code",
+      "screen": "Join"
+    },
+    "join_nick_title": {
+      "hr": "Kako da te zovemo?",
+      "en": "What should we call you?",
+      "screen": "Join"
+    },
+    "join_nick_label": {
+      "hr": "Nadimak",
+      "en": "Nickname",
+      "screen": "Join"
+    },
+    "join_nick_hint": {
+      "hr": "Vide ga samo igrači u ovoj sobi.",
+      "en": "Only players in this room see it.",
+      "screen": "Join"
+    },
+    "join_enter": {
+      "hr": "Uđi u sobu",
+      "en": "Join room",
+      "screen": "Join"
+    },
+    "join_err_not_found": {
+      "hr": "Soba %1$s ne postoji. Provjeri kod ili skeniraj QR.",
+      "en": "Room %1$s doesn’t exist. Check the code or scan the QR.",
+      "screen": "Join"
+    },
+    "join_err_nick_taken": {
+      "hr": "Netko u sobi već se zove %1$s.",
+      "en": "Someone in the room is already called %1$s.",
+      "screen": "Join"
+    },
+    "join_err_started_title": {
+      "hr": "Igra je već počela",
+      "en": "The game has already started",
+      "screen": "Join"
+    },
+    "join_err_started_body": {
+      "hr": "Uđi kad krene sljedeća — kod ostaje isti.",
+      "en": "Join when the next one starts — the code stays the same.",
+      "screen": "Join"
+    },
+    "join_err_full_title": {
+      "hr": "Soba je puna",
+      "en": "The room is full",
+      "screen": "Join"
+    },
+    "join_err_full_body": {
+      "hr": "U sobi je već 12 igrača.",
+      "en": "The room already has 12 players.",
+      "screen": "Join"
+    },
+    "join_wait_next": {
+      "hr": "Čekaj sljedeću igru",
+      "en": "Wait for the next game",
+      "screen": "Join"
+    },
+    "reveal_player_of": {
+      "hr": "Igrač %1$d od %2$d",
+      "en": "Player %1$d of %2$d",
+      "screen": "Role reveal"
+    },
+    "reveal_pass_to": {
+      "hr": "Telefon ide: %1$s",
+      "en": "Pass the phone to %1$s",
+      "note": "Avoids declining the name",
+      "screen": "Role reveal"
+    },
+    "reveal_tap_card": {
+      "hr": "%1$s, dodirni kartu.",
+      "en": "%1$s, tap the card.",
+      "screen": "Role reveal"
+    },
+    "reveal_nobody_look": {
+      "hr": "Neka nitko drugi ne gleda.",
+      "en": "Make sure nobody else is looking.",
+      "screen": "Role reveal"
+    },
+    "reveal_show": {
+      "hr": "Prikaži ulogu",
+      "en": "Show role",
+      "screen": "Role reveal"
+    },
+    "reveal_secret_word": {
+      "hr": "TAJNA RIJEČ",
+      "en": "SECRET WORD",
+      "screen": "Role reveal"
+    },
+    "reveal_category": {
+      "hr": "Kategorija · %1$s",
+      "en": "Category · %1$s",
+      "screen": "Role reveal"
+    },
+    "reveal_you_are": {
+      "hr": "TI SI",
+      "en": "YOU ARE",
+      "screen": "Role reveal"
+    },
+    "reveal_spy": {
+      "hr": "Špijun",
+      "en": "Spy",
+      "screen": "Role reveal"
+    },
+    "reveal_spy_alone": {
+      "hr": "Sam si. Slušaj, blefiraj i ne odaj se.",
+      "en": "You’re alone. Listen, bluff, don’t give yourself away.",
+      "screen": "Role reveal"
+    },
+    "reveal_other_spies": {
+      "hr": "OSTALI ŠPIJUNI",
+      "en": "OTHER SPIES",
+      "screen": "Role reveal"
+    },
+    "reveal_hide_next": {
+      "hr": "Sakrij i dalje",
+      "en": "Hide and pass on",
+      "screen": "Role reveal"
+    },
+    "reveal_hide_start": {
+      "hr": "Sakrij i započni raspravu",
+      "en": "Hide and start the discussion",
+      "note": "Last player",
+      "screen": "Role reveal"
+    },
+    "reveal_autohide": {
+      "hr": "Sakriva se za %1$d s",
+      "en": "Hides in %1$d s",
+      "screen": "Role reveal"
+    },
+    "reveal_starts_when_all": {
+      "hr": "Rasprava počinje kad svi pogledaju.",
+      "en": "The discussion starts once everyone has looked.",
+      "screen": "Role reveal"
+    },
+    "reveal_peek_again": {
+      "hr": "Pogledaj ponovno",
+      "en": "Look again",
+      "note": "Own-phone mode only",
+      "screen": "Role reveal"
+    },
+    "reveal_seen_count": {
+      "hr": "%1$d / %2$d",
+      "en": "%1$d / %2$d",
+      "screen": "Role reveal"
+    },
+    "reveal_seen_label": {
+      "hr": "pogledalo kartu",
+      "en": "have looked",
+      "screen": "Role reveal"
+    },
+    "round_label": {
+      "hr": "RUNDA %1$d",
+      "en": "ROUND %1$d",
+      "screen": "Round & discussion"
+    },
+    "round_category_pill": {
+      "hr": "Kategorija · %1$s",
+      "en": "Category · %1$s",
+      "screen": "Round & discussion"
+    },
+    "round_who": {
+      "hr": "Tko ne zna riječ?",
+      "en": "Who doesn’t know the word?",
+      "screen": "Round & discussion"
+    },
+    "round_talk": {
+      "hr": "Razgovarajte",
+      "en": "Talk it out",
+      "note": "Timer off",
+      "screen": "Round & discussion"
+    },
+    "round_no_timer": {
+      "hr": "bez timera",
+      "en": "no timer",
+      "screen": "Round & discussion"
+    },
+    "round_almost": {
+      "hr": "Još malo!",
+      "en": "Almost up!",
+      "screen": "Round & discussion"
+    },
+    "round_time_up": {
+      "hr": "Vrijeme!",
+      "en": "Time’s up!",
+      "screen": "Round & discussion"
+    },
+    "round_led_by": {
+      "hr": "Vodi %1$s",
+      "en": "Run by %1$s",
+      "screen": "Round & discussion"
+    },
+    "round_end_discussion": {
+      "hr": "Završi raspravu",
+      "en": "End discussion",
+      "screen": "Round & discussion"
+    },
+    "round_add_minute": {
+      "hr": "+1 min",
+      "en": "+1 min",
+      "screen": "Round & discussion"
+    },
+    "round_to_vote": {
+      "hr": "Na glasanje",
+      "en": "To the vote",
+      "screen": "Round & discussion"
+    },
+    "round_vote_opens": {
+      "hr": "Kad vrijeme istekne, otvara se glasanje.",
+      "en": "When time runs out, voting opens.",
+      "screen": "Round & discussion"
+    },
+    "round_own_card": {
+      "hr": "Pogledaj svoju kartu",
+      "en": "Look at your card",
+      "screen": "Round & discussion"
+    },
+    "round_loud_title": {
+      "hr": "Koga ste izbacili?",
+      "en": "Who did you vote out?",
+      "screen": "Round & discussion"
+    },
+    "round_loud_tap": {
+      "hr": "Dodirni kartu tog igrača.",
+      "en": "Tap that player’s card.",
+      "screen": "Round & discussion"
+    },
+    "round_loud_vote": {
+      "hr": "Glasajte naglas",
+      "en": "Vote out loud",
+      "screen": "Round & discussion"
+    },
+    "round_knock_out": {
+      "hr": "Izbaci · %1$s",
+      "en": "Knock out · %1$s",
+      "screen": "Round & discussion"
+    },
+    "round_nobody": {
+      "hr": "Nitko ne ispada",
+      "en": "Nobody’s out",
+      "screen": "Round & discussion"
+    },
+    "vote_title": {
+      "hr": "Tko je špijun?",
+      "en": "Who’s the spy?",
+      "screen": "Voting"
+    },
+    "vote_secret": {
+      "hr": "Glas je tajan. Rezultat se vidi kad svi glasaju.",
+      "en": "Your vote is secret. Results show once everyone has voted.",
+      "screen": "Voting"
+    },
+    "vote_confirm": {
+      "hr": "Glasaj · %1$s",
+      "en": "Vote · %1$s",
+      "screen": "Voting"
+    },
+    "vote_locked": {
+      "hr": "Nakon potvrde glas se ne može promijeniti.",
+      "en": "Once confirmed, your vote can’t be changed.",
+      "screen": "Voting"
+    },
+    "vote_self": {
+      "hr": "ti",
+      "en": "you",
+      "screen": "Voting"
+    },
+    "vote_cast": {
+      "hr": "Glas je predan",
+      "en": "Vote cast",
+      "screen": "Voting"
+    },
+    "vote_not_yet": {
+      "hr": "JOŠ NISU GLASALI",
+      "en": "NOT VOTED YET",
+      "screen": "Voting"
+    },
+    "vote_close": {
+      "hr": "Zatvori glasanje",
+      "en": "Close voting",
+      "note": "Host only",
+      "screen": "Voting"
+    },
+    "vote_close_hint": {
+      "hr": "Zatvaranje broji samo predane glasove.",
+      "en": "Closing counts only the votes already cast.",
+      "screen": "Voting"
+    },
+    "vote_progress": {
+      "hr": "Glasalo %1$d od %2$d",
+      "en": "%1$d of %2$d voted",
+      "screen": "Voting"
+    },
+    "vote_i_am": {
+      "hr": "Ja sam %1$s · glasam",
+      "en": "I’m %1$s · vote",
+      "note": "One-phone handoff",
+      "screen": "Voting"
+    },
+    "vote_pass_secret": {
+      "hr": "Glas je tajan — neka nitko ne gleda.",
+      "en": "Your vote is secret — don’t let anyone look.",
+      "screen": "Voting"
+    },
+    "vote_spectating": {
+      "hr": "Gledaš",
+      "en": "Watching",
+      "screen": "Voting"
+    },
+    "vote_spectator_title": {
+      "hr": "Izvan igre si od runde %1$d",
+      "en": "You’ve been out since round %1$d",
+      "screen": "Voting"
+    },
+    "vote_spectator_body": {
+      "hr": "Gledaš do kraja, ali ne glasaš. Ne odaj ništa — uloge se otkrivaju na kraju.",
+      "en": "You’re watching till the end but can’t vote. Don’t give anything away — roles are revealed at the end.",
+      "screen": "Voting"
+    },
+    "result_pill": {
+      "hr": "Runda %1$d · rezultat",
+      "en": "Round %1$d · result",
+      "screen": "Round result"
+    },
+    "result_out": {
+      "hr": "%1$s ispada iz igre",
+      "en": "%1$s is out",
+      "note": "Neutral verb, no gender",
+      "screen": "Round result"
+    },
+    "result_out_stamp": {
+      "hr": "IZVAN IGRE",
+      "en": "OUT",
+      "note": "Stamp on the face-down card; gender-neutral",
+      "screen": "Round result"
+    },
+    "result_roles_end": {
+      "hr": "Uloge se otkrivaju na kraju igre.",
+      "en": "Roles are revealed at the end of the game.",
+      "screen": "Round result"
+    },
+    "result_votes": {
+      "hr": "GLASOVI",
+      "en": "VOTES",
+      "screen": "Round result"
+    },
+    "result_next_round": {
+      "hr": "Sljedeća runda",
+      "en": "Next round",
+      "screen": "Round result"
+    },
+    "result_tie": {
+      "hr": "Neriješeno",
+      "en": "It’s a tie",
+      "screen": "Round result"
+    },
+    "result_tie_body": {
+      "hr": "Ponovno glasanje: %1$s ili %2$s.",
+      "en": "Re-vote: %1$s or %2$s.",
+      "screen": "Round result"
+    },
+    "result_revote": {
+      "hr": "Glasaj ponovno · %1$s ili %2$s",
+      "en": "Vote again · %1$s or %2$s",
+      "screen": "Round result"
+    },
+    "result_tie_again": {
+      "hr": "Opet neriješeno",
+      "en": "Tied again",
+      "screen": "Round result"
+    },
+    "result_tie_again_body": {
+      "hr": "Nitko ne ispada. Igra se nastavlja.",
+      "en": "Nobody’s out. The game goes on.",
+      "screen": "Round result"
+    },
+    "result_round_n": {
+      "hr": "Runda %1$d",
+      "en": "Round %1$d",
+      "screen": "Round result"
+    },
+    "gameover_label": {
+      "hr": "Kraj igre",
+      "en": "Game over",
+      "screen": "Game over"
+    },
+    "gameover_citizens": {
+      "hr": "Građani pobjeđuju",
+      "en": "Citizens win",
+      "screen": "Game over"
+    },
+    "gameover_spies": {
+      "hr": "Špijuni pobjeđuju",
+      "en": "Spies win",
+      "screen": "Game over"
+    },
+    "gameover_play_again": {
+      "hr": "Igraj ponovno",
+      "en": "Play again",
+      "screen": "Game over"
+    },
+    "gameover_play_again_hint": {
+      "hr": "Iste postavke, nova riječ, nove uloge.",
+      "en": "Same settings, new word, new roles.",
+      "screen": "Game over"
+    },
+    "gameover_new": {
+      "hr": "Nova igra",
+      "en": "New game",
+      "screen": "Game over"
+    },
+    "role_citizen": {
+      "hr": "građanin",
+      "en": "citizen",
+      "screen": "Roles"
+    },
+    "role_spy": {
+      "hr": "špijun",
+      "en": "spy",
+      "screen": "Roles"
+    },
+    "dict_title": {
+      "hr": "Rječnici",
+      "en": "Dictionaries",
+      "screen": "Dictionaries"
+    },
+    "dict_builtin": {
+      "hr": "Ugrađen",
+      "en": "Built-in",
+      "screen": "Dictionaries"
+    },
+    "dict_custom": {
+      "hr": "Vlastiti",
+      "en": "Custom",
+      "screen": "Dictionaries"
+    },
+    "dict_section_builtin": {
+      "hr": "UGRAĐENI",
+      "en": "BUILT-IN",
+      "screen": "Dictionaries"
+    },
+    "dict_section_mine": {
+      "hr": "MOJI · SAMO NA OVOM UREĐAJU",
+      "en": "MINE · ON THIS DEVICE ONLY",
+      "screen": "Dictionaries"
+    },
+    "dict_new": {
+      "hr": "Novi rječnik",
+      "en": "New dictionary",
+      "screen": "Dictionaries"
+    },
+    "dict_import": {
+      "hr": "Uvezi",
+      "en": "Import",
+      "screen": "Dictionaries"
+    },
+    "dict_new_category": {
+      "hr": "Nova kategorija",
+      "en": "New category",
+      "screen": "Dictionaries"
+    },
+    "dict_add": {
+      "hr": "Dodaj",
+      "en": "Add",
+      "screen": "Dictionaries"
+    },
+    "dict_new_word": {
+      "hr": "Nova riječ",
+      "en": "New word",
+      "screen": "Dictionaries"
+    },
+    "dict_duplicate": {
+      "hr": "„%1$s“ već postoji u ovoj kategoriji.",
+      "en": "“%1$s” is already in this category.",
+      "note": "Case-insensitive check",
+      "screen": "Dictionaries"
+    },
+    "dict_name": {
+      "hr": "Naziv",
+      "en": "Name",
+      "screen": "Dictionaries"
+    },
+    "dict_language": {
+      "hr": "Jezik riječi",
+      "en": "Word language",
+      "screen": "Dictionaries"
+    },
+    "dict_local_hint": {
+      "hr": "Sprema se samo na ovaj telefon. U igru putuje samo izvučena riječ.",
+      "en": "Saved only on this phone. Only the drawn word goes into a game.",
+      "screen": "Dictionaries"
+    },
+    "dict_delete_title": {
+      "hr": "Izbrisati „%1$s“?",
+      "en": "Delete “%1$s”?",
+      "screen": "Dictionaries"
+    },
+    "dict_delete_body": {
+      "hr": "Sve kategorije i riječi trajno će se obrisati s ovog telefona.",
+      "en": "All its categories and words will be permanently deleted from this phone.",
+      "screen": "Dictionaries"
+    },
+    "dict_delete": {
+      "hr": "Izbriši rječnik",
+      "en": "Delete dictionary",
+      "screen": "Dictionaries"
+    },
+    "dict_delete_short": {
+      "hr": "Izbriši",
+      "en": "Delete",
+      "screen": "Dictionaries"
+    },
+    "dict_duplicate_dict": {
+      "hr": "Kopiraj",
+      "en": "Duplicate",
+      "screen": "Dictionaries"
+    },
+    "dict_empty_title": {
+      "hr": "Još nemaš vlastitih rječnika",
+      "en": "No dictionaries of your own yet",
+      "screen": "Dictionaries"
+    },
+    "dict_empty_body": {
+      "hr": "Napravi svoj s riječima vaše ekipe ili uvezi datoteku od prijatelja.",
+      "en": "Make one with your group’s words, or import a file from a friend.",
+      "screen": "Dictionaries"
+    },
+    "dict_category_empty": {
+      "hr": "još nema riječi",
+      "en": "no words yet",
+      "screen": "Dictionaries"
+    },
+    "dict_readonly": {
+      "hr": "Ugrađeni rječnik ne možeš mijenjati. Kopiraj ga i uredi kopiju.",
+      "en": "Built-in dictionaries can’t be edited. Make a copy and edit that.",
+      "screen": "Dictionaries"
+    },
+    "dict_copy": {
+      "hr": "Napravi kopiju",
+      "en": "Make a copy",
+      "screen": "Dictionaries"
+    },
+    "dict_updated": {
+      "hr": "ažurirano %1$s",
+      "en": "updated %1$s",
+      "note": "Localised date",
+      "screen": "Dictionaries"
+    },
+    "export_title": {
+      "hr": "Podijeli rječnik",
+      "en": "Share dictionary",
+      "screen": "Export"
+    },
+    "export_file": {
+      "hr": "Datoteka",
+      "en": "File",
+      "screen": "Export"
+    },
+    "export_file_desc": {
+      "hr": "Pošalji .json porukom, mailom ili spremi.",
+      "en": "Send the .json by message or email, or save it.",
+      "screen": "Export"
+    },
+    "export_link": {
+      "hr": "Poveznica",
+      "en": "Link",
+      "screen": "Export"
+    },
+    "export_link_desc": {
+      "hr": "Otvara se ravno u Špijunu.",
+      "en": "Opens straight in Špijun.",
+      "screen": "Export"
+    },
+    "export_qr": {
+      "hr": "QR kod",
+      "en": "QR code",
+      "screen": "Export"
+    },
+    "export_qr_desc": {
+      "hr": "Za nekoga tko sjedi pokraj tebe.",
+      "en": "For someone sitting next to you.",
+      "screen": "Export"
+    },
+    "export_too_big": {
+      "hr": "Prevelik — najviše oko 80 riječi (2 KB).",
+      "en": "Too big — about 80 words (2 KB) max.",
+      "screen": "Export"
+    },
+    "export_file_best": {
+      "hr": "Najbolje za veće rječnike.",
+      "en": "Best for bigger dictionaries.",
+      "screen": "Export"
+    },
+    "export_qr_how": {
+      "hr": "Prijatelj otvara Špijun → Rječnici → Uvezi → Skeniraj.",
+      "en": "Your friend opens Špijun → Dictionaries → Import → Scan.",
+      "screen": "Export"
+    },
+    "export_copy_link": {
+      "hr": "Kopiraj poveznicu",
+      "en": "Copy link",
+      "screen": "Export"
+    },
+    "export_done": {
+      "hr": "Gotovo",
+      "en": "Done",
+      "screen": "Export"
+    },
+    "import_title": {
+      "hr": "Uvoz rječnika",
+      "en": "Import dictionary",
+      "screen": "Import"
+    },
+    "import_conflict": {
+      "hr": "Već imaš rječnik „%1$s“. Što želiš?",
+      "en": "You already have “%1$s”. What would you like to do?",
+      "screen": "Import"
+    },
+    "import_merge": {
+      "hr": "Spoji s postojećim",
+      "en": "Merge into existing",
+      "screen": "Import"
+    },
+    "import_merge_desc": {
+      "hr": "Doda nove riječi, preskoči one koje već imaš.",
+      "en": "Adds the new words and skips the ones you already have.",
+      "screen": "Import"
+    },
+    "import_save_new": {
+      "hr": "Spremi kao novi",
+      "en": "Save as new",
+      "screen": "Import"
+    },
+    "import_save_new_desc": {
+      "hr": "Kao „%1$s“.",
+      "en": "As “%1$s”.",
+      "screen": "Import"
+    },
+    "import_already_have": {
+      "hr": "već imaš",
+      "en": "you have",
+      "screen": "Import"
+    },
+    "import_err_invalid": {
+      "hr": "Ovo nije Špijun rječnik",
+      "en": "This isn’t a Špijun dictionary",
+      "screen": "Import"
+    },
+    "import_err_invalid_body": {
+      "hr": "Datoteka se ne može pročitati. Zamoli prijatelja da je ponovno izveze iz Špijuna.",
+      "en": "The file can’t be read. Ask your friend to export it from Špijun again.",
+      "screen": "Import"
+    },
+    "import_err_version": {
+      "hr": "Ova datoteka je iz novije verzije Špijuna — ažuriraj aplikaciju.",
+      "en": "This file is from a newer version of Špijun — update the app.",
+      "screen": "Import"
+    },
+    "import_err_empty": {
+      "hr": "Rječnik je prazan — nema što uvesti.",
+      "en": "The dictionary is empty — nothing to import.",
+      "screen": "Import"
+    },
+    "import_pick_other": {
+      "hr": "Odaberi drugu datoteku",
+      "en": "Choose another file",
+      "screen": "Import"
+    },
+    "scan_title": {
+      "hr": "Skeniraj QR kod",
+      "en": "Scan a QR code",
+      "screen": "QR scanner"
+    },
+    "scan_hint": {
+      "hr": "Sobe ili rječnika — prepoznat ćemo što je.",
+      "en": "A room or a dictionary — we’ll work out which.",
+      "screen": "QR scanner"
+    },
+    "scan_enter_code": {
+      "hr": "Upiši kod sobe",
+      "en": "Enter room code",
+      "screen": "QR scanner"
+    },
+    "scan_torch": {
+      "hr": "Svjetiljka",
+      "en": "Torch",
+      "screen": "QR scanner"
+    },
+    "settings_title": {
+      "hr": "Postavke",
+      "en": "Settings",
+      "screen": "Settings"
+    },
+    "settings_general": {
+      "hr": "OPĆENITO",
+      "en": "GENERAL",
+      "screen": "Settings"
+    },
+    "settings_language": {
+      "hr": "Jezik",
+      "en": "Language",
+      "screen": "Settings"
+    },
+    "settings_theme": {
+      "hr": "Tema",
+      "en": "Theme",
+      "screen": "Settings"
+    },
+    "settings_theme_system": {
+      "hr": "Kao sustav",
+      "en": "Same as system",
+      "screen": "Settings"
+    },
+    "settings_theme_light": {
+      "hr": "Svijetla",
+      "en": "Light",
+      "screen": "Settings"
+    },
+    "settings_theme_dark": {
+      "hr": "Tamna",
+      "en": "Dark",
+      "screen": "Settings"
+    },
+    "settings_defaults": {
+      "hr": "NOVA IGRA · ZADANO",
+      "en": "NEW GAME · DEFAULTS",
+      "screen": "Settings"
+    },
+    "settings_players_spies": {
+      "hr": "Igrači i špijuni",
+      "en": "Players and spies",
+      "screen": "Settings"
+    },
+    "settings_reveal": {
+      "hr": "OTKRIVANJE",
+      "en": "REVEAL",
+      "screen": "Settings"
+    },
+    "settings_reveal_mode": {
+      "hr": "Način",
+      "en": "Style",
+      "screen": "Settings"
+    },
+    "settings_reveal_tap": {
+      "hr": "Dodirni za okretanje",
+      "en": "Tap to flip",
+      "screen": "Settings"
+    },
+    "settings_reveal_tap_desc": {
+      "hr": "Karta se okrene i sama se vrati. Preporučeno.",
+      "en": "The card flips and turns back by itself. Recommended.",
+      "screen": "Settings"
+    },
+    "settings_reveal_hold": {
+      "hr": "Drži za pogled",
+      "en": "Hold to peek",
+      "screen": "Settings"
+    },
+    "settings_reveal_hold_desc": {
+      "hr": "Vidi se samo dok držiš prst na karti.",
+      "en": "Visible only while your finger is on the card.",
+      "screen": "Settings"
+    },
+    "settings_autohide": {
+      "hr": "Automatsko skrivanje",
+      "en": "Auto-hide",
+      "screen": "Settings"
+    },
+    "settings_autohide_off": {
+      "hr": "Isključeno",
+      "en": "Off",
+      "screen": "Settings"
+    },
+    "settings_autohide_desc": {
+      "hr": "Karta se sama okrene nakon %1$d sekundi, da tajna ne ostane na ekranu.",
+      "en": "The card turns back after %1$d seconds so the secret never lingers.",
+      "screen": "Settings"
+    },
+    "settings_reduce_motion": {
+      "hr": "Uključeno je „Smanji pokrete“ — karta se pojavljuje bez okretanja i stol se ne vrti.",
+      "en": "“Reduce Motion” is on — the card appears without flipping and the table doesn’t turn.",
+      "screen": "Settings"
+    },
+    "settings_senses": {
+      "hr": "OSJETILA",
+      "en": "SENSES",
+      "screen": "Settings"
+    },
+    "settings_haptics": {
+      "hr": "Vibracija",
+      "en": "Haptics",
+      "screen": "Settings"
+    },
+    "settings_sound": {
+      "hr": "Zvukovi",
+      "en": "Sounds",
+      "screen": "Settings"
+    },
+    "settings_keep_awake": {
+      "hr": "Zaslon uvijek upaljen",
+      "en": "Keep screen on",
+      "screen": "Settings"
+    },
+    "settings_about": {
+      "hr": "O aplikaciji",
+      "en": "About",
+      "screen": "Settings"
+    },
+    "settings_version": {
+      "hr": "Verzija",
+      "en": "Version",
+      "screen": "Settings"
+    },
+    "settings_admin": {
+      "hr": "Uređivanje ugrađenih rječnika",
+      "en": "Edit built-in dictionaries",
+      "note": "Low prominence",
+      "screen": "Settings"
+    },
+    "admin_title": {
+      "hr": "Administrator",
+      "en": "Administrator",
+      "screen": "Admin PIN"
+    },
+    "admin_body": {
+      "hr": "Unesi PIN za uređivanje ugrađenih rječnika. Izmjene vide svi igrači.",
+      "en": "Enter the PIN to edit built-in dictionaries. Every player sees the changes.",
+      "screen": "Admin PIN"
+    },
+    "admin_wrong_pin": {
+      "hr": "Pogrešan PIN. Pokušaj ponovno.",
+      "en": "Wrong PIN. Try again.",
+      "screen": "Admin PIN"
+    },
+    "conn_lost": {
+      "hr": "Veza je prekinuta",
+      "en": "Connection lost",
+      "screen": "Connection & edge states"
+    },
+    "conn_reconnecting": {
+      "hr": "Ponovno spajanje… Igra se nastavlja, vraćamo te čim uhvatiš signal.",
+      "en": "Reconnecting… The game goes on; you’ll be back as soon as you have signal.",
+      "screen": "Connection & edge states"
+    },
+    "conn_card_saved": {
+      "hr": "Tvoja karta je spremljena na ovom telefonu.",
+      "en": "Your card is saved on this phone.",
+      "screen": "Connection & edge states"
+    },
+    "conn_player_dropped": {
+      "hr": "%1$s nije na vezi",
+      "en": "%1$s lost connection",
+      "note": "Neutral; no past participle",
+      "screen": "Connection & edge states"
+    },
+    "conn_player_dropped_body": {
+      "hr": "Čekamo još %1$s. Ako ga izbaciš, ide među izbačene — uloga se otkriva tek na kraju.",
+      "en": "Waiting %1$s more. If you remove them they count as out — their role is still revealed only at the end.",
+      "screen": "Connection & edge states"
+    },
+    "conn_wait_for": {
+      "hr": "Čekaj · %1$s",
+      "en": "Wait for %1$s",
+      "screen": "Connection & edge states"
+    },
+    "conn_remove": {
+      "hr": "Izbaci iz igre",
+      "en": "Remove from game",
+      "screen": "Connection & edge states"
+    },
+    "conn_host_left": {
+      "hr": "Domaćin je napustio igru",
+      "en": "The host has left",
+      "screen": "Connection & edge states"
+    },
+    "conn_host_left_body": {
+      "hr": "Netko mora preuzeti vođenje da biste nastavili — uloge ostaju iste.",
+      "en": "Someone needs to take over to carry on — roles stay the same.",
+      "screen": "Connection & edge states"
+    },
+    "conn_paused": {
+      "hr": "pauzirano",
+      "en": "paused",
+      "screen": "Connection & edge states"
+    },
+    "conn_take_over": {
+      "hr": "Preuzmi vođenje",
+      "en": "Take over as host",
+      "screen": "Connection & edge states"
+    },
+    "conn_end_game": {
+      "hr": "Završi igru",
+      "en": "End game",
+      "screen": "Connection & edge states"
+    },
+    "conn_removed": {
+      "hr": "Domaćin te uklonio iz igre",
+      "en": "The host removed you from the game",
+      "screen": "Connection & edge states"
+    },
+    "conn_removed_body": {
+      "hr": "Možeš ući ponovno kad počne sljedeća igra, s istim kodom sobe.",
+      "en": "You can rejoin when the next game starts, with the same room code.",
+      "screen": "Connection & edge states"
+    },
+    "conn_to_home": {
+      "hr": "Na početak",
+      "en": "Back to start",
+      "screen": "Connection & edge states"
+    },
+    "conn_offline_title": {
+      "hr": "Nema interneta",
+      "en": "No internet",
+      "screen": "Connection & edge states"
+    },
+    "conn_offline_body": {
+      "hr": "Za igru „svaki na svom telefonu“ treba veza. Na jednom telefonu možeš igrati i bez nje.",
+      "en": "“Each on their own phone” needs a connection. One-phone play works without it.",
+      "screen": "Connection & edge states"
+    },
+    "conn_offline_one_phone": {
+      "hr": "Igraj na jednom telefonu",
+      "en": "Play on one phone",
+      "screen": "Connection & edge states"
+    },
+    "conn_back": {
+      "hr": "Opet si tu",
+      "en": "You’re back",
+      "note": "Gender-neutral",
+      "screen": "Connection & edge states"
+    },
+    "conn_back_body": {
+      "hr": "Runda %1$d je još u tijeku. Ništa ti nije promaknulo.",
+      "en": "Round %1$d is still going. You haven’t missed anything.",
+      "note": "Gender-neutral phrasing",
+      "screen": "Connection & edge states"
+    },
+    "toast_word_added": {
+      "hr": "Dodano: „%1$s“",
+      "en": "Added: “%1$s”",
+      "screen": "Toasts"
+    },
+    "toast_undo": {
+      "hr": "Poništi",
+      "en": "Undo",
+      "screen": "Toasts"
+    },
+    "toast_imported": {
+      "hr": "Rječnik uvezen",
+      "en": "Dictionary imported",
+      "screen": "Toasts"
+    },
+    "quit_title": {
+      "hr": "Prekinuti igru?",
+      "en": "End the game?",
+      "screen": "Quit game"
+    },
+    "quit_body": {
+      "hr": "Igra završava za sve igrače u sobi. Uloge i riječ neće se otkriti.",
+      "en": "The game ends for everyone in the room. Roles and the word won’t be revealed.",
+      "screen": "Quit game"
+    },
+    "quit_confirm": {
+      "hr": "Prekini igru",
+      "en": "End game",
+      "screen": "Quit game"
+    },
+    "quit_keep": {
+      "hr": "Nastavi igrati",
+      "en": "Keep playing",
+      "screen": "Quit game"
+    },
+    "camera_title": {
+      "hr": "Kamera za QR kod",
+      "en": "Camera for QR codes",
+      "screen": "Camera permission"
+    },
+    "camera_body": {
+      "hr": "Koristimo je samo dok skeniraš kod sobe ili rječnika. Ništa se ne snima ni ne šalje.",
+      "en": "Used only while you scan a room or dictionary code. Nothing is recorded or sent.",
+      "screen": "Camera permission"
+    },
+    "camera_allow": {
+      "hr": "Dopusti kameru",
+      "en": "Allow camera",
+      "screen": "Camera permission"
+    },
+    "camera_settings": {
+      "hr": "Otvori postavke",
+      "en": "Open settings",
+      "note": "After denial",
+      "screen": "Camera permission"
+    },
+    "camera_manual": {
+      "hr": "Upiši kod ručno",
+      "en": "Enter code manually",
+      "screen": "Camera permission"
+    },
+    "a11y_card_hidden": {
+      "hr": "Karta za igrača %1$s. Dvaput dodirni za prikaz uloge.",
+      "en": "Card for %1$s. Double-tap to show your role.",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_citizen": {
+      "hr": "Građanin. Tajna riječ: %1$s. Kategorija: %2$s.",
+      "en": "Citizen. Secret word: %1$s. Category: %2$s.",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_spy": {
+      "hr": "Špijun. Ne znaš riječ. Kategorija: %1$s.",
+      "en": "Spy. You don’t know the word. Category: %1$s.",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_other_spies": {
+      "hr": "Ostali špijuni: %1$s.",
+      "en": "Other spies: %1$s.",
+      "note": "Read last",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_role_hidden": {
+      "hr": "Uloga skrivena.",
+      "en": "Role hidden.",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_timer": {
+      "hr": "Preostalo %1$s",
+      "en": "%1$s left",
+      "note": "Announced at full minutes, 30 s, 10 s, 0",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_sr_warning": {
+      "hr": "Uloga će se izgovoriti naglas. Stavi slušalice.",
+      "en": "Your role will be read aloud. Put on headphones.",
+      "note": "Before first reveal with a screen reader",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_vote_selected": {
+      "hr": "%1$s, odabrano",
+      "en": "%1$s, selected",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_vote_self": {
+      "hr": "%1$s, to si ti, nije moguće",
+      "en": "%1$s, that’s you, not available",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    },
+    "a11y_knocked_out": {
+      "hr": "%1$s ispada. Uloge se otkrivaju na kraju igre.",
+      "en": "%1$s is out. Roles are revealed at the end of the game.",
+      "screen": "Accessibility (VoiceOver/TalkBack)"
+    }
+  },
+  "plurals": {
+    "words_in_selection": {
+      "hr": {
+        "one": "%1$d riječ u odabiru",
+        "few": "%1$d riječi u odabiru",
+        "other": "%1$d riječi u odabiru"
+      },
+      "en": {
+        "one": "%1$d word in selection",
+        "other": "%1$d words in selection"
+      },
+      "note": "Setup footer"
+    },
+    "words": {
+      "hr": {
+        "one": "%1$d riječ",
+        "few": "%1$d riječi",
+        "other": "%1$d riječi"
+      },
+      "en": {
+        "one": "%1$d word",
+        "other": "%1$d words"
+      }
+    },
+    "categories": {
+      "hr": {
+        "one": "%1$d kategorija",
+        "few": "%1$d kategorije",
+        "other": "%1$d kategorija"
+      },
+      "en": {
+        "one": "%1$d category",
+        "other": "%1$d categories"
+      }
+    },
+    "players": {
+      "hr": {
+        "one": "%1$d igrač",
+        "few": "%1$d igrača",
+        "other": "%1$d igrača"
+      },
+      "en": {
+        "one": "%1$d player",
+        "other": "%1$d players"
+      }
+    },
+    "spies_in_game": {
+      "hr": {
+        "one": "U igri je %1$d špijun",
+        "few": "U igri su %1$d špijuna",
+        "other": "U igri je %1$d špijuna"
+      },
+      "en": {
+        "one": "There is %1$d spy",
+        "other": "There are %1$d spies"
+      },
+      "note": "Verb agrees: je / su / je"
+    },
+    "waiting_players": {
+      "hr": {
+        "one": "Čeka se još %1$d igrač",
+        "few": "Čeka se još %1$d igrača",
+        "other": "Čeka se još %1$d igrača"
+      },
+      "en": {
+        "one": "Waiting for %1$d more player",
+        "other": "Waiting for %1$d more players"
+      },
+      "note": "Reveal + vote"
+    },
+    "need_more_players": {
+      "hr": {
+        "one": "Treba još barem %1$d igrač.",
+        "few": "Treba još barem %1$d igrača.",
+        "other": "Treba još barem %1$d igrača."
+      },
+      "en": {
+        "one": "Need at least %1$d more player.",
+        "other": "Need at least %1$d more players."
+      },
+      "note": "Lobby gate"
+    },
+    "start_with_players": {
+      "hr": {
+        "one": "Započni igru · %1$d igrač",
+        "few": "Započni igru · %1$d igrača",
+        "other": "Započni igru · %1$d igrača"
+      },
+      "en": {
+        "one": "Start game · %1$d player",
+        "other": "Start game · %1$d players"
+      }
+    },
+    "votes": {
+      "hr": {
+        "one": "%1$d glas",
+        "few": "%1$d glasa",
+        "other": "%1$d glasova"
+      },
+      "en": {
+        "one": "%1$d vote",
+        "other": "%1$d votes"
+      }
+    },
+    "rounds": {
+      "hr": {
+        "one": "%1$d runda",
+        "few": "%1$d runde",
+        "other": "%1$d rundi"
+      },
+      "en": {
+        "one": "%1$d round",
+        "other": "%1$d rounds"
+      },
+      "note": "Game over header"
+    },
+    "search_words": {
+      "hr": {
+        "one": "Traži u %1$d riječi",
+        "few": "Traži u %1$d riječi",
+        "other": "Traži u %1$d riječi"
+      },
+      "en": {
+        "one": "Search %1$d word",
+        "other": "Search %1$d words"
+      }
+    },
+    "in_game": {
+      "hr": {
+        "one": "%1$d u igri",
+        "few": "%1$d u igri",
+        "other": "%1$d u igri"
+      },
+      "en": {
+        "one": "%1$d still in",
+        "other": "%1$d still in"
+      }
+    }
+  },
+  "proposed": {
+    "$description": "proposed — string appears in the mock-ups but has no key in the design copy table; key name and English are proposed by the export, Croatian is from the mock unless noted",
+    "strings": {
+      "setup_vote_app_hint_one_phone": {
+        "hr": "Tajno glasanje — telefon kruži, rezultat se vidi kad svi glasaju.",
+        "en": "Secret vote — the phone goes round; results show once everyone has voted.",
+        "screen": "Game setup",
+        "status": "proposed"
+      },
+      "setup_dicts_and_categories": {
+        "hr": "RJEČNICI I KATEGORIJE",
+        "en": "DICTIONARIES & CATEGORIES",
+        "screen": "Game setup",
+        "status": "proposed"
+      },
+      "setup_players_you_plus": {
+        "hr": "ti + ostali",
+        "en": "you + the others",
+        "screen": "Game setup (host)",
+        "note": "Value in the Players row of host setup",
+        "status": "proposed"
+      },
+      "setup_names_checked_later": {
+        "hr": "provjera kad svi uđu",
+        "en": "checked once everyone’s in",
+        "screen": "Game setup (host)",
+        "status": "proposed"
+      },
+      "setup_dict_builtin_inline": {
+        "hr": "%1$s · ugrađen",
+        "en": "%1$s · built-in",
+        "screen": "Game setup",
+        "status": "proposed"
+      },
+      "setup_dict_custom_inline": {
+        "hr": "%1$s · vlastiti",
+        "en": "%1$s · custom",
+        "screen": "Game setup",
+        "status": "proposed"
+      },
+      "setup_categories_of": {
+        "hr": "KATEGORIJE · %1$s",
+        "en": "CATEGORIES · %1$s",
+        "screen": "Game setup",
+        "note": "Dictionary name, uppercased in UI",
+        "status": "proposed"
+      },
+      "setup_empty_pool_body": {
+        "hr": "Ove kategorije još nemaju riječi.",
+        "en": "These categories have no words yet.",
+        "screen": "Game setup",
+        "status": "proposed"
+      },
+      "setup_offline_dated": {
+        "hr": "Nema veze sa serverom. Igraš sa spremljenim rječnicima (%1$s).",
+        "en": "No connection to the server. Playing with saved dictionaries (%1$s).",
+        "screen": "Game setup",
+        "note": "%1$s = localised short date of the cache",
+        "status": "proposed"
+      },
+      "lobby_players_label": {
+        "hr": "IGRAČI",
+        "en": "PLAYERS",
+        "screen": "Lobby",
+        "status": "proposed"
+      },
+      "lobby_guest_header": {
+        "hr": "Soba: %1$s · igraš kao %2$s",
+        "en": "%1$s’s room · you’re %2$s",
+        "screen": "Lobby (guest)",
+        "note": "Mock says „Lukina soba“ (declined possessive) — violates the no-declined-names rule; use this form",
+        "status": "proposed"
+      },
+      "lobby_rules_timer": {
+        "hr": "timer %1$d min",
+        "en": "%1$d min timer",
+        "screen": "Lobby",
+        "status": "proposed"
+      },
+      "lobby_rules_no_timer": {
+        "hr": "bez timera",
+        "en": "no timer",
+        "screen": "Lobby",
+        "status": "proposed"
+      },
+      "lobby_rules_vote_app": {
+        "hr": "glasanje u aplikaciji",
+        "en": "voting in the app",
+        "screen": "Lobby",
+        "status": "proposed"
+      },
+      "lobby_rules_vote_loud": {
+        "hr": "glasanje naglas",
+        "en": "voting out loud",
+        "screen": "Lobby",
+        "note": "Rules line = plural_spies_short · timer · vote mode · plural_words, joined with ' · '",
+        "status": "proposed"
+      },
+      "reveal_room_pill": {
+        "hr": "Soba %1$s",
+        "en": "Room %1$s",
+        "screen": "Role reveal (own phone)",
+        "status": "proposed"
+      },
+      "reveal_own_card_hint": {
+        "hr": "Tvoja karta je dolje. Dodirni je ako trebaš ponovno pogledati.",
+        "en": "Your card is at the bottom. Tap it if you need another look.",
+        "screen": "Role reveal (own phone)",
+        "status": "proposed"
+      },
+      "vote_option_out": {
+        "hr": "izvan igre",
+        "en": "out",
+        "screen": "Voting",
+        "status": "proposed"
+      },
+      "vote_player_dropped": {
+        "hr": "%1$s · prekid veze",
+        "en": "%1$s · disconnected",
+        "screen": "Voting",
+        "status": "proposed"
+      },
+      "vote_spectator_voting_tag": {
+        "hr": "GLASA",
+        "en": "VOTING",
+        "screen": "Voting (spectator)",
+        "status": "proposed"
+      },
+      "result_tie_again_cards": {
+        "hr": "Nitko ne ispada. Obje karte ostaju na stolu.",
+        "en": "Nobody’s out. Both cards stay on the table.",
+        "screen": "Round result",
+        "status": "proposed"
+      },
+      "result_missing_vote": {
+        "hr": "bez glasa: %1$s",
+        "en": "didn’t vote: %1$s",
+        "screen": "Round result",
+        "note": "Mock „Ivan nije glasao“ uses a gendered participle; neutral form proposed",
+        "status": "proposed"
+      },
+      "gameover_unmasked_spies": {
+        "hr": "Neotkriveni: %1$s",
+        "en": "Never caught: %1$s",
+        "screen": "Game over",
+        "note": "Mock „Ana i Nina su ostale neotkrivene“ is gendered; neutral list form proposed",
+        "status": "proposed"
+      },
+      "dict_delete_body_counts": {
+        "hr": "%1$s i %2$s trajno će se obrisati s ovog telefona. Ovo se ne može poništiti.",
+        "en": "%1$s and %2$s will be permanently deleted from this phone. This can’t be undone.",
+        "screen": "Dictionaries",
+        "note": "%1$s = plural_categories, %2$s = plural_words",
+        "status": "proposed"
+      },
+      "export_meta": {
+        "hr": "„%1$s“ · %2$s · %3$s KB",
+        "en": "“%1$s” · %2$s · %3$s KB",
+        "screen": "Export",
+        "note": "%2$s = plural_words",
+        "status": "proposed"
+      },
+      "import_merge_desc_counts": {
+        "hr": "Doda %1$s, preskoči %2$s koje već imaš.",
+        "en": "Adds %1$s and skips %2$s you already have.",
+        "screen": "Import",
+        "note": "%1$s = plural_new_words, %2$s = plural_words",
+        "status": "proposed"
+      },
+      "import_merge_button": {
+        "hr": "Spoji · %1$s",
+        "en": "Merge · %1$s",
+        "screen": "Import",
+        "note": "%1$s = plural_new_words",
+        "status": "proposed"
+      },
+      "import_err_invalid_named": {
+        "hr": "Datoteka „%1$s“ se ne može pročitati. Zamoli prijatelja da je ponovno izveze iz Špijuna.",
+        "en": "“%1$s” can’t be read. Ask your friend to export it from Špijun again.",
+        "screen": "Import",
+        "status": "proposed"
+      },
+      "settings_timer": {
+        "hr": "Timer",
+        "en": "Timer",
+        "screen": "Settings",
+        "status": "proposed"
+      },
+      "settings_voting": {
+        "hr": "Glasanje",
+        "en": "Voting",
+        "screen": "Settings",
+        "status": "proposed"
+      },
+      "settings_reveal_title": {
+        "hr": "Otkrivanje uloge",
+        "en": "Role reveal",
+        "screen": "Settings",
+        "status": "proposed"
+      },
+      "settings_reveal_mode_label": {
+        "hr": "NAČIN",
+        "en": "STYLE",
+        "screen": "Settings › Reveal",
+        "status": "proposed"
+      },
+      "settings_autohide_label": {
+        "hr": "AUTOMATSKO SKRIVANJE",
+        "en": "AUTO-HIDE",
+        "screen": "Settings › Reveal",
+        "status": "proposed"
+      },
+      "settings_seconds": {
+        "hr": "%1$d s",
+        "en": "%1$d s",
+        "screen": "Settings",
+        "status": "proposed"
+      },
+      "settings_licenses": {
+        "hr": "Licence",
+        "en": "Licences",
+        "screen": "Settings",
+        "status": "proposed"
+      },
+      "settings_touch": {
+        "hr": "Dodir",
+        "en": "Tap",
+        "screen": "Settings",
+        "note": "Summary value of the Reveal row (= tap to flip)",
+        "status": "proposed"
+      },
+      "conn_host_left_named": {
+        "hr": "%1$s više nije u igri.",
+        "en": "%1$s has left.",
+        "screen": "Connection",
+        "note": "Mock „Luka je izašao iz igre“ is gendered; neutral form proposed. Precedes conn_host_left_body",
+        "status": "proposed"
+      },
+      "conn_snapshot_blurred": {
+        "hr": "U pregledu aplikacija ekran je uvijek zamagljen.",
+        "en": "The screen is always blurred in the app switcher.",
+        "screen": "Connection (back from background)",
+        "status": "proposed"
+      }
+    },
+    "plurals": {
+      "spies_short": {
+        "hr": {
+          "one": "%1$d špijun",
+          "few": "%1$d špijuna",
+          "other": "%1$d špijuna"
+        },
+        "en": {
+          "one": "%1$d spy",
+          "other": "%1$d spies"
+        },
+        "status": "proposed",
+        "note": "Lobby rules line"
+      },
+      "out_count": {
+        "hr": {
+          "one": "%1$d izvan igre",
+          "few": "%1$d izvan igre",
+          "other": "%1$d izvan igre"
+        },
+        "en": {
+          "one": "%1$d out",
+          "other": "%1$d out"
+        },
+        "status": "proposed",
+        "note": "Round header „7 u igri · 1 izbačen“ — mock uses gendered „izbačen“; neutral form proposed"
+      },
+      "new_words": {
+        "hr": {
+          "one": "%1$d novu riječ",
+          "few": "%1$d nove riječi",
+          "other": "%1$d novih riječi"
+        },
+        "en": {
+          "one": "%1$d new word",
+          "other": "%1$d new words"
+        },
+        "status": "proposed",
+        "note": "Accusative after „Doda“ / „Spoji ·“"
+      },
+      "spies_caught": {
+        "hr": {
+          "one": "Špijun je otkriven.",
+          "few": "Svi špijuni su otkriveni.",
+          "other": "Svi špijuni su otkriveni."
+        },
+        "en": {
+          "one": "The spy was caught.",
+          "other": "All the spies were caught."
+        },
+        "status": "proposed",
+        "note": "Game over (citizens win). Mock „Oba špijuna su otkrivena.“ only covers 2. ‘špijun’ is grammatical gender of the noun, not of a player, so this is allowed."
+      }
+    }
+  },
+  "review": [
+    {
+      "key": "conn_player_dropped_body",
+      "issue": "HR „Ako ga izbaciš … uloga mu se otkriva“ uses masculine pronouns (ga/mu) — breaks the design's own no-gendered-copy rule.",
+      "suggest_hr": "Čekamo još %1$s. Ako ukloniš igrača, ide među izbačene — uloga se otkriva tek na kraju."
+    },
+    {
+      "key": "round_loud_tap",
+      "issue": "Mock shows „Dodirni njegovu kartu.“ (gendered); the key already has the neutral „Dodirni kartu tog igrača.“ — use the key."
+    },
+    {
+      "key": "round_vote_opens",
+      "issue": "Mock text „…glasanje se otvara samo.“ differs from key „…otvara se glasanje.“ — key wins."
+    },
+    {
+      "key": "lobby_waiting_slot",
+      "issue": "Mock shows ordinal „Čeka se treći igrač…“; key is „Čeka se igrač…“ — key wins (avoids ordinal agreement)."
+    },
+    {
+      "key": "(P2-07 mock rows)",
+      "issue": "Phase-2 component board shows „Domaćin · povezan“ and „Glasala“ — superseded by lobby_connected „Na vezi“ and vote_cast; don't copy from that board."
+    },
+    {
+      "key": "reveal_hide_next",
+      "issue": "Phase-1/2 boards say „Okreni i dodaj dalje“ / „Sakrij i sljedeći igrač“; final key is „Sakrij i dalje“ / last player „Sakrij i započni raspravu“."
+    },
+    {
+      "key": "import_file_from (mock)",
+      "issue": "Mock „party-pack.json · od Ane“ declines the sender's name (genitive) and the OS doesn't reliably give a sender — drop the sender, show only the file name."
+    },
+    {
+      "key": "setup_names_filled / lobby_players_count",
+      "issue": "Both are „%1$d od %2$d“ — fine, but don't reuse one for the other; different contexts in EN may diverge."
+    }
+  ],
+  "changelog": [
+    {
+      "key": "result_out_stamp",
+      "from": {
+        "hr": "IZBAČEN"
+      },
+      "to": {
+        "hr": "IZVAN IGRE"
+      },
+      "why": "gender-neutral (later revision of the copy table)"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>06 Motion, haptics, sound</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1640px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 44px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">06 · MOTION, HAPTICS, SOUND</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">The table glides. Cards snap.</h1>
+    <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #C9C2B9; max-width: 1000px">Table motion is short and quiet. Card motion is physical — lift, flip, settle — and always paired with a haptic, so a player feels which role they got before they read it.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{ tokens }}" as="t" hint-placeholder-count="5">
+      <div style="border-radius: 18px; background: #1C1A18; padding: 18px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FF6B3D">{{ t.name }}</span>
+        <span style="font-size: 20px; font-weight: 700">{{ t.v }}</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">{{ t.use }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 22px; font-weight: 800">Role reveal · tap to flip (recommended default)</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">0 ─ 800 ms</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 16px">
+        <span style="font-size: 13px; font-weight: 700; color: #A39C94">CARD</span>
+        <div style="position: relative; height: 40px">
+          <div style="position: absolute; left: 0; width: 12%; top: 0; height: 40px; border-radius: 8px; background: #34302C; font-size: 12px; display: flex; align-items: center; padding-left: 10px">lift 1.04</div>
+          <div style="position: absolute; left: 12.5%; width: 20%; top: 0; height: 40px; border-radius: 8px; background: #4A443F; font-size: 12px; display: flex; align-items: center; padding-left: 10px">rotateY 0→90° in</div>
+          <div style="position: absolute; left: 33%; width: 55%; top: 0; height: 40px; border-radius: 8px; background: #FF6B3D; color: #1A0905; font-size: 12px; font-weight: 700; display: flex; align-items: center; padding-left: 10px">face swap · 90→0° spring.card · settle at −2° tilt</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 16px">
+        <span style="font-size: 13px; font-weight: 700; color: #A39C94">CONTENT</span>
+        <div style="position: relative; height: 32px">
+          <div style="position: absolute; left: 42%; width: 14%; height: 32px; border-radius: 8px; background: #262320; font-size: 12px; display: flex; align-items: center; padding-left: 8px">glyph</div>
+          <div style="position: absolute; left: 49.5%; width: 14%; top: 0; height: 32px; border-radius: 8px; background: #34302C; font-size: 12px; display: flex; align-items: center; padding-left: 8px">role / word</div>
+          <div style="position: absolute; left: 57%; width: 14%; height: 32px; border-radius: 8px; background: #4A443F; font-size: 12px; display: flex; align-items: center; padding-left: 8px">category</div>
+          <div style="position: absolute; left: 64.5%; width: 18%; height: 32px; border-radius: 8px; background: #6B645C; font-size: 12px; display: flex; align-items: center; padding-left: 8px">other spies</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 16px">
+        <span style="font-size: 13px; font-weight: 700; color: #A39C94">HAPTIC</span>
+        <div style="position: relative; height: 32px">
+          <span style="position: absolute; left: 0; top: 4px; width: 10px; height: 24px; border-radius: 3px; background: #A39C94"></span>
+          <span style="position: absolute; left: 14px; top: 8px; font-size: 12px; color: #A39C94">light</span>
+          <span style="position: absolute; left: 33%; top: 0; width: 12px; height: 32px; border-radius: 3px; background: #FF6B3D"></span>
+          <span style="position: absolute; left: calc(33% + 18px); top: 0; width: 12px; height: 32px; border-radius: 3px; background: #FF6B3D"></span>
+          <span style="position: absolute; left: calc(33% + 40px); top: 8px; font-size: 12px; color: #C9C2B9">spy: heavy · heavy (90 ms apart) — citizen: one medium</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 16px">
+        <span style="font-size: 13px; font-weight: 700; color: #A39C94">SOUND</span>
+        <div style="position: relative; height: 24px"><span style="position: absolute; left: 33%; top: 3px; font-size: 13px; color: #C9C2B9">▸ card flick (optional, respects silent mode)</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-top: 8px; border-top: 1px solid #34302C; font-size: 14px; line-height: 1.5; color: #C9C2B9">
+        <span><strong style="color: #F3EDE2">Auto-hide.</strong> After 8 s the card flips back by itself (5 / 8 / off in Settings). A thin ring on the hide button shows the time left.</span>
+        <span><strong style="color: #F3EDE2">Hide + next.</strong> Flip back 300 ms emphasized, soft haptic; the back slides off left and the next player's card deals in from below (spring.deal).</span>
+        <span><strong style="color: #F3EDE2">Hold to peek</strong> (Settings option). Flips while held, back on release. Never lingers, but harder for some hands — so it's the alternative, not the default.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 18px; font-weight: 800">Elimination · knock-out, no reveal</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">1 · Player's row lifts out of "Još u igri" and becomes a face-down card, centre (300 ms).<br>2 · Suspense: 700 ms hold, three light ticks.<br>3 · Knock-out: the card is flicked off the table, spinning out to the side (280 ms), with one heavy thud. Identical for spies and citizens.<br>4 · It lands face-down on the "Izbačeni" pile; the row gets a strikethrough. No flip, no role — every role is revealed at game over.</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 18px; font-weight: 800">Countdown</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">Digits change with a 120 ms vertical roll (tabular, no width jump).<br>≤ 30 s: turns warning amber, one haptic.<br>≤ 10 s: each second a 1.0→1.04 pulse.<br>0: amber edge flashes twice; in-app voting opens, out-loud mode plays the alarm.</span>
+    </div>
+    <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 18px; font-weight: 800">Reduce Motion</span>
+      <span style="font-size: 14px; line-height: 1.55; color: #C9C2B9">Flips become a 200 ms cross-fade with 0.98→1 scale. No tilt, stagger, deal slides or digit roll. Haptics stay — they carry meaning, not decoration. Android: honours "Remove animations".</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">HAPTICS MAP</span>
+    <div style="display: grid; grid-template-columns: 1.1fr 1.3fr 1.3fr; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Event</span>
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">iOS</span>
+      <span style="padding: 12px 18px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Android</span>
+      <sc-for list="{{ haptics }}" as="h" hint-placeholder-count="10">
+        <span style="padding: 11px 18px; border-top: 1px solid #34302C; font-size: 15px; font-weight: 600">{{ h.e }}</span>
+        <span style="padding: 11px 18px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C9C2B9">{{ h.i }}</span>
+        <span style="padding: 11px 18px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #C9C2B9">{{ h.a }}</span>
+      </sc-for>
+    </div>
+    <span style="font-size: 14px; color: #A39C94">Sound cues (Settings, default on, silenced by the ringer switch / DND): flick · deal · low drum (elimination) · bell (time up) · soft chime (all votes in). Each under 400 ms.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      tokens: [
+        { name: 'motion.press', v: '100 ms · ease-out', use: 'Scale 0.97 on press; Android buttons also morph shape' },
+        { name: 'motion.standard', v: '220 ms · (.2, 0, 0, 1)', use: 'Table transitions, list changes, chips' },
+        { name: 'motion.emphasized', v: '400 ms · (.3, 0, 0, 1)', use: 'Screen enter, results, hide card' },
+        { name: 'spring.card', v: 'damping 0.75 · stiffness 400', use: 'Card flip settle (Compose LowBouncy / MediumLow)' },
+        { name: 'spring.deal', v: 'damping 0.8 · stiffness 200', use: 'Card dealt in, cards fanned at game over' }
+      ],
+      haptics: [
+        { e: 'Stepper / chip change', i: 'UISelectionFeedback', a: 'SEGMENT_TICK (API 34) · CLOCK_TICK' },
+        { e: 'Reveal · citizen', i: 'Impact .medium', a: 'CONFIRM' },
+        { e: 'Reveal · spy', i: 'Impact .heavy ×2, 90 ms', a: 'Composition THUD ×2' },
+        { e: 'Hide card', i: 'Impact .soft', a: 'CLOCK_TICK' },
+        { e: 'Vote cast', i: 'Notification .success', a: 'CONFIRM' },
+        { e: 'Elimination suspense', i: 'Impact .light ×3', a: 'Composition TICK ×3' },
+        { e: 'Knock-out (same for every role)', i: 'Impact .heavy', a: 'Composition THUD' },
+        { e: 'Game over · roles revealed', i: '.heavy ×2 + .success', a: 'THUD ×2 + CONFIRM' },
+        { e: '30 s left', i: 'Notification .warning', a: 'Composition QUICK_RISE' },
+        { e: 'Time up / error', i: '.error · Core Haptics 1.2 s', a: 'Waveform 3 pulses · REJECT' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

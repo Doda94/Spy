@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>08 Components — card and game layer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 2100px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 44px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">08 · COMPONENTS — CARD &amp; GAME LAYER · all Shared (Compose)</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Cards, players, rounds, votes</h1>
+  </div>
+
+  <!-- ROLE CARDS -->
+  <div style="display: flex; flex-direction: column; gap: 18px">
+    <span style="font-size: 22px; font-weight: 800">Role card · 5 faces</span>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px">
+
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="position: relative; width: 220px; height: 302px; filter: drop-shadow(0 18px 30px rgba(0,0,0,0.55))">
+          <svg width="220" height="302" viewBox="0 0 220 302" style="position: absolute; inset: 0"><polygon points="16,0 204,0 220,16 220,286 204,302 16,302 0,286 0,16" fill="#2A221C" stroke="#4A3D33" stroke-width="1.5"></polygon></svg>
+          <div style="position: absolute; inset: 14px; border-radius: 4px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px)"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center"><span style="width: 90px; height: 90px; border-radius: 45px; background: #2A221C; box-shadow: 0 0 0 2px #FF6B3D, 0 0 0 8px #2A221C; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 50px; font-weight: 800; color: #FF6B3D">Š</span></div>
+        </div>
+        <span style="font-size: 16px; font-weight: 700">Back · hidden</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">VO: "Karta za igrača Luka. Dvaput dodirni za prikaz uloge."</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="position: relative; width: 220px; height: 302px; filter: drop-shadow(0 18px 30px rgba(0,0,0,0.55))">
+          <svg width="220" height="302" viewBox="0 0 220 302" style="position: absolute; inset: 0"><polygon points="16,0 204,0 220,16 220,286 204,302 16,302 0,286 0,16" fill="#F3EDE2"></polygon><polygon points="19,9 201,9 211,19 211,283 201,293 19,293 9,283 9,19" fill="none" stroke="#1F3FA8" stroke-opacity="0.45" stroke-width="1.2"></polygon></svg>
+          <svg aria-hidden="true" width="11" height="15" viewBox="0 0 56 76" style="position: absolute; left: 18px; top: 18px; color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; text-align: center; color: #1A1714">
+            <svg aria-hidden="true" width="26" height="36" viewBox="0 0 56 76" style="color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: #6B645C">TAJNA RIJEČ</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Bolnica</span>
+            <span style="font-size: 12px; color: #6B645C">Kategorija · <strong style="color: #1A1714">Mjesta</strong></span>
+          </div>
+        </div>
+        <span style="font-size: 16px; font-weight: 700">Citizen</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">VO: "Građanin. Tajna riječ: Bolnica. Kategorija: Mjesta."</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="position: relative; width: 220px; height: 302px; filter: drop-shadow(0 18px 30px rgba(0,0,0,0.55))">
+          <svg width="220" height="302" viewBox="0 0 220 302" style="position: absolute; inset: 0"><polygon points="16,0 204,0 220,16 220,286 204,302 16,302 0,286 0,16" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon><polygon points="19,9 201,9 211,19 211,283 201,293 19,293 9,283 9,19" fill="none" stroke="#FF6B3D" stroke-opacity="0.55" stroke-width="1.2"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 0 22px; text-align: center">
+            <svg aria-hidden="true" width="26" height="36" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: #A39C94">TI SI</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span>
+            <span style="font-size: 12px; color: #A39C94">Kategorija · <strong style="color: #FF6B3D">Mjesta</strong></span>
+          </div>
+        </div>
+        <span style="font-size: 16px; font-weight: 700">Spy · alone</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">VO: "Špijun. Ne znaš riječ. Kategorija: Mjesta."</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="position: relative; width: 220px; height: 302px; filter: drop-shadow(0 18px 30px rgba(0,0,0,0.55))">
+          <svg width="220" height="302" viewBox="0 0 220 302" style="position: absolute; inset: 0"><polygon points="16,0 204,0 220,16 220,286 204,302 16,302 0,286 0,16" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon><polygon points="19,9 201,9 211,19 211,283 201,293 19,293 9,283 9,19" fill="none" stroke="#FF6B3D" stroke-opacity="0.55" stroke-width="1.2"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 22px; text-align: center">
+            <svg aria-hidden="true" width="22" height="30" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span>
+            <span style="font-size: 12px; color: #A39C94">Kategorija · <strong style="color: #FF6B3D">Mjesta</strong></span>
+            <div style="width: 130px; border-top: 1.5px dashed #34302C; margin: 4px 0"></div>
+            <span style="font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: #A39C94">OSTALI ŠPIJUNI</span>
+            <span style="font-size: 17px; font-weight: 700">Ana · Petar</span>
+          </div>
+        </div>
+        <span style="font-size: 16px; font-weight: 700">Spy · with others</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">Up to 11 names; above 3, wrap to a 2-column list. VO reads names last.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="position: relative; width: 220px; height: 302px">
+          <div style="position: absolute; inset: 0; transform: rotate(9deg) translateX(10px); filter: grayscale(1); opacity: 0.55">
+            <svg width="220" height="302" viewBox="0 0 220 302" style="position: absolute; inset: 0"><polygon points="16,0 204,0 220,16 220,286 204,302 16,302 0,286 0,16" fill="#2A221C" stroke="#4A3D33" stroke-width="1.5"></polygon></svg>
+            <div style="position: absolute; inset: 14px; border-radius: 4px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 14px)"></div>
+          </div>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center">
+            <span style="padding: 8px 14px; border-radius: 8px; border: 2.5px solid #F3EDE2; background: #121110; transform: rotate(-8deg); font-size: 18px; font-weight: 800; letter-spacing: 0.12em">IZVAN IGRE</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; line-height: 1; font-weight: 800; text-decoration: line-through; color: #C9C2B9; text-shadow: 0 2px 8px #121110">Marko</span>
+          </div>
+        </div>
+        <span style="font-size: 16px; font-weight: 700">Knocked out · face-down</span>
+        <span style="font-size: 13px; color: #A39C94; line-height: 1.45">No role, no word until game over. Spectators keep seeing this card in place of a vote.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px">
+    <!-- LEFT -->
+    <div style="display: flex; flex-direction: column; gap: 36px">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Player row · states</span>
+        <div style="border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+          <sc-for list="{{ players }}" as="p" hint-placeholder-count="7">
+            <div style="display: flex; align-items: center; gap: 14px; padding: 0 18px; min-height: 60px; border-bottom: 1px solid #34302C">
+              <span style="position: relative; width: 40px; height: 40px; border-radius: 20px; background: #262320; display: flex; align-items: center; justify-content: center; font-weight: 800; color: {{ p.ink }}">{{ p.initial }}</span>
+              <div style="flex: 1; display: flex; flex-direction: column">
+                <span style="font-size: 17px; font-weight: 600; color: {{ p.ink }}; text-decoration: {{ p.deco }}">{{ p.name }}</span>
+                <span style="font-size: 13px; color: {{ p.subInk }}">{{ p.sub }}</span>
+              </div>
+              <span style="font-size: 13px; font-weight: 700; color: {{ p.tagInk }}">{{ p.tag }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-size: 14px; color: #A39C94">Host = dealer chip "D". Connection is a word + dot, never a dot alone. Rows are 60 tall; host gets a trailing ⋯ menu to remove a player.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Progress pips &amp; round indicator</span>
+        <div style="display: flex; align-items: center; gap: 28px">
+          <div style="display: flex; gap: 7px; align-items: center">
+            <span style="width: 14px; height: 20px; border-radius: 3px; background: #F3EDE2"></span><span style="width: 14px; height: 20px; border-radius: 3px; background: #F3EDE2"></span><span style="width: 14px; height: 20px; border-radius: 3px; background: #F3EDE2; transform: translateY(-4px) rotate(-6deg); box-shadow: 0 0 0 2px #121110, 0 0 0 4px #F3EDE2"></span><span style="width: 14px; height: 20px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span><span style="width: 14px; height: 20px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #4A443F"></span><span style="width: 14px; height: 20px; box-sizing: border-box; border-radius: 3px; border: 1.5px dashed #34302C; opacity: 0.6"></span>
+          </div>
+          <span style="font-size: 14px; color: #A39C94">done · current (lifted, ringed) · upcoming · eliminated (skipped)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 14px 18px; border-radius: 22px; background: #1C1A18">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800">Runda 2</span>
+          <span style="flex: 1; font-size: 15px; color: #A39C94">6 u igri · 2 izbačena</span>
+          <span style="padding: 6px 12px; border-radius: 10px; background: #262320; font-size: 14px; font-weight: 600">Kategorija · Mjesta</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Countdown · 4 states</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+          <div style="border-radius: 22px; background: #1C1A18; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+            <span style="font-size: 72px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em">4:32</span>
+            <div style="width: 100%; height: 6px; border-radius: 3px; background: #262320"><div style="width: 90%; height: 6px; border-radius: 3px; background: #F3EDE2"></div></div>
+            <span style="font-size: 13px; color: #A39C94">running</span>
+          </div>
+          <div style="border-radius: 22px; background: #1C1A18; box-shadow: inset 0 0 0 2px #F5B83D; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+            <span style="font-size: 72px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: #F5B83D">0:24</span>
+            <div style="width: 100%; height: 6px; border-radius: 3px; background: #262320"><div style="width: 8%; height: 6px; border-radius: 3px; background: #F5B83D"></div></div>
+            <span style="font-size: 13px; color: #F5B83D; font-weight: 600">Još malo! · almost up</span>
+          </div>
+          <div style="border-radius: 22px; background: #F5B83D; color: #1A1206; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1.15; font-weight: 800">Vrijeme!</span>
+            <span style="font-size: 13px; font-weight: 600">ended → vote opens</span>
+          </div>
+          <div style="border-radius: 22px; border: 1.5px dashed #34302C; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A39C94" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path><path d="M4 4l16 16"></path></svg>
+            <span style="font-size: 17px; font-weight: 700">Bez timera</span>
+            <span style="font-size: 13px; color: #A39C94">timer off · host ends discussion</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <span style="height: 48px; padding: 0 18px; border-radius: 24px; background: #262320; font-weight: 700; display: flex; align-items: center">+1 min</span>
+          <span style="flex: 1; height: 48px; border-radius: 24px; background: #F3EDE2; color: #121110; font-weight: 700; display: flex; align-items: center; justify-content: center">Završi raspravu</span>
+        </div>
+        <span style="font-size: 14px; color: #A39C94">Host-only controls. Guests see the same countdown, synced from the server clock.</span>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div style="display: flex; flex-direction: column; gap: 36px">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Vote option</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <span style="height: 64px; padding: 0 16px; border-radius: 18px; background: #1C1A18; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600"><span style="width: 36px; height: 36px; border-radius: 18px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">L</span>Luka</span>
+          <span style="height: 64px; padding: 0 16px; box-sizing: border-box; border-radius: 18px; background: #262320; border: 2px solid #F3EDE2; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700"><span style="width: 36px; height: 36px; border-radius: 18px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>Ana</span>
+          <span style="height: 64px; padding: 0 16px; box-sizing: border-box; border-radius: 18px; border: 1.5px dashed #34302C; display: flex; align-items: center; gap: 12px; font-size: 18px; color: #8F8880"><span style="width: 36px; height: 36px; border-radius: 18px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">M</span>Marta · ti</span>
+          <span style="height: 64px; padding: 0 16px; border-radius: 18px; background: #1C1A18; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600"><span style="width: 36px; height: 36px; border-radius: 18px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">P</span>Petar</span>
+        </div>
+        <span style="height: 56px; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center">Glasaj · Ana</span>
+        <span style="font-size: 14px; color: #A39C94">default · selected (border + check) · you (can't vote for yourself). Eliminated players aren't listed. Confirm locks the vote — no change after.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Waiting for votes</span>
+        <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between">
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 800">Čeka se još 3 igrača</span>
+            <span style="font-size: 15px; color: #A39C94; font-variant-numeric: tabular-nums">3 / 6</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px"><span style="height: 8px; border-radius: 4px; background: #4CC38A"></span><span style="height: 8px; border-radius: 4px; background: #4CC38A"></span><span style="height: 8px; border-radius: 4px; background: #4CC38A"></span><span style="height: 8px; border-radius: 4px; background: #34302C"></span><span style="height: 8px; border-radius: 4px; background: #34302C"></span><span style="height: 8px; border-radius: 4px; background: #34302C"></span></div>
+          <span style="font-size: 15px; color: #C9C2B9">Još nisu glasali: <strong style="color: #F3EDE2">Iva, Petar, Luka</strong></span>
+          <span style="font-size: 13px; color: #A39C94">Shows who hasn't voted — never who voted for whom.</span>
+          <div style="display: flex; justify-content: flex-end"><span style="height: 44px; padding: 0 16px; border-radius: 22px; background: #262320; font-size: 15px; font-weight: 700; display: flex; align-items: center">Zatvori glasanje · host</span></div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Vote result · tie</span>
+        <div style="border-radius: 22px; background: #1C1A18; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: grid; grid-template-columns: 80px 1fr 30px; align-items: center; gap: 12px"><span style="font-size: 17px; font-weight: 700">Ana</span><div style="height: 28px; border-radius: 8px; background: #F3EDE2; width: 100%"></div><span style="font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums">3</span></div>
+          <div style="display: grid; grid-template-columns: 80px 1fr 30px; align-items: center; gap: 12px"><span style="font-size: 17px; font-weight: 700">Luka</span><div style="height: 28px; border-radius: 8px; background: #F3EDE2; width: 100%"></div><span style="font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums">3</span></div>
+          <div style="display: grid; grid-template-columns: 80px 1fr 30px; align-items: center; gap: 12px"><span style="font-size: 17px; color: #A39C94">Petar</span><div><div style="height: 28px; border-radius: 8px; background: #4A443F; width: 33%"></div></div><span style="font-size: 17px; color: #A39C94">1</span></div>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; margin-top: 6px">Neriješeno: Ana i Luka</span>
+          <span style="font-size: 15px; color: #C9C2B9">Svi glasaju ponovno — ovaj put samo između njih dvoje.</span>
+          <span style="height: 52px; border-radius: 26px; background: #F3EDE2; color: #121110; font-weight: 700; display: flex; align-items: center; justify-content: center">Glasaj ponovno · Ana ili Luka</span>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #262320">
+            <span style="font-size: 13px; font-weight: 700; color: #A39C94; white-space: nowrap">2nd tie</span>
+            <span style="font-size: 15px">Opet neriješeno — nitko ne ispada. Počinje runda 3.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 800">Room code + QR card</span>
+        <div style="border-radius: 28px; background: #F3EDE2; color: #1A1714; padding: 24px; display: flex; gap: 22px; align-items: center">
+          <div aria-label="QR kod za ulazak u sobu" style="position: relative; width: 150px; height: 150px; flex-shrink: 0; border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #DDD5C8">
+            <span style="position: absolute; left: 12px; top: 12px; width: 34px; height: 34px; box-sizing: border-box; border: 7px solid #1A1714"></span>
+            <span style="position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; box-sizing: border-box; border: 7px solid #1A1714"></span>
+            <span style="position: absolute; left: 12px; bottom: 12px; width: 34px; height: 34px; box-sizing: border-box; border: 7px solid #1A1714"></span>
+            <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6B645C">[QR]</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #6B645C">KOD SOBE</span>
+            <span style="font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: 0.12em; font-variant-numeric: tabular-nums">K7QX</span>
+            <span style="font-size: 14px; color: #6B645C">Skeniraj ili upiši kod u aplikaciji.</span>
+            <span style="height: 44px; width: fit-content; padding: 0 16px; margin-top: 4px; border-radius: 22px; background: #1A1714; color: #F3EDE2; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v7h14v-7"></path></svg>Podijeli poveznicu</span>
+          </div>
+        </div>
+        <span style="font-size: 14px; color: #A39C94">An ivory card in both themes so phones held up across the room scan reliably. Code alphabet skips 0/O/1/I.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = '#F3EDE2', M = '#A39C94', E = '#8F8880';
+    const players = [
+      { initial: 'L', name: 'Luka', sub: 'Domaćin · povezan', tag: 'D · DOMAĆIN', ink: T, subInk: M, tagInk: T, deco: 'none' },
+      { initial: 'A', name: 'Ana', sub: 'Na vezi', tag: '', ink: T, subInk: '#4CC38A', tagInk: T, deco: 'none' },
+      { initial: 'P', name: 'Petar', sub: 'Veza prekinuta · čeka se 0:42', tag: 'PREKID', ink: T, subInk: '#F5B83D', tagInk: '#F5B83D', deco: 'none' },
+      { initial: 'I', name: 'Iva', sub: 'Glasala', tag: '✓', ink: T, subInk: '#4CC38A', tagInk: '#4CC38A', deco: 'none' },
+      { initial: 'M', name: 'Marko', sub: 'Izvan igre od runde 1', tag: 'GLEDA', ink: E, subInk: E, tagInk: E, deco: 'line-through' },
+      { initial: 'N', name: 'Nina', sub: 'Izvan igre od runde 2', tag: 'GLEDA', ink: E, subInk: E, tagInk: E, deco: 'line-through' }
+    ];
+    return { players: players };
+  }
+}
+</script>
+</body>
+</html>

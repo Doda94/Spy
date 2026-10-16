@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ideas outside the main flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 40px">
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">IDEAS · NOT IN THE MAIN FLOW</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Small bets, big table feel.</h1>
+    <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #C9C2B9; max-width: 980px">Low-risk additions that fit the existing system. None needs accounts or server storage. Pick any; none blocks the release.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <sc-for list="{{ ideas }}" as="i" hint-placeholder-count="6">
+      <div style="border-radius: 24px; background: #1C1A18; padding: 24px; display: flex; flex-direction: column; gap: 10px; min-height: 230px; box-sizing: border-box">
+        <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FF6B3D">{{ i.n }}</span><span style="height: 26px; padding: 0 10px; border-radius: 6px; background: #262320; display: flex; align-items: center; font-size: 12px; font-weight: 700; color: #C9C2B9">{{ i.effort }}</span></div>
+        <span style="font-size: 22px; font-weight: 800; line-height: 1.2">{{ i.title }}</span>
+        <span style="font-size: 15px; line-height: 1.5; color: #C9C2B9">{{ i.body }}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { ideas: [
+      { n: '01', effort: 'small', title: 'Same crew as last time?', body: 'Remember the last group’s names and seat order on this phone. One tap refills one-phone setup — names are the slowest part of starting.' },
+      { n: '02', effort: 'small', title: 'Fresh table on rematch', body: '"Igraj ponovno" reshuffles the seats so the table looks new. Roles stay fully random every game — the same player can be the spy twice in a row.' },
+      { n: '03', effort: 'small', title: 'Shake to hide', body: 'A quick shake flips any open card back instantly — a panic button when someone leans over your shoulder.' },
+      { n: '04', effort: 'small', title: 'Haptic-only reveal', body: 'For low-vision players in a noisy room: the role is given only by vibration (double thud = spy), nothing spoken aloud. Word read on demand with headphones.' },
+      { n: '05', effort: 'medium', title: 'Flag a bad word', body: 'At game over, long-press the word card: "Preteško / nejasno". Custom dictionaries: mark locally. Built-ins: one anonymous flag to the existing admin list.' },
+      { n: '06', effort: 'small', title: 'Night stats', body: 'Local-only fun facts after a few games: "Ana je preživjela 3 igre kao špijun." Cleared when the app closes; nothing stored.' }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

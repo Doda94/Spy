@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>H 04 Annotated game setup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="position: relative; width: 1860px; height: 1300px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; overflow: hidden">
+  <div style="position: absolute; left: 64px; top: 56px; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">PHASE 4 · H·04 · ANNOTATED</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Game setup · one phone</h1>
+  </div>
+
+  <sc-for list="{{ phones }}" as="p" hint-placeholder-count="2">
+    <div style="position: absolute; left: {{ p.x }}px; top: 220px; width: {{ p.w }}px; height: {{ p.h }}px; overflow: hidden; border-radius: {{ p.pr }}px; background: #121110; box-shadow: 0 0 0 1.5px #34302C">
+      <div style="position: absolute; left: 16px; top: {{ p.navTop }}px"><span style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: {{ p.nbBg }}; border: 1px solid {{ p.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F3EDE2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ p.back }}"></path></svg></span></div>
+      <div style="position: absolute; left: 20px; top: {{ p.titleTop }}px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: {{ p.titleSize }}px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em">Postavke igre</span>
+        <span style="align-self: flex-start; height: 32px; padding: 0 12px; border-radius: 16px; background: #262320; display: flex; align-items: center; font-size: 14px; font-weight: 600">Jedan telefon ▾</span>
+      </div>
+      <div style="position: absolute; left: 16px; right: 16px; top: {{ p.contentTop }}px; display: flex; flex-direction: column; gap: 22px">
+        <div style="border-radius: 22px; background: #1C1A18; display: flex; flex-direction: column">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 18px; height: 60px; box-sizing: border-box"><span style="font-size: 17px; font-weight: 600">Igrači</span><span style="display: flex; align-items: center; gap: 4px"><span style="width: 48px; height: 48px; border-radius: 24px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 22px">−</span><span style="width: 40px; text-align: center; font-size: 22px; font-weight: 700">8</span><span style="width: 48px; height: 48px; border-radius: 24px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 22px">+</span></span></div>
+          <div style="height: 1px; background: #34302C; margin-left: 18px"></div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 0 16px 0 18px; height: 60px"><span style="flex: 1; font-size: 17px; font-weight: 600">Imena igrača</span><span style="font-size: 15px; font-weight: 600; color: #4CC38A">8 od 8</span><span style="color: #6B645C">›</span></div>
+          <div style="height: 1px; background: #34302C; margin-left: 18px"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 18px; height: 60px; box-sizing: border-box"><span style="display: flex; flex-direction: column"><span style="font-size: 17px; font-weight: 600">Špijuni</span><span style="font-size: 13px; color: #A39C94">najviše 7</span></span><span style="display: flex; align-items: center; gap: 4px"><span style="width: 48px; height: 48px; border-radius: 24px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 22px">−</span><span style="width: 40px; text-align: center; font-size: 22px; font-weight: 700">2</span><span style="width: 48px; height: 48px; border-radius: 24px; background: #262320; display: flex; align-items: center; justify-content: center; font-size: 22px">+</span></span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94; padding: 0 4px">TIMER PO RUNDI</span>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px"><span style="height: 48px; border-radius: 24px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px">Bez</span><span style="height: 48px; border-radius: 24px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px">3 min</span><span style="height: 48px; border-radius: 24px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">5 min</span><span style="height: 48px; border-radius: 24px; background: #1C1A18; display: flex; align-items: center; justify-content: center; font-size: 15px">8 min</span><span style="height: 48px; box-sizing: border-box; border-radius: 24px; border: 1.5px dashed #4A443F; display: flex; align-items: center; justify-content: center; font-size: 15px">Svoje…</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94; padding: 0 4px">GLASANJE</span>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 28px; background: #1C1A18"><span style="height: 48px; border-radius: 24px; background: #F3EDE2; color: #121110; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">U aplikaciji</span><span style="height: 48px; display: flex; align-items: center; justify-content: center; font-size: 16px">Naglas</span></div>
+        </div>
+      </div>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px {{ p.bot }}px; background: #121110; box-shadow: 0 -1px 0 #34302C; display: flex; flex-direction: column; gap: 10px">
+        <span style="text-align: center; font-size: 14px; color: #A39C94">36 riječi u odabiru</span>
+        <span style="height: {{ p.bh }}px; border-radius: {{ p.br }}px; background: #F3EDE2; color: #121110; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center">Započni igru</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <sc-for list="{{ notes }}" as="n" hint-placeholder-count="14">
+    <div style="position: absolute; left: {{ n.hx }}px; top: {{ n.ly }}px; width: {{ n.hw }}px; height: 1px; background: #FF6B3D"></div>
+    <div style="position: absolute; left: {{ n.vx }}px; top: {{ n.vy }}px; width: 1px; height: {{ n.vh }}px; background: #FF6B3D"></div>
+    <div style="position: absolute; left: {{ n.dx }}px; top: {{ n.dy }}px; width: 9px; height: 9px; border-radius: 5px; background: #FF6B3D; box-shadow: 0 0 0 3px #0B0A09"></div>
+    <div style="position: absolute; left: {{ n.bx }}px; top: {{ n.by }}px; width: 360px; text-align: {{ n.align }}; display: flex; flex-direction: column; gap: 3px">
+      <span style="font-size: 15px; font-weight: 700; line-height: 1.3">{{ n.title }}</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; color: #A39C94">{{ n.body }}</span>
+    </div>
+  </sc-for>
+  <span style="position: absolute; left: 520px; top: 1086px; font-size: 14px; color: #A39C94">iOS 26 · 390 × 844 pt</span>
+  <span style="position: absolute; left: 1000px; top: 1157px; font-size: 14px; color: #A39C94">Android 16 · 412 × 915 dp</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const TOP = 220;
+    const mk = function (ios) {
+      return { x: ios ? 520 : 1000, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36, navTop: ios ? 58 : 48, titleTop: ios ? 116 : 112, titleSize: ios ? 34 : 30, contentTop: ios ? 214 : 206,
+        nbBg: ios ? 'rgba(255,255,255,0.08)' : 'transparent', nbLine: ios ? 'rgba(255,255,255,0.16)' : 'transparent', back: ios ? 'M15 5l-7 7 7 7' : 'M19 12H5M11 6l-6 6 6 6',
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 34 : 24 };
+    };
+    const left = [
+      [40, 82, 60, 'Back · GlassButton 48 · Native iOS', 'part of NavigationStack toolbar'],
+      [120, 136, 140, 'Large title · Native nav bar', 'title.large 34/40 · collapses to inline 17/600 on scroll'],
+      [80, 178, 210, 'Mode chip · Shared', 'opens the mode sheet · surface2 · 32 high'],
+      [300, 244, 290, 'SpyStepper · Shared', 'row 60 · buttons 48 · panel lg 22 · surface\nmax = players − 1 (setup_spies_max)'],
+      [330, 304, 360, 'Names row · required for in-app vote', 'success text "8 od 8"; warning if missing'],
+      [195, 440, 450, 'SpyChoiceRow · chips 48', 'selected = primary fill + bold; custom = dashed'],
+      [195, 530, 540, 'SpyChoiceRow · segmented', 'radio group semantics'],
+      [195, 748, 700, 'Sticky footer · Shared', 'plural_words_in_selection · hairline line top\nnever scrolls; reason text replaces count when disabled'],
+      [195, 790, 790, 'SpyButton Primary', 'setup_start · 56 capsule']
+    ];
+    const right = [
+      [40, 72, 60, 'Back · IconButton · Native Android', 'arrow back; predictive back gesture'],
+      [120, 132, 140, 'LargeTopAppBar · Native Android', 'title 30 Bricolage · collapses to 22/600'],
+      [356, 254, 300, 'Same Shared components', 'only height tokens differ per platform'],
+      [206, 830, 820, 'SpyButton Primary · 64 dp', 'SpyShape.md → full on press'],
+      [206, 895, 900, 'Gesture inset 24', 'edge-to-edge; content scrolls under the footer']
+    ];
+    const notes = [];
+    left.forEach(function (n) { const tx = 520 + n[0], ty = TOP + n[1], ly = TOP + n[2]; notes.push({ hx: 440, hw: tx - 440, ly: ly, vx: tx, vy: Math.min(ly, ty), vh: Math.abs(ty - ly) + 1, dx: tx - 4, dy: ty - 4, bx: 64, by: ly - 22, align: 'right', title: n[3], body: n[4] }); });
+    right.forEach(function (n) { const tx = 1000 + n[0], ty = TOP + n[1], ly = TOP + n[2]; notes.push({ hx: tx, hw: 1432 - tx, ly: ly, vx: tx, vy: Math.min(ly, ty), vh: Math.abs(ty - ly) + 1, dx: tx - 4, dy: ty - 4, bx: 1440, by: ly - 22, align: 'left', title: n[3], body: n[4] }); });
+    return { phones: [mk(true), mk(false)], notes: notes };
+  }
+}
+</script>
+</body>
+</html>

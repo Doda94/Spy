@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>04 Typography — Špijun design language</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1560px; box-sizing: border-box; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 72px 80px; display: flex; flex-direction: column; gap: 48px">
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A39C94; letter-spacing: 0.06em">04 · TYPOGRAPHY</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Two faces, both platforms.</h1>
+    <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #C9C2B9; max-width: 1000px">Bricolage Grotesque speaks for the cards and the big moments; Hanken Grotesk runs the table. Both are OFL, bundled as Compose resources and shared by iOS and Android, so the game reads the same everywhere. All sizes are pt/sp and scale with Dynamic Type / font scale.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <div style="border-radius: 24px; background: #0F0D0B; border: 1.5px solid #34302C; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FF6B3D">DISPLAY · card layer</span>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 800; letter-spacing: -0.02em">Bricolage Grotesque</span>
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: 0.02em">Č Ć Š Ž Đ č ć š ž đ</span>
+      <span style="font-size: 15px; color: #A39C94">700 / 800 · optical size 48–96 · card words, role, large titles, results</span>
+    </div>
+    <div style="border-radius: 24px; background: #1C1A18; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A39C94">TEXT · table layer</span>
+      <span style="font-size: 44px; font-weight: 700; letter-spacing: -0.02em">Hanken Grotesk</span>
+      <span style="font-size: 40px; font-weight: 600; letter-spacing: 0.02em">Č Ć Š Ž Đ č ć š ž đ</span>
+      <span style="font-size: 15px; color: #A39C94">400 / 500 / 600 / 700 · tabular figures for timers, counts, room codes</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 200px 260px 1fr; gap: 0; border-radius: 20px; overflow: hidden; border: 1px solid #34302C">
+    <span style="padding: 12px 20px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Token</span>
+    <span style="padding: 12px 20px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Spec</span>
+    <span style="padding: 12px 20px; background: #1C1A18; font-size: 13px; font-weight: 700; color: #A39C94">Sample (HR)</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">word.display</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94; line-height: 1.5">Bricolage 800 · 56/56 · −3%<br>auto-fit 56→40, max 2 lines, never hyphenate</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Svemirska postaja</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">role.display</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Bricolage 800 · 64/64 · −3%</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">countdown</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Hanken 700 · 96/96 · −2% · tnum</span>
+    <span style="padding: 10px 20px; border-top: 1px solid #34302C; font-size: 96px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">4:32</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">title.large</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Bricolage 800 · 34/40 · −2%</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; line-height: 40px; font-weight: 800; letter-spacing: -0.02em">Postavke igre</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">title.medium</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Bricolage 700 · 24/30</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; line-height: 30px; font-weight: 700">Runda 2 · Tko je špijun?</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">headline</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Hanken 700 · 20/26</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-size: 20px; line-height: 26px; font-weight: 700">Dodaj telefon igraču</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">body.large · button</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Hanken 500 · 17/24 · button 700</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-size: 17px; line-height: 24px; font-weight: 500">Neka nitko drugi ne gleda u ekran. <strong>Započni igru</strong></span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">body</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Hanken 400 · 15/22</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; font-size: 15px; line-height: 22px">Samo odabrana riječ putuje u sobu — tvoj rječnik ostaje na ovom uređaju.</span>
+
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-family: 'JetBrains Mono', monospace; font-size: 14px">label · caption</span>
+    <span style="padding: 18px 20px; border-top: 1px solid #34302C; font-size: 14px; color: #A39C94">Hanken 700 · 13/18 · +8% caps<br>Hanken 500 · 12/16</span>
+    <span style="padding: 14px 20px; border-top: 1px solid #34302C; display: flex; gap: 24px; align-items: baseline"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">KATEGORIJE</span><span style="font-size: 12px; color: #A39C94">22 riječi · ugrađeni rječnik</span></span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">STRESS TEST · card content width 250 pt, auto-fit result</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+        <div style="height: 200px; border-radius: 14px; background: #F3EDE2; color: #1A1714; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; text-align: center">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #6B645C">TAJNA RIJEČ</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Svemirska postaja</span>
+        </div>
+        <div style="height: 200px; border-radius: 14px; background: #F3EDE2; color: #1A1714; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; text-align: center">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #6B645C">TAJNA RIJEČ</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Policijska postaja</span>
+        </div>
+        <div style="height: 200px; border-radius: 14px; background: #F3EDE2; color: #1A1714; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; text-align: center">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #6B645C">TAJNA RIJEČ</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Nogometni stadion</span>
+        </div>
+      </div>
+      <span style="font-size: 14px; color: #A39C94; line-height: 1.5">Shown at 60% scale. Rule: break only between words; if the longest single word doesn't fit at 56, step down 4 pt at a time to 40; below that, scale the whole card text block.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: #A39C94">CROATIAN PLURALS · one / few / other</span>
+      <div style="border-radius: 20px; background: #1C1A18; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; font-size: 17px">
+        <span>U igri je <strong>1 špijun</strong> · su <strong>3 špijuna</strong> · je <strong>5 špijuna</strong></span>
+        <span><strong>1 riječ</strong> · <strong>2 riječi</strong> · <strong>36 riječi</strong> u odabiru</span>
+        <span>Čeka se još <strong>1 igrač</strong> · <strong>3 igrača</strong> · <strong>5 igrača</strong></span>
+        <span style="font-size: 14px; color: #A39C94">Strings use ICU plural rules (hr: one, few, other; en: one, other). The verb agrees too ("je" / "su"), so whole sentences are keyed, never concatenated.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

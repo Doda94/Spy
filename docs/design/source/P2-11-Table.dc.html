@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>Table prototype — deal, zoom, pass, discuss</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit;cursor:pointer}
+@keyframes drift{from{transform:translate(0,1px) rotate(-1.4deg)}to{transform:translate(0,-4px) rotate(1.4deg)}}
+@keyframes tremble{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(-1px,.6px) rotate(-1deg)}50%{transform:translate(.8px,-.7px) rotate(.8deg)}75%{transform:translate(-.5px,-.4px) rotate(-.5deg)}100%{transform:translate(0,0) rotate(0)}}
+@keyframes tableSpin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #121110; color: #F3EDE2; font-family: 'Hanken Grotesk', -apple-system, sans-serif">
+
+  <!-- CAMERA: rotates the current seat to the bottom and pushes in -->
+  <div style="position: absolute; inset: 0; transform-origin: 195px 410px; transform: {{ cameraTf }}; transition: transform 700ms cubic-bezier(.3,0,0,1)">
+    <div style="position: absolute; inset: 0; transform-origin: 195px 410px; animation: tableSpin 90s linear infinite; animation-play-state: {{ spinState }}">
+      <div style="position: absolute; left: 23px; top: 238px; width: 344px; height: 344px; border-radius: 50%; background: #1A1816; box-shadow: inset 0 0 0 1.5px {{ ringColor }}, inset 0 0 60px rgba(0,0,0,0.5); transition: box-shadow 400ms"></div>
+      <div style="position: absolute; left: 85px; top: 300px; width: 220px; height: 220px; border-radius: 50%; box-shadow: inset 0 0 0 1px #262320"></div>
+      <sc-for list="{{ seats }}" as="c" hint-placeholder-count="8">
+        <div style="position: absolute; left: {{ c.left }}px; top: {{ c.top }}px; width: 56px; height: 78px; transform: {{ c.tf }}; opacity: {{ c.op }}; transition: transform 560ms cubic-bezier(.2,.9,.25,1.1) {{ c.delay }}ms, opacity 300ms">
+          <div style="width: 56px; height: 78px; position: relative; animation: {{ c.anim }}; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.55))">
+            <svg width="56" height="78" viewBox="0 0 56 78" style="position: absolute; inset: 0"><polygon points="5,0 51,0 56,5 56,73 51,78 5,78 0,73 0,5" fill="#2A221C" stroke="#4A3D33" stroke-width="1"></polygon></svg>
+            <div style="position: absolute; inset: 5px 5px 18px; border-radius: 2px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.25) 0 1px, transparent 1px 6px)"></div>
+            <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #F3EDE2">{{ c.name }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- TABLE CENTRE (does not rotate) -->
+  <div style="position: absolute; left: 0; right: 0; top: 410px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: {{ centreOp }}; transition: opacity 300ms; pointer-events: none">
+    <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800">8 igrača</span>
+      <span style="font-size: 14px; color: #A39C94">2 špijuna · Mjesta, Zanimanja</span>
+    </sc-if>
+    <sc-if value="{{ isDisc }}" hint-placeholder-val="{{ false }}">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #A39C94">RUNDA 1</span>
+      <span style="font-size: 54px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: {{ clockColor }}; animation: {{ clockAnim }}">{{ clock }}</span>
+      <span style="font-size: 13px; color: {{ clockColor }}">{{ clockSub }}</span>
+    </sc-if>
+  </div>
+
+  <!-- LIFTED CARD (FLIP from the seat to centre) -->
+  <div onClick="{{ flip }}" style="position: absolute; left: 0; top: 0; width: 300px; height: 420px; transform-origin: 0 0; transform: {{ ovTf }}; transition: transform 480ms cubic-bezier(.2,.9,.25,1.08); opacity: {{ ovOp }}; pointer-events: {{ ovPe }}; perspective: 1400px; cursor: pointer">
+    <div style="position: relative; width: 300px; height: 420px; transform-style: preserve-3d; transition: transform 520ms cubic-bezier(.2,.9,.25,1.15); transform: rotateY({{ flipDeg }}deg)">
+      <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; filter: drop-shadow(0 24px 40px rgba(0,0,0,0.6))">
+        <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#2A221C" stroke="#4A3D33" stroke-width="1.5"></polygon></svg>
+        <div style="position: absolute; inset: 20px 20px 84px; border-radius: 6px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 18px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.22) 0 1.5px, transparent 1.5px 18px)"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 108px; display: flex; justify-content: center"><span style="width: 120px; height: 120px; border-radius: 60px; background: #2A221C; box-shadow: 0 0 0 2px #FF6B3D, 0 0 0 10px #2A221C; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 66px; font-weight: 800; color: #FF6B3D">Š</span></div>
+        <span style="position: absolute; left: 0; right: 0; bottom: 26px; text-align: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 800">{{ curName }}</span>
+      </div>
+      <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); filter: drop-shadow(0 24px 40px rgba(0,0,0,0.6))">
+        <sc-if value="{{ curSpy }}" hint-placeholder-val="{{ true }}">
+          <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#0F0D0B" stroke="#3A322B" stroke-width="1.5"></polygon><polygon points="25,12 275,12 288,25 288,395 275,408 25,408 12,395 12,25" fill="none" stroke="#FF6B3D" stroke-opacity="0.55" stroke-width="1.5"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0 36px; text-align: center">
+            <svg aria-hidden="true" width="44" height="60" viewBox="0 0 56 76" style="color: #FF6B3D"><polygon points="25,0 0,36 25,72" fill="currentColor"></polygon><polygon points="31,4 56,40 31,76" fill="currentColor"></polygon></svg>
+            <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: #A39C94">TI SI</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 62px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Špijun</span></div>
+            <span style="font-size: 15px; color: #A39C94">Kategorija · <strong style="color: #FF6B3D">Mjesta</strong></span>
+            <div style="width: 180px; border-top: 1.5px dashed #34302C"></div>
+            <span style="font-size: 15px; color: #A39C94">Drugi špijun: <strong style="color: #F3EDE2; font-size: 19px">{{ otherSpy }}</strong></span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ curCitizen }}" hint-placeholder-val="{{ false }}">
+          <svg width="300" height="420" viewBox="0 0 300 420" style="position: absolute; inset: 0"><polygon points="21,0 279,0 300,21 300,399 279,420 21,420 0,399 0,21" fill="#F3EDE2"></polygon><polygon points="25,12 275,12 288,25 288,395 275,408 25,408 12,395 12,25" fill="none" stroke="#1F3FA8" stroke-opacity="0.45" stroke-width="1.5"></polygon></svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0 30px; text-align: center; color: #1A1714">
+            <svg aria-hidden="true" width="40" height="54" viewBox="0 0 56 76" style="color: #1F3FA8"><polygon points="28,0 56,38 28,76 0,38" fill="currentColor"></polygon></svg>
+            <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: #6B645C">TAJNA RIJEČ</span>
+            <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Svemirska postaja</span>
+            <div style="width: 160px; border-top: 1.5px dashed #C9C2B9"></div>
+            <span style="font-size: 15px; color: #6B645C">Kategorija · <strong style="color: #1A1714">Mjesta</strong></span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
+    <p style="position: absolute; left: 30px; right: 30px; top: 566px; margin: 0; text-align: center; font-size: 16px; line-height: 1.4; color: #C9C2B9">{{ curName }}, dodirni kartu.<br>Neka nitko drugi ne gleda.</p>
+  </sc-if>
+
+  <!-- TOP BAR -->
+  <div style="position: absolute; left: 20px; right: 20px; top: 58px; display: flex; align-items: center; justify-content: space-between">
+    <button aria-label="Prekini igru" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: #F3EDE2; background: rgba(255,255,255,0.08); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.16); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+    <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: rgba(255,255,255,0.08); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.16)">{{ pill }}</span>
+    <button onClick="{{ restart }}" aria-label="Prototip ispočetka" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: #F3EDE2; background: rgba(255,255,255,0.08); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.16); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.6-5.9"></path><path d="M4 4v4h4"></path></svg></button>
+  </div>
+
+  <!-- BOTTOM ACTION -->
+  <div style="position: absolute; left: 20px; right: 20px; bottom: 34px; display: flex; flex-direction: column; gap: 10px">
+    <sc-if value="{{ btnStart }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ start }}" style="height: 56px; border: none; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">Podijeli uloge</button>
+    </sc-if>
+    <sc-if value="{{ btnWait }}" hint-placeholder-val="{{ false }}">
+      <button disabled style="height: 56px; border: none; border-radius: 28px; background: #262320; color: #A39C94; font-size: 17px; font-weight: 700">Telefon ide: {{ curName }}</button>
+    </sc-if>
+    <sc-if value="{{ btnShow }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ flip }}" style="height: 56px; border: none; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">Prikaži ulogu</button>
+    </sc-if>
+    <sc-if value="{{ btnHide }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ hideNext }}" style="height: 56px; border: none; border-radius: 28px; background: #F3EDE2; color: #121110; font-size: 17px; font-weight: 700">{{ hideLabel }}</button>
+    </sc-if>
+    <sc-if value="{{ btnEnd }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ endDisc }}" style="height: 56px; border: none; border-radius: 28px; background: #262320; color: #F3EDE2; font-size: 17px; font-weight: 700">Završi raspravu</button>
+    </sc-if>
+    <sc-if value="{{ btnVote }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ restart }}" style="height: 56px; border: none; border-radius: 28px; background: #F5B83D; color: #1A1206; font-size: 17px; font-weight: 700">Na glasanje</button>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"discussionSeconds":{"editor":"int","default":45,"min":5,"max":600},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._timers = [];
+    this.later(() => this.setState({ dealt: true }), 350);
+  }
+  componentWillUnmount() { this.clearAll(); }
+  later(fn, ms) { const id = setTimeout(fn, ms); (this._timers = this._timers || []).push(id); return id; }
+  clearAll() {
+    (this._timers || []).forEach(function (id) { clearTimeout(id); });
+    this._timers = [];
+    if (this._iv) { clearInterval(this._iv); this._iv = null; }
+  }
+  focus(i) {
+    this.setState({ phase: 'focus', cur: i, overlayOn: false, lifted: false, flipped: false });
+    this.later(() => this.setState({ overlayOn: true }), 720);
+    this.later(() => this.setState({ lifted: true }), 760);
+  }
+  startDiscussion() {
+    const secs = this.props.discussionSeconds ?? 45;
+    this.setState({ phase: 'disc', overlayOn: false, lifted: false, flipped: false, remaining: secs });
+    this._iv = setInterval(() => {
+      const r = ((this.state && this.state.remaining) || 0) - 1;
+      if (r <= 0) { clearInterval(this._iv); this._iv = null; this.setState({ remaining: 0 }); }
+      else this.setState({ remaining: r });
+    }, 1000);
+  }
+  renderVals() {
+    const st = this.state || {};
+    const names = ['Luka', 'Ana', 'Marko', 'Iva', 'Petar', 'Nina', 'Marta', 'Ivan'];
+    const spies = [2, 5];
+    const n = names.length;
+    const phase = st.phase || 'intro';
+    const dealt = !!st.dealt;
+    const cur = st.cur || 0;
+    const overlayOn = !!st.overlayOn, lifted = !!st.lifted, flipped = !!st.flipped;
+    const remaining = st.remaining ?? 0;
+    const r = 130, CX = 195, CY = 410;
+
+    let anim = function () { return 'none'; };
+    if (phase === 'disc' && remaining > 30) anim = function (i) { return 'drift ' + (3.2 + (i % 3) * 0.7).toFixed(1) + 's ease-in-out ' + (-i * 0.6).toFixed(1) + 's infinite alternate'; };
+    else if (phase === 'disc' && remaining > 10) anim = function (i) { return 'drift ' + (1.3 + (i % 3) * 0.3).toFixed(1) + 's ease-in-out ' + (-i * 0.3).toFixed(1) + 's infinite alternate'; };
+    else if (phase === 'disc' && remaining > 0) anim = function (i) { return 'tremble ' + (0.26 + (i % 2) * 0.06).toFixed(2) + 's linear ' + (-i * 0.05).toFixed(2) + 's infinite'; };
+
+    const seats = names.map(function (name, i) {
+      const th = (90 + 45 * i) * Math.PI / 180;
+      const x = r * Math.cos(th), y = r * Math.sin(th);
+      let op = dealt ? 1 : 0;
+      if (phase === 'focus') op = (i === cur) ? (overlayOn ? 0 : 1) : 0.4;
+      return {
+        name: name,
+        left: (CX + x - 28).toFixed(1),
+        top: (CY + y - 39).toFixed(1),
+        tf: dealt ? 'rotate(' + (45 * i) + 'deg)' : 'translate(' + (-x).toFixed(1) + 'px, ' + (-y).toFixed(1) + 'px) scale(0.6)',
+        op: op,
+        delay: dealt ? i * 70 : 0,
+        anim: anim(i)
+      };
+    });
+
+    const R = phase === 'intro' ? 0 : -45 * cur;
+    const s = phase === 'focus' ? 1.3 : 1;
+    const k = (56 * 1.3) / 300;
+    const ovTf = lifted ? 'translate(45px, 128px) scale(1)' : 'translate(' + (195 - 150 * k).toFixed(1) + 'px, ' + (410 + r * 1.3 - 210 * k).toFixed(1) + 'px) scale(' + k.toFixed(4) + ')';
+    const curSpy = spies.indexOf(cur) !== -1;
+    const last = cur === n - 1;
+    const mm = Math.floor(remaining / 60), ss = remaining % 60;
+    const warn = phase === 'disc' && remaining <= 30;
+
+    return {
+      seats: seats,
+      cameraTf: 'rotate(' + R + 'deg) scale(' + s + ')',
+      spinState: (phase === 'disc' && remaining > 0) ? 'running' : 'paused',
+      ringColor: warn ? '#F5B83D' : '#34302C',
+      centreOp: phase === 'focus' ? 0 : 1,
+      isIntro: phase === 'intro',
+      isDisc: phase === 'disc',
+      clock: remaining > 0 ? (mm + ':' + (ss < 10 ? '0' : '') + ss) : 'Vrijeme!',
+      clockColor: warn ? '#F5B83D' : '#F3EDE2',
+      clockAnim: (phase === 'disc' && remaining > 0 && remaining <= 10) ? 'pulse 1s ease-in-out infinite' : 'none',
+      clockSub: remaining > 30 ? 'Tko ne zna riječ?' : (remaining > 0 ? 'Još malo!' : 'Na glasanje'),
+      ovTf: ovTf,
+      ovOp: (phase === 'focus' && overlayOn) ? 1 : 0,
+      ovPe: (phase === 'focus' && overlayOn) ? 'auto' : 'none',
+      flipDeg: flipped ? 180 : 0,
+      curName: names[cur],
+      curSpy: curSpy,
+      curCitizen: !curSpy,
+      otherSpy: names[spies.filter(function (x) { return x !== cur; })[0]],
+      showHint: phase === 'focus' && lifted && !flipped,
+      pill: phase === 'intro' ? 'Dijeljenje' : (phase === 'focus' ? 'Igrač ' + (cur + 1) + ' od ' + n : 'Rasprava'),
+      btnStart: phase === 'intro',
+      btnWait: phase === 'focus' && !lifted,
+      btnShow: phase === 'focus' && lifted && !flipped,
+      btnHide: phase === 'focus' && lifted && flipped,
+      btnEnd: phase === 'disc' && remaining > 0,
+      btnVote: phase === 'disc' && remaining <= 0,
+      hideLabel: last ? 'Sakrij i započni raspravu' : 'Sakrij i dalje',
+      start: () => this.focus(0),
+      flip: () => { const t = this.state || {}; if (t.phase === 'focus' && t.lifted && !t.flipped) this.setState({ flipped: true }); },
+      hideNext: () => {
+        const t = this.state || {};
+        const c = t.cur || 0;
+        this.setState({ flipped: false });
+        this.later(() => this.setState({ lifted: false }), 380);
+        this.later(() => {
+          this.setState({ overlayOn: false });
+          if (c < n - 1) this.focus(c + 1); else this.startDiscussion();
+        }, 880);
+      },
+      endDisc: () => { if (this._iv) { clearInterval(this._iv); this._iv = null; } this.setState({ remaining: 0 }); },
+      restart: () => {
+        this.clearAll();
+        this.setState({ phase: 'intro', dealt: false, cur: 0, overlayOn: false, lifted: false, flipped: false, remaining: 0 });
+        this.later(() => this.setState({ dealt: true }), 350);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

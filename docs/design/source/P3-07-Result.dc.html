@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>P1 07 Round result</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Hanken+Grotesk:wght@400..800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#FF6B3D}a:hover{color:#FF8B68}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1860px; height: 3461px; box-sizing: border-box; background: #0B0A09; color: #F3EDE2; font-family: 'Hanken Grotesk', sans-serif; padding: 64px; display: flex; flex-direction: column; gap: 72px">
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A39C94; letter-spacing: 0.06em">PHASE 3 · P1 · 07</span>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 60px; line-height: 1; font-weight: 800; letter-spacing: -0.03em">Round result</h1>
+    <span style="font-size: 18px; color: #A39C94">All votes revealed at once. The knocked-out card is flicked off the table face-down — no role shown. If that was the last spy, or spies now match citizens, this screen is skipped and Game over plays.</span>
+  </div>
+
+  <sc-for list="{{ states }}" as="s" hint-placeholder-count="3">
+    <section style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #FF6B3D">{{ s.key }}</span><span style="font-size: 26px; font-weight: 800">{{ s.title }}</span><span style="font-size: 16px; color: #A39C94">{{ s.note }}</span></div>
+      <div style="display: flex; gap: 40px; align-items: flex-start">
+        <sc-for list="{{ s.V }}" as="v" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div style="position: relative; overflow: hidden; box-sizing: border-box; width: {{ v.w }}px; height: {{ v.h }}px; border-radius: {{ v.pr }}px; background: {{ v.t.bg }}; color: {{ v.t.text }}; box-shadow: 0 0 0 1.5px {{ v.t.frame }}">
+              <div style="position: absolute; left: 16px; right: 16px; top: {{ v.navTop }}px; display: flex; align-items: center; justify-content: space-between">
+                <button aria-label="Izbornik igre" style="width: 48px; height: 48px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: {{ v.t.text }}; background: {{ v.nbBg }}; border: 1px solid {{ v.nbLine }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+                <span style="height: 40px; padding: 0 16px; border-radius: 20px; display: flex; align-items: center; font-size: 15px; font-weight: 600; background: {{ v.pillBg }}; border: 1px solid {{ v.nbLine }}">{{ s.pill }}</span>
+                <span style="width: 48px"></span>
+              </div>
+
+              <div style="position: absolute; left: 0; right: 0; top: {{ v.cardsT }}px; height: 230px">
+                <sc-for list="{{ s.cards }}" as="c" hint-placeholder-count="2">
+                  <div style="position: absolute; left: 50%; top: 0; width: 150px; height: 210px; margin-left: -75px; transform: {{ c.tf }}">
+                    <div style="position: absolute; inset: 0; filter: {{ c.filter }}; opacity: {{ c.op }}">
+                      <svg width="150" height="210" viewBox="0 0 150 210" style="position: absolute; inset: 0"><polygon points="11,0 139,0 150,11 150,199 139,210 11,210 0,199 0,11" fill="#2A221C" stroke="#4A3D33" stroke-width="1.5"></polygon></svg>
+                      <div style="position: absolute; inset: 11px 11px 46px; border-radius: 3px; background-image: repeating-linear-gradient(45deg, rgba(255,107,61,0.25) 0 1.5px, transparent 1.5px 12px), repeating-linear-gradient(-45deg, rgba(255,107,61,0.25) 0 1.5px, transparent 1.5px 12px)"></div>
+                      <span style="position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: #F3EDE2">{{ c.name }}</span>
+                    </div>
+                    <sc-if value="{{ c.stamp }}" hint-placeholder-val="{{ false }}">
+                      <span style="position: absolute; left: 50%; top: 74px; margin-left: -62px; width: 124px; text-align: center; padding: 6px 0; border-radius: 8px; border: 2.5px solid {{ v.t.text }}; background: {{ v.t.bg }}; transform: rotate(-12deg); font-size: 16px; font-weight: 800; letter-spacing: 0.12em">IZVAN IGRE</span>
+                    </sc-if>
+                    <sc-if value="{{ c.q }}" hint-placeholder-val="{{ false }}">
+                      <span style="position: absolute; left: 50%; top: 66px; margin-left: -28px; width: 56px; height: 56px; border-radius: 28px; background: {{ v.t.bg }}; box-shadow: 0 0 0 2px {{ v.t.text }}; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800">=</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="position: absolute; left: 24px; right: 24px; top: {{ v.textT }}px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+                <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; line-height: 1.08; font-weight: 800; letter-spacing: -0.02em">{{ s.head }}</span>
+                <span style="font-size: 16px; line-height: 1.4; color: {{ v.t.muted }}">{{ s.sub }}</span>
+              </div>
+
+              <div style="position: absolute; left: 16px; right: 16px; top: {{ v.tallyT }}px; border-radius: 22px; background: {{ v.t.surf }}; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; justify-content: space-between"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.t.muted }}">GLASOVI</span><span style="font-size: 13px; color: {{ v.t.muted }}">{{ s.total }}</span></div>
+                <sc-for list="{{ v.tally }}" as="r" hint-placeholder-count="3">
+                  <div style="display: grid; grid-template-columns: 70px 1fr 24px; align-items: center; gap: 10px">
+                    <span style="font-size: 16px; font-weight: {{ r.fw }}; color: {{ r.ink }}">{{ r.name }}</span>
+                    <div style="height: 24px; border-radius: 6px; background: {{ v.t.surf2 }}; overflow: hidden"><div style="height: 24px; border-radius: 6px; width: {{ r.pct }}%; background: {{ r.bar }}"></div></div>
+                    <span style="font-size: 16px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums">{{ r.n }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="position: absolute; left: 20px; right: 20px; bottom: {{ v.bot }}px"><button style="width: 100%; height: {{ v.bh }}px; border: none; border-radius: {{ v.br }}px; background: {{ v.t.pri }}; color: {{ v.t.priInk }}; font-size: 18px; font-weight: 700">{{ s.cta }}</button></div>
+            </div>
+            <span style="font-size: 14px; color: #A39C94">{{ v.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1860,"height":3461}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = { bg: '#121110', surf: '#1C1A18', surf2: '#262320', text: '#F3EDE2', muted: '#A39C94', pri: '#F3EDE2', priInk: '#121110', glass: 'rgba(255,255,255,0.08)', glassLine: 'rgba(255,255,255,0.16)', frame: '#34302C', barTop: '#F3EDE2', barLow: '#4A443F' };
+    const L = { bg: '#F6F2EA', surf: '#FFFFFF', surf2: '#EEE8DE', text: '#1A1714', muted: '#6B645C', pri: '#1A1714', priInk: '#F3EDE2', glass: 'rgba(255,255,255,0.72)', glassLine: 'rgba(26,23,20,0.10)', frame: '#DDD5C8', barTop: '#1A1714', barLow: '#C9C2B9' };
+    const mkV = function (ios, dark) {
+      const t = dark ? D : L;
+      return { ios: ios, t: t, w: ios ? 390 : 412, h: ios ? 844 : 915, pr: ios ? 48 : 36,
+        navTop: ios ? 58 : 48, nbBg: ios ? t.glass : 'transparent', nbLine: ios ? t.glassLine : 'transparent', pillBg: ios ? t.glass : t.surf2,
+        cardsT: ios ? 130 : 140, textT: ios ? 384 : 404, tallyT: ios ? 500 : 530,
+        bh: ios ? 56 : 64, br: ios ? 28 : 16, bot: ios ? 34 : 24,
+        label: (ios ? 'iOS 26' : 'Android 16') + ' · ' + (dark ? 'dark' : 'light') };
+    };
+    const V = [mkV(true, true), mkV(true, false), mkV(false, true), mkV(false, false)];
+    const withTally = function (rows) {
+      const max = Math.max.apply(null, rows.map(function (r) { return r[1]; }));
+      return function (v) {
+        return rows.map(function (r) { const top = r[1] === max; return { name: r[0], n: r[1], pct: Math.round(r[1] / max * 100), bar: top ? v.t.barTop : v.t.barLow, ink: top ? v.t.text : v.t.muted, fw: top ? 700 : 500 }; });
+      };
+    };
+    const state = function (o) {
+      const tallyFn = withTally(o.tally);
+      return Object.assign({}, o, { V: V.map(function (v) { return Object.assign({}, v, { tally: tallyFn(v) }); }) });
+    };
+    const states = [
+      state({ key: 'a', title: 'Knocked out', note: 'one player has the most votes · heavy thud, same for every role', pill: 'Runda 2 · rezultat',
+        cards: [{ name: 'Ana', tf: 'translateX(14px) rotate(12deg)', filter: 'grayscale(1)', op: 0.6, stamp: true, q: false }],
+        head: 'Ana ispada iz igre', sub: 'Uloge se otkrivaju na kraju igre.', total: '7 glasova',
+        tally: [['Ana', 4], ['Luka', 2], ['Petar', 1]], cta: 'Sljedeća runda' }),
+      state({ key: 'b', title: 'Tie', note: 'vote again, only between the tied players', pill: 'Runda 2 · rezultat',
+        cards: [{ name: 'Ana', tf: 'translateX(-62px) rotate(-7deg)', filter: 'none', op: 1, stamp: false, q: false }, { name: 'Luka', tf: 'translateX(62px) rotate(7deg)', filter: 'none', op: 1, stamp: false, q: true }],
+        head: 'Neriješeno', sub: 'Ponovno glasanje: Ana ili Luka.', total: '7 glasova',
+        tally: [['Ana', 3], ['Luka', 3], ['Petar', 1]], cta: 'Glasaj ponovno · Ana ili Luka' }),
+      state({ key: 'c', title: 'Second tie', note: 'the re-vote ties again → nobody is knocked out, next round starts', pill: 'Runda 2 · ponovno glasanje',
+        cards: [{ name: 'Ana', tf: 'translateX(-58px) rotate(-4deg)', filter: 'none', op: 1, stamp: false, q: false }, { name: 'Luka', tf: 'translateX(58px) rotate(4deg)', filter: 'none', op: 1, stamp: false, q: false }],
+        head: 'Opet neriješeno', sub: 'Nitko ne ispada. Obje karte ostaju na stolu.', total: '6 glasova · Ivan nije glasao',
+        tally: [['Ana', 3], ['Luka', 3]], cta: 'Runda 3' })
+    ];
+    return { states: states };
+  }
+}
+</script>
+</body>
+</html>
