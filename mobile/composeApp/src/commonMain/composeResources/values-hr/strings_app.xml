@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings the v2 app needs that docs/design/copy does not have yet. -->
+<resources>
+    <string name="app_name">Špijun</string>
+    <string name="player_default_name">Igrač %1$d</string>
+    <string name="mode_multi_soon">Uskoro</string>
+    <string name="setup_names_title">Imena igrača</string>
+    <string name="setup_name_field">Igrač %1$d</string>
+    <string name="setup_timer_custom_title">Trajanje runde</string>
+    <string name="dict_lang_hr">Hrvatski</string>
+    <string name="dict_lang_en">Engleski</string>
+    <string name="dict_name_hr">Hrvatski</string>
+    <string name="dict_name_en">English</string>
+    <string name="round_hide_hint">Predaj telefon sljedećem igraču.</string>
+    <string name="vote_pass_title">Glasanje</string>
+    <string name="vote_pass_label">GLASA</string>
+    <string name="vote_pick_pill">Runda %1$d · glasanje</string>
+    <string name="vote_you_tag">ti</string>
+    <string name="vote_out_tag">izvan igre</string>
+    <string name="result_no_votes">bez glasova</string>
+    <string name="gameover_recap">RUNDU PO RUNDU</string>
+    <string name="gameover_rounds_meta">Kraj igre · %1$s</string>
+    <string name="round_in_game_out">%1$s · %2$s</string>
+    <string name="round_dealing">Dijeljenje…</string>
+    <string name="reveal_hold_hint">%1$s, dodirni kartu.</string>
+    <string name="quit_a11y">Prekini igru</string>
+    <string name="setup_selected_summary">%1$s · %2$s</string>
+    <string name="common_done">Gotovo</string>
+</resources>

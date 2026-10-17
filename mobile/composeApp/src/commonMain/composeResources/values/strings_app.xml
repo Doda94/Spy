@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings the v2 app needs that docs/design/copy does not have yet. -->
+<resources>
+    <string name="app_name">Špijun</string>
+    <string name="player_default_name">Player %1$d</string>
+    <string name="mode_multi_soon">Coming soon</string>
+    <string name="setup_names_title">Player names</string>
+    <string name="setup_name_field">Player %1$d</string>
+    <string name="setup_timer_custom_title">Round length</string>
+    <string name="dict_lang_hr">Croatian</string>
+    <string name="dict_lang_en">English</string>
+    <string name="dict_name_hr">Hrvatski</string>
+    <string name="dict_name_en">English</string>
+    <string name="round_hide_hint">Hand the phone to the next player.</string>
+    <string name="vote_pass_title">Vote</string>
+    <string name="vote_pass_label">VOTING</string>
+    <string name="vote_pick_pill">Round %1$d · voting</string>
+    <string name="vote_you_tag">you</string>
+    <string name="vote_out_tag">out of the game</string>
+    <string name="result_no_votes">no votes</string>
+    <string name="gameover_recap">ROUND BY ROUND</string>
+    <string name="gameover_rounds_meta">Game over · %1$s</string>
+    <string name="round_in_game_out">%1$s · %2$s</string>
+    <string name="round_dealing">Dealing…</string>
+    <string name="reveal_hold_hint">%1$s, tap the card.</string>
+    <string name="quit_a11y">Quit game</string>
+    <string name="setup_selected_summary">%1$s · %2$s</string>
+    <string name="common_done">Done</string>
+</resources>
