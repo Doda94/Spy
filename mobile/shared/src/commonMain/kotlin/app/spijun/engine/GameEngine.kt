@@ -9,12 +9,6 @@ import kotlin.random.Random
  */
 object GameEngine {
 
-    /** Words from the selected categories. An empty selection means "nothing", not "everything". */
-    fun wordsIn(words: List<Word>, categories: Set<String>): List<Word> {
-        val wanted = categories.map { it.trim().lowercase() }.toSet()
-        return words.filter { it.category.trim().lowercase() in wanted }
-    }
-
     fun newGame(config: GameConfig, pool: List<Word>, random: Random = Random): GameState {
         require(config.players.size in Rules.MIN_PLAYERS..Rules.MAX_PLAYERS) { "players" }
         require(config.spyCount in 1..Rules.maxSpies(config.players.size)) { "spies" }

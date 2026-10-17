@@ -1,5 +1,6 @@
 package app.spijun.engine
 
+import kotlinx.serialization.json.Json
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -72,13 +73,7 @@ class GameEngineTest {
     }
 
     @Test
-    fun wordsInUsesCaseInsensitiveCategories() {
-        assertEquals(listOf("Plaža"), GameEngine.wordsIn(pool, setOf("mjesta")).map { it.text })
-        assertTrue(GameEngine.wordsIn(pool, emptySet()).isEmpty())
-    }
-
-    @Test
-    fun votingIsSequentialAndSecretUntilTheLastBallot() {
+    fun votingPassesVotersInSeatOrder() {
         var s = GameEngine.openVote(game(4, setOf(0)))
         val voting = s.stage as Stage.Voting
         assertEquals(listOf(0, 1, 2, 3), voting.voters)
@@ -152,6 +147,52 @@ class GameEngineTest {
         assertEquals(RoundRecord(1, null), next.history.last())
     }
 
+    /** 5 players: 3 and 4 tie 2-2, player 1 gets the stray vote. */
+    private fun tiedBetween3And4(spyIds: Set<Int>): GameState {
+        val s = GameEngine.openVote(game(5, spyIds)).vote(3, 3, 4, 4, 1)
+        assertEquals(Outcome.Tie(listOf(3, 4)), (s.stage as Stage.Result).outcome)
+        return GameEngine.continueAfterResult(s)
+    }
+
+    @Test
+    fun revoteThatResolvesKnocksOutAndRecordsTheRound() {
+        val s = tiedBetween3And4(setOf(0)).vote(3, 3, 3, 4, 3)
+        val result = s.stage as Stage.Result
+        assertEquals(Outcome.KnockedOut(3), result.outcome)
+        assertTrue(result.isRevote)
+        assertEquals(VoteCount(3, 4), result.tally.first())
+        assertEquals(listOf(3), s.eliminated)
+        assertEquals(listOf(RoundRecord(1, 3)), s.history)
+        val next = GameEngine.continueAfterResult(s)
+        assertEquals(Stage.Discussion, next.stage)
+        assertEquals(2, next.round)
+    }
+
+    @Test
+    fun revoteThatKnocksOutTheLastSpyEndsTheGame() {
+        val s = tiedBetween3And4(setOf(3)).vote(3, 3, 3, 4, 3)
+        assertEquals(Stage.GameOver(Winner.Citizens), s.stage)
+        assertEquals(listOf(RoundRecord(1, 3)), s.history)
+    }
+
+    @Test
+    fun threeWayTieRevotesBetweenAllThree() {
+        // 6 players: 1, 2 and 3 get two votes each.
+        var s = GameEngine.openVote(game(6, setOf(0))).vote(1, 2, 3, 1, 2, 3)
+        assertEquals(Outcome.Tie(listOf(1, 2, 3)), (s.stage as Stage.Result).outcome)
+        s = GameEngine.continueAfterResult(s)
+        val voting = s.stage as Stage.Voting
+        assertTrue(voting.isRevote)
+        assertEquals(listOf(1, 2, 3), voting.candidates)
+        assertEquals(listOf(0, 1, 2, 3, 4, 5), voting.voters)
+        assertFailsWith<IllegalArgumentException> { GameEngine.castVote(s, 4) }
+        s = GameEngine.castVote(s, 2)
+        // Voter 1 is a candidate and may only pick one of the other two.
+        assertFailsWith<IllegalArgumentException> { GameEngine.castVote(s, 1) }
+        s = s.vote(2, 3, 2, 2, 3)
+        assertEquals(Outcome.KnockedOut(2), (s.stage as Stage.Result).outcome)
+    }
+
     @Test
     fun citizensWinWhenLastSpyIsOut() {
         val s = game(5, setOf(4)).vote5Out(4)
@@ -185,6 +226,74 @@ class GameEngineTest {
         assertEquals(Outcome.KnockedOut(6), result.outcome)
         assertTrue(result.tally.isEmpty())
         assertEquals(listOf(RoundRecord(1, null), RoundRecord(2, 6)), s.history)
+    }
+
+    @Test
+    fun outLoudKnockOutThatEndsTheGame() {
+        val citizensWin = GameEngine.knockOutLoud(game(5, setOf(2), VotingMode.OutLoud), 2)
+        assertEquals(Stage.GameOver(Winner.Citizens), citizensWin.stage)
+        assertEquals(listOf(RoundRecord(1, 2)), citizensWin.history)
+
+        // 5 players, 2 spies: one citizen out leaves 2 vs 2.
+        val spiesWin = GameEngine.knockOutLoud(game(5, setOf(0, 1), VotingMode.OutLoud), 4)
+        assertEquals(Stage.GameOver(Winner.Spies), spiesWin.stage)
+    }
+
+    @Test
+    fun outLoudRejectsAPlayerWhoIsAlreadyOut() {
+        var s = GameEngine.knockOutLoud(game(7, setOf(0, 1), VotingMode.OutLoud), 6)
+        s = GameEngine.continueAfterResult(s)
+        assertFailsWith<IllegalArgumentException> { GameEngine.knockOutLoud(s, 6) }
+        assertFailsWith<IllegalArgumentException> { GameEngine.knockOutLoud(s, 42) }
+    }
+
+    @Test
+    fun wrongStageCallsThrow() {
+        val reveal = GameEngine.newGame(config(4), pool, Random(3))
+        val discussion = game(4, setOf(0))
+        assertFailsWith<IllegalStateException> { GameEngine.finishReveal(discussion) }
+        assertFailsWith<IllegalStateException> { GameEngine.openVote(reveal) }
+        assertFailsWith<IllegalStateException> { GameEngine.castVote(discussion, 1) }
+        assertFailsWith<IllegalStateException> { GameEngine.continueAfterResult(discussion) }
+        assertFailsWith<IllegalStateException> { GameEngine.knockOutLoud(discussion, 1) }
+
+        val afterLastBallot = GameEngine.openVote(discussion).vote(1, 2, 1, 1)
+        assertIs<Stage.Result>(afterLastBallot.stage)
+        assertFailsWith<IllegalStateException> { GameEngine.castVote(afterLastBallot, 1) }
+        assertFailsWith<IllegalStateException> { GameEngine.openVote(afterLastBallot) }
+
+        val over = game(5, setOf(4)).vote5Out(4)
+        assertFailsWith<IllegalStateException> { GameEngine.continueAfterResult(over) }
+        assertFailsWith<IllegalStateException> { GameEngine.finishReveal(over) }
+    }
+
+    @Test
+    fun gameStateSurvivesJsonInEveryStage() {
+        val base = game(6, setOf(0, 1)).copy(eliminated = listOf(5), round = 2, history = listOf(RoundRecord(1, 5)))
+        val stages = listOf(
+            Stage.Reveal(2),
+            Stage.Discussion,
+            Stage.Voting(candidates = listOf(0, 1, 2), voters = listOf(0, 1, 2, 3, 4), ballots = mapOf(0 to 1, 1 to 2), isRevote = true),
+            Stage.Result(listOf(VoteCount(2, 3), VoteCount(1, 1)), Outcome.KnockedOut(2), false),
+            Stage.Result(listOf(VoteCount(1, 2), VoteCount(2, 2)), Outcome.Tie(listOf(1, 2)), false),
+            Stage.Result(listOf(VoteCount(1, 2), VoteCount(2, 2)), Outcome.SecondTie(listOf(1, 2)), true),
+            Stage.GameOver(Winner.Spies),
+        )
+        for (stage in stages) {
+            val state = base.copy(stage = stage)
+            val json = Json.encodeToString(GameState.serializer(), state)
+            assertEquals(state, Json.decodeFromString(GameState.serializer(), json), json)
+        }
+        val outLoud = game(4, setOf(0), VotingMode.OutLoud).copy(config = config(4, 1, VotingMode.OutLoud, timer = null))
+        assertEquals(outLoud, Json.decodeFromString(GameState.serializer(), Json.encodeToString(GameState.serializer(), outLoud)))
+    }
+
+    @Test
+    fun toStringKeepsTheSecretOut() {
+        val s = game(5, setOf(3))
+        val text = s.toString()
+        assertTrue(s.word !in text, text)
+        assertTrue("spy" !in text.lowercase(), text)
     }
 
     @Test
