@@ -5,6 +5,7 @@
     <string name="player_default_name">Igrač %1$d</string>
     <string name="mode_multi_soon">Uskoro</string>
     <string name="setup_names_title">Imena igrača</string>
+    <string name="setup_names_duplicate">Imena igrača moraju biti različita.</string>
     <string name="setup_name_field">Igrač %1$d</string>
     <string name="setup_timer_custom_title">Trajanje runde</string>
     <string name="dict_lang_hr">Hrvatski</string>

@@ -32,6 +32,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +58,7 @@ import app.spijun.resources.setup_empty_pool
 import app.spijun.resources.setup_loading
 import app.spijun.resources.setup_name_field
 import app.spijun.resources.setup_names_filled
+import app.spijun.resources.setup_names_duplicate
 import app.spijun.resources.setup_names_title
 import app.spijun.resources.setup_none_selected
 import app.spijun.resources.setup_player_names
@@ -236,7 +240,7 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
                 SetupProblem.NoCategories -> stringResource(Res.string.setup_none_selected) to c.warningText
                 SetupProblem.EmptyPool -> stringResource(Res.string.setup_empty_pool) to c.danger
                 SetupProblem.MissingNames -> stringResource(Res.string.setup_player_names_hint) to c.warningText
-                SetupProblem.DuplicateNames -> stringResource(Res.string.setup_player_names) to c.warningText
+                SetupProblem.DuplicateNames -> stringResource(Res.string.setup_names_duplicate) to c.warningText
                 else -> null
             }
             val text = when {

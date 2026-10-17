@@ -4,6 +4,7 @@
     <string name="app_name">Špijun</string>
     <string name="player_default_name">Player %1$d</string>
     <string name="mode_multi_soon">Coming soon</string>
+    <string name="setup_names_duplicate">Player names must be different.</string>
     <string name="setup_names_title">Player names</string>
     <string name="setup_name_field">Player %1$d</string>
     <string name="setup_timer_custom_title">Round length</string>
