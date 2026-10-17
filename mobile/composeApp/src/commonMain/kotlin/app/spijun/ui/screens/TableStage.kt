@@ -177,7 +177,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             haptics.perform(SpyHaptic.HideCard)
             if (reduce) { flip.snapTo(0f) } else flip.animateTo(0f, tween(SpyMotion.FLIP_BACK_MS, easing = SpyMotion.Emphasized))
             if (reduce) lift.snapTo(0f) else lift.animateTo(0f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
-            controller.finishReveal()
+            controller.finishReveal(seat)
         }
     }
 
@@ -389,9 +389,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                     if (sel == null) {
                         SpyButton(stringResource(Res.string.round_loud_vote), onClick = {}, enabled = false)
                     } else {
-                        SpyButton(stringResource(Res.string.round_knock_out, game.player(sel).name), onClick = { controller.knockOutLoud(sel) })
+                        SpyButton(stringResource(Res.string.round_knock_out, game.player(sel).name), onClick = { controller.knockOutLoud(game.round, sel) })
                     }
-                    TextButton(onClick = { controller.knockOutLoud(null) }) {
+                    TextButton(onClick = { controller.knockOutLoud(game.round, null) }) {
                         Text(stringResource(Res.string.round_nobody), color = c.text, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
                     }
                 } else if (inDiscussion) {

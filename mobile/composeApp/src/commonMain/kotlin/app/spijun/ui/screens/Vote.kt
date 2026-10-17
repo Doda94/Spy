@@ -108,7 +108,7 @@ fun VoteScreen(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 } else {
                     PickPlayer(game, voting, voter, picked, onPick = { picked = it; haptics.perform(SpyHaptic.StepperTick) }) { target ->
                         haptics.perform(SpyHaptic.VoteCast)
-                        controller.castVote(target)
+                        controller.castVote(voterId, target)
                     }
                 }
             }
