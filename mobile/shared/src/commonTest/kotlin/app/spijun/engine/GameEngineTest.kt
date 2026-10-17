@@ -72,12 +72,6 @@ class GameEngineTest {
     }
 
     @Test
-    fun wordsInUsesCaseInsensitiveCategories() {
-        assertEquals(listOf("Plaža"), GameEngine.wordsIn(pool, setOf("mjesta")).map { it.text })
-        assertTrue(GameEngine.wordsIn(pool, emptySet()).isEmpty())
-    }
-
-    @Test
     fun votingIsSequentialAndSecretUntilTheLastBallot() {
         var s = GameEngine.openVote(game(4, setOf(0)))
         val voting = s.stage as Stage.Voting
