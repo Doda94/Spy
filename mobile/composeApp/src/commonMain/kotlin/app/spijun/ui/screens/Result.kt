@@ -98,9 +98,8 @@ fun ResultScreen(game: GameState, controller: AppController, onQuit: () -> Unit)
     val cardTilt = remember(game.round, game.eliminated.size, result.isRevote) { Animatable(0f) }
     LaunchedEffect(game.round, game.eliminated.size, result.isRevote, outcome) {
         if (outcome is Outcome.KnockedOut) {
-            if (!reduce) {
-                repeat(3) { haptics.perform(SpyHaptic.SuspenseTick); delay(230) }
-            }
+            // Haptics carry meaning, so they stay under reduce motion; only the tilt is skipped (motion.md §7, §9).
+            repeat(3) { haptics.perform(SpyHaptic.SuspenseTick); delay(230) }
             haptics.perform(SpyHaptic.KnockOut)
             if (reduce) cardTilt.snapTo(8f) else cardTilt.animateTo(8f, SpyMotion.card())
         }
