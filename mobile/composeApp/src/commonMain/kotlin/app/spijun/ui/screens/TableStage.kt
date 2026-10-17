@@ -110,6 +110,7 @@ import app.spijun.resources.round_who
 import app.spijun.ui.AppController
 import app.spijun.ui.ScreenReaderReveal
 import app.spijun.ui.design.ButtonKind
+import app.spijun.ui.design.CapDisplayFontScale
 import app.spijun.ui.design.CardBack
 import app.spijun.ui.design.CitizenFace
 import app.spijun.ui.design.FlipCard
@@ -577,12 +578,14 @@ private fun DiscussionCentre(total: Int?, remaining: Int?, tension: Tension, rou
                 },
                 label = "countdown",
             ) { t ->
-                Text(
-                    t,
-                    style = Spy.type.countdown.copy(fontSize = (64 * unit).sp, lineHeight = (64 * unit).sp),
-                    color = tone,
-                    modifier = Modifier.graphicsLayer { scaleX = pulse; scaleY = pulse },
-                )
+                CapDisplayFontScale {
+                    Text(
+                        t,
+                        style = Spy.type.countdown.copy(fontSize = (64 * unit).sp, lineHeight = (64 * unit).sp),
+                        color = tone,
+                        modifier = Modifier.graphicsLayer { scaleX = pulse; scaleY = pulse },
+                    )
+                }
             }
             Text(
                 if (warn) stringResource(Res.string.round_almost) else stringResource(Res.string.round_who),
