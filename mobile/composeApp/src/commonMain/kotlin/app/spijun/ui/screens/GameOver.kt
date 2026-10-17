@@ -179,15 +179,18 @@ private fun RecapRow(round: Int, name: String?, role: Role?) {
     }
 }
 
-/** Spy cards (dark) plus the ivory word card, fanned. */
+/** Every spy card (dark) plus the ivory word card, fanned (decisions.md §3: every card is shown). */
 @Composable
 private fun FannedCards(game: GameState, spyNames: List<String>, shown: Boolean, unit: Float, reduce: Boolean) {
     val c = Spy.colors
     val cardW = (118 * unit).dp
     val cat = game.category
     Box(Modifier.fillMaxWidth().height((240 * unit).dp), contentAlignment = Alignment.Center) {
-        val count = spyNames.size.coerceAtMost(3)
-        spyNames.take(3).forEachIndexed { i, name ->
+        val count = spyNames.size
+        // Up to 5 spies (12 players); more cards share the same fan width, so they overlap more.
+        val step = if (count <= 3) 62f else 124f / (count - 1)
+        val tiltStep = if (count <= 3) 6f else 12f / (count - 1)
+        spyNames.forEachIndexed { i, name ->
             val progress = remember { Animatable(0f) }
             LaunchedEffect(shown) {
                 if (shown) {
@@ -197,9 +200,9 @@ private fun FannedCards(game: GameState, spyNames: List<String>, shown: Boolean,
             val spread = (i - (count - 1) / 2f)
             Box(
                 Modifier
-                    .offset(x = ((-70 + spread * 62) * unit).dp)
+                    .offset(x = ((-70 + spread * step) * unit).dp)
                     .graphicsLayer {
-                        rotationZ = (-8f + i * 6f) * progress.value
+                        rotationZ = (-8f + i * tiltStep) * progress.value
                         translationY = (1f - progress.value) * 80f * density
                         alpha = progress.value
                     }
