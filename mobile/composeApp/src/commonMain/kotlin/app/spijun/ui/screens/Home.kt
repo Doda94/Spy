@@ -41,6 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.spijun.resources.Res
+import app.spijun.resources.home_hero_category
+import app.spijun.resources.home_hero_word
 import app.spijun.resources.common_close
 import app.spijun.resources.home_join
 import app.spijun.resources.home_new_game
@@ -126,7 +128,7 @@ fun HomeScreen(onOnePhone: () -> Unit) {
 @Composable
 private fun HeroCards(unit: Float) {
     val c = Spy.colors
-    val cat = "Mjesta"
+    val cat = stringResource(Res.string.home_hero_category)
     Box(Modifier.size((340 * unit).dp, (300 * unit).dp).clearAndSetSemantics { }, contentAlignment = Alignment.Center) {
         CardBack(
             (150 * unit).dp,
@@ -134,7 +136,7 @@ private fun HeroCards(unit: Float) {
             modifier = Modifier.graphicsLayer { rotationZ = -13f; translationX = -70f * density * unit; translationY = 14f * density * unit },
         )
         CitizenFace(
-            "Bolnica", cat, stringResource(Res.string.reveal_category, cat), stringResource(Res.string.reveal_secret_word), (150 * unit).dp,
+            stringResource(Res.string.home_hero_word), cat, stringResource(Res.string.reveal_category, cat), stringResource(Res.string.reveal_secret_word), (150 * unit).dp,
             Modifier.graphicsLayer { rotationZ = 11f; translationX = 74f * density * unit; translationY = 6f * density * unit }
                 .cardShadow((150 * unit).dp),
         )

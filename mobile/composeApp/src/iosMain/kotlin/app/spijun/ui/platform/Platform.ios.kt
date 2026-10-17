@@ -3,13 +3,20 @@ package app.spijun.ui.platform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import app.spijun.ui.design.SpyHaptic
 import app.spijun.ui.design.SpyHaptics
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
+import platform.UIKit.UIAccessibilityAnnouncementNotification
 import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
+import platform.UIKit.UIAccessibilityIsVoiceOverRunning
+import platform.UIKit.UIAccessibilityPostNotification
+import platform.UIKit.UIAccessibilityVoiceOverStatusDidChangeNotification
+import platform.UIKit.UIAccessibilityReduceMotionStatusDidChangeNotification
 import platform.UIKit.UIApplicationWillResignActiveNotification
 import platform.UIKit.UIImpactFeedbackGenerator
 import platform.UIKit.UIImpactFeedbackStyle
@@ -69,8 +76,21 @@ private class IosHaptics(private val enabled: Boolean) : SpyHaptics {
     }
 }
 
+/** Follows Reduce Motion live: the setting can change while the app is open. */
 @Composable
-actual fun rememberReduceMotion(): Boolean = remember { UIAccessibilityIsReduceMotionEnabled() }
+actual fun rememberReduceMotion(): Boolean {
+    var reduce by remember { mutableStateOf(UIAccessibilityIsReduceMotionEnabled()) }
+    DisposableEffect(Unit) {
+        val token = NSNotificationCenter.defaultCenter.addObserverForName(
+            name = UIAccessibilityReduceMotionStatusDidChangeNotification,
+            `object` = null,
+            queue = NSOperationQueue.mainQueue,
+        ) { _ -> reduce = UIAccessibilityIsReduceMotionEnabled() }
+        reduce = UIAccessibilityIsReduceMotionEnabled()
+        onDispose { NSNotificationCenter.defaultCenter.removeObserver(token) }
+    }
+    return reduce
+}
 
 @Composable
 actual fun PlatformBackHandler(enabled: Boolean, onBack: () -> Unit) {
@@ -88,6 +108,26 @@ actual fun OnAppBackground(onBackground: () -> Unit) {
         ) { _ -> current() }
         onDispose { NSNotificationCenter.defaultCenter.removeObserver(token) }
     }
+}
+
+@Composable
+actual fun rememberScreenReaderOn(): Boolean {
+    var on by remember { mutableStateOf(UIAccessibilityIsVoiceOverRunning()) }
+    DisposableEffect(Unit) {
+        val token = NSNotificationCenter.defaultCenter.addObserverForName(
+            name = UIAccessibilityVoiceOverStatusDidChangeNotification,
+            `object` = null,
+            queue = NSOperationQueue.mainQueue,
+        ) { _ -> on = UIAccessibilityIsVoiceOverRunning() }
+        on = UIAccessibilityIsVoiceOverRunning()
+        onDispose { NSNotificationCenter.defaultCenter.removeObserver(token) }
+    }
+    return on
+}
+
+@Composable
+actual fun rememberAnnouncer(): (String) -> Unit = remember {
+    { text -> UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, text) }
 }
 
 @Composable

@@ -108,7 +108,7 @@ fun VoteScreen(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 } else {
                     PickPlayer(game, voting, voter, picked, onPick = { picked = it; haptics.perform(SpyHaptic.StepperTick) }) { target ->
                         haptics.perform(SpyHaptic.VoteCast)
-                        controller.castVote(target)
+                        controller.castVote(voterId, target)
                     }
                 }
             }
@@ -126,8 +126,9 @@ private fun PassPhone(voter: Player, unit: Float, onReady: () -> Unit) {
             Box(Modifier.height(20.dp))
             CardBack(cardWidth, lifted = true, medallion = false) {
                 Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Box(Modifier.size((62 * unit).dp).clip(CircleShape).background(c.cardBack).border(1.5.dp, c.vermilion, CircleShape), contentAlignment = Alignment.Center) {
-                        SpyIcon(SpyIcons.Vote, c.vermilion, size = (30 * unit).dp)
+                    // Ivory, not vermilion: vermilion means spy and nothing else (p1-06-vote/c mock).
+                    Box(Modifier.size((62 * unit).dp).clip(CircleShape).background(c.cardBack).border(1.5.dp, c.cardCitizenFace, CircleShape), contentAlignment = Alignment.Center) {
+                        SpyIcon(SpyIcons.Vote, c.cardCitizenFace, size = (30 * unit).dp)
                     }
                     Text(stringResource(Res.string.vote_pass_label), fontFamily = Spy.type.body.fontFamily, fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 1.4.sp, color = Color(0xFFA39C94))
                     Text(

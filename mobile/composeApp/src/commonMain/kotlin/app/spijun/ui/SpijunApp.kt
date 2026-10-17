@@ -18,8 +18,7 @@ import app.spijun.ui.screens.HomeScreen
 import app.spijun.ui.screens.SetupScreen
 
 @Composable
-fun SpijunApp() {
-    val controller = remember { AppController() }
+fun SpijunApp(controller: AppController = remember { AppController() }) {
     val language = Locale.current.language
 
     LaunchedEffect(Unit) {

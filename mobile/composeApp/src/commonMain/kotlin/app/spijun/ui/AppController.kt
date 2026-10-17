@@ -11,12 +11,16 @@ import app.spijun.engine.Player
 import app.spijun.engine.Rules
 import app.spijun.engine.SetupProblem
 import app.spijun.engine.SetupValidation
+import app.spijun.engine.Stage
 import app.spijun.engine.VotingMode
 import app.spijun.engine.Word
 import app.spijun.ui.data.Dictionary
 import app.spijun.ui.data.categoryKey
 
 enum class Route { Home, Setup, Game }
+
+/** How a screen-reader user chose to see their role, asked once before the first reveal. */
+enum class ScreenReaderReveal { Aloud, Silent }
 
 data class SetupState(
     val players: Int = 4,
@@ -39,6 +43,8 @@ class AppController {
         private set
     var game by mutableStateOf<GameState?>(null)
         private set
+    /** Null until a screen-reader user has answered `a11y_sr_warning` (once per app run). */
+    var screenReaderReveal by mutableStateOf<ScreenReaderReveal?>(null)
 
     fun onDictionariesLoaded(list: List<Dictionary>, preferredId: String) {
         dictionaries = list
@@ -99,15 +105,21 @@ class AppController {
         route = Route.Game
     }
 
-    fun playAgain() { game = game?.let { GameEngine.playAgain(it, pool()) } }
+    // Every action is a no-op unless the game is still where the caller saw it: a double tap, or a
+    // tap on a screen that is fading out, must not reach the engine (it throws on wrong-stage calls)
+    // or act twice (a second ballot for the next voter, a second "nobody is out").
+    fun playAgain() = applyIn<Stage.GameOver> { g, _ -> GameEngine.playAgain(g, pool()) }
+    fun finishReveal(seat: Int) = applyIn<Stage.Reveal> { g, s -> if (s.seat == seat) GameEngine.finishReveal(g) else g }
+    fun openVote() = applyIn<Stage.Discussion> { g, _ -> GameEngine.openVote(g) }
+    fun castVote(voter: Int, target: Int) =
+        applyIn<Stage.Voting> { g, s -> if (s.currentVoter == voter) GameEngine.castVote(g, target) else g }
+    fun knockOutLoud(round: Int, playerId: Int?) =
+        applyIn<Stage.Discussion> { g, _ -> if (g.round == round) GameEngine.knockOutLoud(g, playerId) else g }
+    fun continueAfterResult() = applyIn<Stage.Result> { g, _ -> GameEngine.continueAfterResult(g) }
 
-    fun finishReveal() = apply { GameEngine.finishReveal(it) }
-    fun openVote() = apply { GameEngine.openVote(it) }
-    fun castVote(target: Int) = apply { GameEngine.castVote(it, target) }
-    fun knockOutLoud(playerId: Int?) = apply { GameEngine.knockOutLoud(it, playerId) }
-    fun continueAfterResult() = apply { GameEngine.continueAfterResult(it) }
-
-    private fun apply(step: (GameState) -> GameState) {
-        game = game?.let(step)
+    private inline fun <reified S : Stage> applyIn(step: (GameState, S) -> GameState) {
+        val g = game ?: return
+        val stage = g.stage as? S ?: return
+        game = step(g, stage)
     }
 }

@@ -1,7 +1,10 @@
 package app.spijun.ui.screens
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,21 +32,22 @@ import org.jetbrains.compose.resources.stringResource
 fun GameScreen(game: GameState, controller: AppController) {
     var confirmQuit by remember { mutableStateOf(false) }
     val askQuit = { confirmQuit = true }
-    PlatformBackHandler(game.stage !is Stage.GameOver) { confirmQuit = true }
+    // Back asks before quitting; once the game is over there is nothing to lose, so it goes Home.
+    PlatformBackHandler(true) { if (game.stage is Stage.GameOver) controller.goHome() else confirmQuit = true }
 
-    // Reveal and discussion share one table so the camera can pull back instead of cutting.
-    val key = when (game.stage) {
-        is Stage.Reveal, Stage.Discussion -> "table"
-        is Stage.Voting -> "vote"
-        is Stage.Result -> "result-${game.round}-${game.eliminated.size}-${(game.stage as Stage.Result).isRevote}"
-        is Stage.GameOver -> "over"
-    }
-    Crossfade(key, animationSpec = tween(SpyMotion.STANDARD_MS), label = "game-stage") {
-        when (game.stage) {
-            is Stage.Reveal, Stage.Discussion -> TableStage(game, controller, askQuit)
-            is Stage.Voting -> VoteScreen(game, controller, askQuit)
-            is Stage.Result -> ResultScreen(game, controller, askQuit)
-            is Stage.GameOver -> GameOverScreen(game, controller, onNewGame = { controller.goHome() })
+    // Crossfade where each slot renders its own state: the outgoing screen keeps the old stage while
+    // it fades, and effects (haptics, the deal) run once, in the incoming screen only.
+    AnimatedContent(
+        targetState = game,
+        transitionSpec = { fadeIn(tween(SpyMotion.STANDARD_MS)) togetherWith fadeOut(tween(SpyMotion.STANDARD_MS)) },
+        contentKey = ::stageKey,
+        label = "game-stage",
+    ) { g ->
+        when (g.stage) {
+            is Stage.Reveal, Stage.Discussion -> TableStage(g, controller, askQuit)
+            is Stage.Voting -> VoteScreen(g, controller, askQuit)
+            is Stage.Result -> ResultScreen(g, controller, askQuit)
+            is Stage.GameOver -> GameOverScreen(g, controller, onNewGame = { controller.goHome() })
         }
     }
 
@@ -66,4 +70,12 @@ fun GameScreen(game: GameState, controller: AppController) {
             },
         )
     }
+}
+
+/** Reveal and discussion share one table so the camera can pull back instead of cutting. */
+private fun stageKey(game: GameState): String = when (val stage = game.stage) {
+    is Stage.Reveal, Stage.Discussion -> "table"
+    is Stage.Voting -> "vote"
+    is Stage.Result -> "result-${game.round}-${game.eliminated.size}-${stage.isRevote}"
+    is Stage.GameOver -> "over"
 }

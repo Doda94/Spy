@@ -28,10 +28,12 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,11 +43,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,7 +65,13 @@ import app.spijun.resources.Res
 import app.spijun.resources.a11y_card_hidden
 import app.spijun.resources.a11y_citizen
 import app.spijun.resources.a11y_other_spies
+import app.spijun.resources.a11y_seconds
+import app.spijun.resources.a11y_minutes
 import app.spijun.resources.a11y_spy
+import app.spijun.resources.a11y_sr_warning
+import app.spijun.resources.a11y_sr_warning_aloud
+import app.spijun.resources.a11y_sr_warning_silent
+import app.spijun.resources.a11y_timer
 import app.spijun.resources.in_game
 import app.spijun.resources.out_count
 import app.spijun.resources.quit_a11y
@@ -98,7 +108,9 @@ import app.spijun.resources.round_to_vote
 import app.spijun.resources.round_vote_opens
 import app.spijun.resources.round_who
 import app.spijun.ui.AppController
+import app.spijun.ui.ScreenReaderReveal
 import app.spijun.ui.design.ButtonKind
+import app.spijun.ui.design.CapDisplayFontScale
 import app.spijun.ui.design.CardBack
 import app.spijun.ui.design.CitizenFace
 import app.spijun.ui.design.FlipCard
@@ -116,6 +128,8 @@ import app.spijun.ui.design.cameraRotationFor
 import app.spijun.ui.design.cardShadow
 import app.spijun.ui.platform.OnAppBackground
 import app.spijun.ui.platform.SecureWhile
+import app.spijun.ui.platform.rememberAnnouncer
+import app.spijun.ui.platform.rememberScreenReaderOn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
@@ -142,6 +156,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     val names = remember(game.players) { game.players.map { it.name } }
     val outSeats = remember(game.eliminated) { game.eliminated.toSet() }
 
+    val screenReader = rememberScreenReaderOn()
+    val announce = rememberAnnouncer()
+    var askScreenReader by remember { mutableStateOf(false) }
+
     val reveal = game.stage as? Stage.Reveal
     val inDiscussion = game.stage == Stage.Discussion
     val seat = reveal?.seat ?: (n - 1)
@@ -153,6 +171,12 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     val lift = remember { Animatable(0f) }
     val barProgress = remember { Animatable(1f) }
     val faceAlpha = remember { Animatable(1f) }
+    // Set synchronously when the app leaves the screen, so the face is gone from the very next frame
+    // even before the animations below are reset.
+    var faceHidden by remember { mutableStateOf(false) }
+    // Animation values are read in graphicsLayer/draw; composition only sees these thresholds.
+    val lifted by remember { derivedStateOf { lift.value > 0.01f } }
+    val secondsLeft by remember { derivedStateOf { ceil(barProgress.value * AUTO_HIDE_MS / 1000f).toInt() } }
 
     LaunchedEffect(reveal?.seat) {
         if (reveal == null) return@LaunchedEffect
@@ -177,21 +201,40 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             haptics.perform(SpyHaptic.HideCard)
             if (reduce) { flip.snapTo(0f) } else flip.animateTo(0f, tween(SpyMotion.FLIP_BACK_MS, easing = SpyMotion.Emphasized))
             if (reduce) lift.snapTo(0f) else lift.animateTo(0f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
-            controller.finishReveal()
+            controller.finishReveal(seat)
         }
     }
 
+    // What the screen reader may say about the card. The role is spoken once, at the flip, and only
+    // after the player was warned (decisions.md §9); focus never re-reads it.
+    val player = game.player(seat)
+    val role = game.roleOf(player.id)
+    val others = game.otherSpiesOf(player.id).map { it.name }
+    val hiddenDesc = stringResource(Res.string.a11y_card_hidden, player.name)
+    val roleAnnouncement = if (role == Role.Citizen) stringResource(Res.string.a11y_citizen, game.word, game.category)
+    else stringResource(Res.string.a11y_spy, game.category) +
+        if (others.isNotEmpty()) " " + stringResource(Res.string.a11y_other_spies, others.joinToString(", ")) else ""
+
     fun flipUp() {
         if (phase != RevealPhase.Handoff) return
+        if (screenReader && controller.screenReaderReveal == null) {
+            askScreenReader = true
+            return
+        }
         phase = RevealPhase.Revealed
-        val role = game.roleOf(seat)
+        faceHidden = false
+        val speak = screenReader && controller.screenReaderReveal == ScreenReaderReveal.Aloud
+        val swap = {
+            haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+            if (speak) announce(roleAnnouncement)
+        }
         scope.launch {
             if (reduce) {
                 flip.snapTo(180f)
-                haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+                swap()
             } else {
                 flip.animateTo(90f, tween(SpyMotion.FLIP_IN_MS, easing = LinearEasing))
-                haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+                swap()
                 flip.animateTo(180f, SpyMotion.card())
             }
         }
@@ -204,8 +247,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
     // Privacy: the instant the app leaves the screen, a face-up card flips back with no animation.
     OnAppBackground {
+        if (phase == RevealPhase.Revealed || phase == RevealPhase.Hiding) faceHidden = true
         if (phase == RevealPhase.Revealed) {
-            scope.launch { flip.snapTo(0f); barProgress.snapTo(1f); phase = RevealPhase.Handoff }
+            phase = RevealPhase.Handoff
+            scope.launch { flip.snapTo(0f); barProgress.snapTo(1f) }
         }
     }
     SecureWhile(reveal != null)
@@ -241,18 +286,41 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     }
     val tension = if (inDiscussion) tensionFor(remaining) else Tension.Calm
 
+    // Screen readers hear the countdown politely at full minutes, 30 s, 10 s and 0, never every
+    // second, and not the starting value (decisions.md §9).
+    val left = remaining
+    val timerAnnouncement = when {
+        !inDiscussion || total == null || left == null || left >= total + extraSeconds -> null
+        left == 0 -> stringResource(Res.string.round_time_up)
+        left == Rules.WARNING_SECONDS || left == Rules.NERVOUS_SECONDS ->
+            stringResource(Res.string.a11y_timer, pluralStringResource(Res.plurals.a11y_seconds, left, left))
+        left % 60 == 0 -> stringResource(Res.string.a11y_timer, pluralStringResource(Res.plurals.a11y_minutes, left / 60, left / 60))
+        else -> null
+    }
+    LaunchedEffect(timerAnnouncement) {
+        if (screenReader && timerAnnouncement != null) announce(timerAnnouncement)
+    }
+
     // ── Camera ────────────────────────────────────────────────────────────────────
     val focusing = reveal != null && phase != RevealPhase.Dealing
-    val camRotation by animateFloatAsState(
+    val camRotation = animateFloatAsState(
         cameraRotationFor(seat, n),
         if (reduce) snap() else tween(SpyMotion.TABLE_TURN_MS, easing = SpyMotion.Emphasized),
         label = "camera-rotation",
     )
-    val camScale by animateFloatAsState(
+    val camScale = animateFloatAsState(
         if (focusing && !reduce) SpyMotion.CAMERA_PUSH else 1f,
         if (reduce) snap() else tween(SpyMotion.TABLE_TURN_MS, easing = SpyMotion.Emphasized),
         label = "camera-scale",
     )
+
+    if (askScreenReader) {
+        ScreenReaderWarning { choice ->
+            askScreenReader = false
+            controller.screenReaderReveal = choice
+            flipUp()
+        }
+    }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(c.bg)) {
         val unit = minOf(maxWidth.value / 390f, maxHeight.value / 844f).coerceIn(0.7f, 1.3f)
@@ -296,9 +364,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 outSeats = outSeats,
                 modifier = Modifier.align(Alignment.Center).offset(y = (8 * unit).dp),
                 unit = unit,
-                cameraRotation = camRotation,
-                cameraScale = camScale,
-                hiddenSeat = if (reveal != null && lift.value > 0.01f) seat else null,
+                cameraRotation = { camRotation.value },
+                cameraScale = { camScale.value },
+                hiddenSeat = if (reveal != null && lifted) seat else null,
                 ringSeat = if (reduce && reveal != null && phase != RevealPhase.Dealing) seat else null,
                 dimOthers = reveal != null && focusing && !reduce,
                 tension = tension,
@@ -311,14 +379,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             }
 
             // The lifted role card (reveal only)
-            if (reveal != null && lift.value > 0.01f) {
-                val player = game.player(seat)
-                val role = game.roleOf(player.id)
-                val others = game.otherSpiesOf(player.id).map { it.name }
-                val hiddenDesc = stringResource(Res.string.a11y_card_hidden, player.name)
-                val shownDesc = if (role == Role.Citizen) stringResource(Res.string.a11y_citizen, game.word, game.category)
-                else stringResource(Res.string.a11y_spy, game.category) +
-                    if (others.isNotEmpty()) " " + stringResource(Res.string.a11y_other_spies, others.joinToString(", ")) else ""
+            if (reveal != null && lifted) {
                 Box(
                     Modifier
                         .align(Alignment.Center)
@@ -331,14 +392,15 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                             alpha = if (reduce) faceAlpha.value * l else l.coerceIn(0f, 1f)
                             rotationZ = if (phase == RevealPhase.Revealed) -2f else 0f
                         }
-                        .semantics {
-                            contentDescription = if (phase == RevealPhase.Revealed) shownDesc else hiddenDesc
-                            liveRegion = LiveRegionMode.Polite
+                        // Replaces the faces' own text nodes, which would read the secret on focus.
+                        .clearAndSetSemantics {
+                            contentDescription = if (phase == RevealPhase.Revealed && !faceHidden) player.name else hiddenDesc
+                            if (phase == RevealPhase.Handoff) onClick { flipUp(); true }
                         },
                 ) {
                     val modifier = Modifier.cardShadow(cardWidth)
                     FlipCard(
-                        flip = flip.value,
+                        flip = { if (faceHidden) 0f else flip.value },
                         width = cardWidth,
                         modifier = modifier.then(
                             if (phase == RevealPhase.Handoff) Modifier.clickableNoRipple { flipUp() } else Modifier,
@@ -354,7 +416,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                             }
                         },
                         front = {
-                            if (role == Role.Citizen) {
+                            if (faceHidden) CardBack(cardWidth)
+                            else if (role == Role.Citizen) {
                                 CitizenFace(game.word, game.category, stringResource(Res.string.reveal_category, game.category), stringResource(Res.string.reveal_secret_word), cardWidth)
                             } else {
                                 SpyFace(
@@ -379,8 +442,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                         phase = phase,
                         name = game.player(seat).name,
                         last = seat == n - 1,
-                        secondsLeft = ceil(barProgress.value * AUTO_HIDE_MS / 1000f).toInt(),
-                        bar = barProgress.value,
+                        secondsLeft = secondsLeft,
+                        bar = { barProgress.value },
                         onFlip = ::flipUp,
                         onHide = ::hideAndPass,
                     )
@@ -389,9 +452,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                     if (sel == null) {
                         SpyButton(stringResource(Res.string.round_loud_vote), onClick = {}, enabled = false)
                     } else {
-                        SpyButton(stringResource(Res.string.round_knock_out, game.player(sel).name), onClick = { controller.knockOutLoud(sel) })
+                        SpyButton(stringResource(Res.string.round_knock_out, game.player(sel).name), onClick = { controller.knockOutLoud(game.round, sel) })
                     }
-                    TextButton(onClick = { controller.knockOutLoud(null) }) {
+                    TextButton(onClick = { controller.knockOutLoud(game.round, null) }) {
                         Text(stringResource(Res.string.round_nobody), color = c.text, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
                     }
                 } else if (inDiscussion) {
@@ -419,13 +482,34 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     }
 }
 
+/** Asked once, before the first reveal with a screen reader on (decisions.md §9, screens.md P1·04). */
+@Composable
+private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
+    val c = Spy.colors
+    AlertDialog(
+        onDismissRequest = {},
+        containerColor = c.surface2,
+        text = { Text(stringResource(Res.string.a11y_sr_warning), style = Spy.type.bodyLarge, color = c.text) },
+        confirmButton = {
+            TextButton(onClick = { onChoice(ScreenReaderReveal.Aloud) }) {
+                Text(stringResource(Res.string.a11y_sr_warning_aloud), color = c.text, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onChoice(ScreenReaderReveal.Silent) }) {
+                Text(stringResource(Res.string.a11y_sr_warning_silent), color = c.text)
+            }
+        },
+    )
+}
+
 @Composable
 private fun RevealFooter(
     phase: RevealPhase,
     name: String,
     last: Boolean,
     secondsLeft: Int,
-    bar: Float,
+    bar: () -> Float,
     onFlip: () -> Unit,
     onHide: () -> Unit,
 ) {
@@ -451,9 +535,14 @@ private fun RevealFooter(
                 onClick = onHide,
                 enabled = phase == RevealPhase.Revealed,
             )
+            // Drawn, not laid out: the bar empties every frame for the whole auto-hide.
+            val barColor = Spy.colors.onPrimary.copy(alpha = 0.4f)
             Box(
-                Modifier.align(Alignment.BottomStart).padding(horizontal = 24.dp).fillMaxWidth(bar.coerceIn(0f, 1f)).height(4.dp)
-                    .clip(RoundedCornerShape(2.dp)).background(Spy.colors.onPrimary.copy(alpha = 0.4f)),
+                Modifier.align(Alignment.BottomStart).padding(horizontal = 24.dp).fillMaxWidth().height(4.dp)
+                    .drawBehind {
+                        val w = size.width * bar().coerceIn(0f, 1f)
+                        drawRoundRect(barColor, size = Size(w, size.height), cornerRadius = CornerRadius(2.dp.toPx()))
+                    },
             )
         }
     }
@@ -489,12 +578,14 @@ private fun DiscussionCentre(total: Int?, remaining: Int?, tension: Tension, rou
                 },
                 label = "countdown",
             ) { t ->
-                Text(
-                    t,
-                    style = Spy.type.countdown.copy(fontSize = (64 * unit).sp, lineHeight = (64 * unit).sp),
-                    color = tone,
-                    modifier = Modifier.graphicsLayer { scaleX = pulse; scaleY = pulse },
-                )
+                CapDisplayFontScale {
+                    Text(
+                        t,
+                        style = Spy.type.countdown.copy(fontSize = (64 * unit).sp, lineHeight = (64 * unit).sp),
+                        color = tone,
+                        modifier = Modifier.graphicsLayer { scaleX = pulse; scaleY = pulse },
+                    )
+                }
             }
             Text(
                 if (warn) stringResource(Res.string.round_almost) else stringResource(Res.string.round_who),
