@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -18,10 +19,7 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +30,10 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -114,7 +115,11 @@ fun EmptySeat(width: Dp, modifier: Modifier = Modifier) {
 
 /** Citizen face: ivory, whole diamond, the secret word and its category. */
 @Composable
-fun CitizenFace(word: String, category: String, categoryLine: String, wordLabel: String, width: Dp, modifier: Modifier = Modifier) {
+fun CitizenFace(word: String, category: String, categoryLine: String, wordLabel: String, width: Dp, modifier: Modifier = Modifier) =
+    CapDisplayFontScale { CitizenFaceContent(word, categoryLine, wordLabel, width, modifier) }
+
+@Composable
+private fun CitizenFaceContent(word: String, categoryLine: String, wordLabel: String, width: Dp, modifier: Modifier) {
     val c = Spy.colors
     val shape = cardShape(width)
     val unit = width.value / 300f
@@ -162,6 +167,18 @@ fun SpyFace(
     others: List<String>,
     width: Dp,
     modifier: Modifier = Modifier,
+) = CapDisplayFontScale { SpyFaceContent(youAre, roleName, categoryLine, aloneLine, othersLabel, others, width, modifier) }
+
+@Composable
+private fun SpyFaceContent(
+    youAre: String,
+    roleName: String,
+    categoryLine: String,
+    aloneLine: String?,
+    othersLabel: String,
+    others: List<String>,
+    width: Dp,
+    modifier: Modifier,
 ) {
     val c = Spy.colors
     val shape = cardShape(width)
@@ -263,22 +280,30 @@ private fun DashedDivider(color: Color, width: Dp) {
  */
 @Composable
 fun AutoFitWord(text: String, style: TextStyle, scale: Float = 1f, modifier: Modifier = Modifier) {
-    val steps = remember(scale) { listOf(56f, 52f, 48f, 44f, 40f, 36f, 32f).map { it * scale } }
-    var step by remember(text, scale) { mutableStateOf(0) }
-    val words = remember(text) { text.trim().split(' ').size }
-    Text(
-        text,
-        modifier = modifier.fillMaxWidth(),
-        style = style.copy(fontSize = steps[step].sp, lineHeight = steps[step].sp * 1.0f),
-        textAlign = TextAlign.Center,
-        maxLines = 2,
-        softWrap = true,
-        onTextLayout = { r ->
-            val brokeAWord = r.lineCount > words
-            if ((r.hasVisualOverflow || brokeAWord) && step < steps.lastIndex) step += 1
-        },
-    )
+    val measurer = rememberTextMeasurer()
+    BoxWithConstraints(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        val maxWidth = constraints.maxWidth
+        // One measuring pass picks the size before the first frame, so the word never jumps.
+        val fitted = remember(text, style, scale, maxWidth, measurer) {
+            val sizes = AUTO_FIT_SIZES.map { it * scale }
+            val styles = sizes.map { style.copy(fontSize = it.sp, lineHeight = it.sp) }
+            styles.firstOrNull { s ->
+                val r = measurer.measure(text, s.copy(textAlign = TextAlign.Center), maxLines = 2, constraints = Constraints(maxWidth = maxWidth))
+                !r.hasVisualOverflow && !r.breaksInsideAWord(text)
+            } ?: styles.last()
+        }
+        Text(text, Modifier.fillMaxWidth(), style = fitted, textAlign = TextAlign.Center, maxLines = 2, softWrap = true)
+    }
 }
+
+private val AUTO_FIT_SIZES = listOf(56f, 52f, 48f, 44f, 40f, 36f, 32f)
+
+/** True when a line ends in the middle of a word (the text didn't fit, so it broke by character). */
+private fun TextLayoutResult.breaksInsideAWord(text: String): Boolean =
+    (0 until lineCount - 1).any { line ->
+        val end = getLineEnd(line)
+        end in 1 until text.length && !text[end - 1].isWhitespace() && !text[end].isWhitespace()
+    }
 
 /** Flip container: rotateY 0→180 swapping to [front] at 90°. Content is mirrored so it reads correctly. */
 @Composable
