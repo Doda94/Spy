@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -166,6 +170,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     // Set synchronously when the app leaves the screen, so the face is gone from the very next frame
     // even before the animations below are reset.
     var faceHidden by remember { mutableStateOf(false) }
+    // Animation values are read in graphicsLayer/draw; composition only sees these thresholds.
+    val lifted by remember { derivedStateOf { lift.value > 0.01f } }
+    val secondsLeft by remember { derivedStateOf { ceil(barProgress.value * AUTO_HIDE_MS / 1000f).toInt() } }
 
     LaunchedEffect(reveal?.seat) {
         if (reveal == null) return@LaunchedEffect
@@ -277,12 +284,12 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
     // ── Camera ────────────────────────────────────────────────────────────────────
     val focusing = reveal != null && phase != RevealPhase.Dealing
-    val camRotation by animateFloatAsState(
+    val camRotation = animateFloatAsState(
         cameraRotationFor(seat, n),
         if (reduce) snap() else tween(SpyMotion.TABLE_TURN_MS, easing = SpyMotion.Emphasized),
         label = "camera-rotation",
     )
-    val camScale by animateFloatAsState(
+    val camScale = animateFloatAsState(
         if (focusing && !reduce) SpyMotion.CAMERA_PUSH else 1f,
         if (reduce) snap() else tween(SpyMotion.TABLE_TURN_MS, easing = SpyMotion.Emphasized),
         label = "camera-scale",
@@ -338,9 +345,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 outSeats = outSeats,
                 modifier = Modifier.align(Alignment.Center).offset(y = (8 * unit).dp),
                 unit = unit,
-                cameraRotation = camRotation,
-                cameraScale = camScale,
-                hiddenSeat = if (reveal != null && lift.value > 0.01f) seat else null,
+                cameraRotation = { camRotation.value },
+                cameraScale = { camScale.value },
+                hiddenSeat = if (reveal != null && lifted) seat else null,
                 ringSeat = if (reduce && reveal != null && phase != RevealPhase.Dealing) seat else null,
                 dimOthers = reveal != null && focusing && !reduce,
                 tension = tension,
@@ -353,7 +360,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             }
 
             // The lifted role card (reveal only)
-            if (reveal != null && lift.value > 0.01f) {
+            if (reveal != null && lifted) {
                 Box(
                     Modifier
                         .align(Alignment.Center)
@@ -374,7 +381,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 ) {
                     val modifier = Modifier.cardShadow(cardWidth)
                     FlipCard(
-                        flip = flip.value,
+                        flip = { if (faceHidden) 0f else flip.value },
                         width = cardWidth,
                         modifier = modifier.then(
                             if (phase == RevealPhase.Handoff) Modifier.clickableNoRipple { flipUp() } else Modifier,
@@ -416,8 +423,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                         phase = phase,
                         name = game.player(seat).name,
                         last = seat == n - 1,
-                        secondsLeft = ceil(barProgress.value * AUTO_HIDE_MS / 1000f).toInt(),
-                        bar = barProgress.value,
+                        secondsLeft = secondsLeft,
+                        bar = { barProgress.value },
                         onFlip = ::flipUp,
                         onHide = ::hideAndPass,
                     )
@@ -483,7 +490,7 @@ private fun RevealFooter(
     name: String,
     last: Boolean,
     secondsLeft: Int,
-    bar: Float,
+    bar: () -> Float,
     onFlip: () -> Unit,
     onHide: () -> Unit,
 ) {
@@ -509,9 +516,14 @@ private fun RevealFooter(
                 onClick = onHide,
                 enabled = phase == RevealPhase.Revealed,
             )
+            // Drawn, not laid out: the bar empties every frame for the whole auto-hide.
+            val barColor = Spy.colors.onPrimary.copy(alpha = 0.4f)
             Box(
-                Modifier.align(Alignment.BottomStart).padding(horizontal = 24.dp).fillMaxWidth(bar.coerceIn(0f, 1f)).height(4.dp)
-                    .clip(RoundedCornerShape(2.dp)).background(Spy.colors.onPrimary.copy(alpha = 0.4f)),
+                Modifier.align(Alignment.BottomStart).padding(horizontal = 24.dp).fillMaxWidth().height(4.dp)
+                    .drawBehind {
+                        val w = size.width * bar().coerceIn(0f, 1f)
+                        drawRoundRect(barColor, size = Size(w, size.height), cornerRadius = CornerRadius(2.dp.toPx()))
+                    },
             )
         }
     }

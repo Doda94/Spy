@@ -53,7 +53,8 @@ fun cameraRotationFor(seat: Int, n: Int): Float = -(360f / n) * seat
 
 /**
  * The round table. Every player has a face-down card on a seat; the camera (rotation + scale)
- * turns the current seat towards whoever holds the phone. [centre] is never rotated.
+ * turns the current seat towards whoever holds the phone. [centre] is never rotated. The camera is
+ * passed as lambdas and read only in graphicsLayer, so turning it doesn't recompose the table.
  *
  * @param unit layout scale: screen width / 390.
  */
@@ -63,8 +64,8 @@ fun SpyTable(
     outSeats: Set<Int>,
     modifier: Modifier = Modifier,
     unit: Float = 1f,
-    cameraRotation: Float = 0f,
-    cameraScale: Float = 1f,
+    cameraRotation: () -> Float = { 0f },
+    cameraScale: () -> Float = { 1f },
     hiddenSeat: Int? = null,
     ringSeat: Int? = null,
     dimOthers: Boolean = false,
@@ -96,10 +97,10 @@ fun SpyTable(
     Box(
         modifier
             .size((TABLE_RADIUS * 2 * unit).dp)
-            .graphicsLayer { scaleX = cameraScale; scaleY = cameraScale },
+            .graphicsLayer { scaleX = cameraScale(); scaleY = scaleX },
         contentAlignment = Alignment.Center,
     ) {
-        Box(Modifier.fillMaxSize().graphicsLayer { rotationZ = cameraRotation + ambient.value }, contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxSize().graphicsLayer { rotationZ = cameraRotation() + ambient.value }, contentAlignment = Alignment.Center) {
             Canvas(Modifier.fillMaxSize()) {
                 drawCircle(c.table)
                 drawCircle(ringColor, style = Stroke(1.5f * density * unit.coerceAtLeast(0.8f)))

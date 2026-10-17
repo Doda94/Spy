@@ -19,7 +19,10 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -305,24 +308,29 @@ private fun TextLayoutResult.breaksInsideAWord(text: String): Boolean =
         end in 1 until text.length && !text[end - 1].isWhitespace() && !text[end].isWhitespace()
     }
 
-/** Flip container: rotateY 0→180 swapping to [front] at 90°. Content is mirrored so it reads correctly. */
+/**
+ * Flip container: rotateY 0→180 swapping to [front] at 90°. Content is mirrored so it reads correctly.
+ * [flip] is read in graphicsLayer; only crossing 90° recomposes.
+ */
 @Composable
 fun FlipCard(
-    flip: Float,
+    flip: () -> Float,
     width: Dp,
     modifier: Modifier = Modifier,
     back: @Composable () -> Unit,
     front: @Composable () -> Unit,
 ) {
+    val currentFlip by rememberUpdatedState(flip)
+    val showFront by remember { derivedStateOf { currentFlip() > 90f } }
     Box(
         modifier
             .size(width, width * CARD_ASPECT)
             .graphicsLayer {
-                rotationY = flip
+                rotationY = currentFlip()
                 cameraDistance = 14f * density
             },
     ) {
-        if (flip <= 90f) back()
+        if (!showFront) back()
         else Box(Modifier.graphicsLayer { rotationY = 180f }) { front() }
     }
 }
