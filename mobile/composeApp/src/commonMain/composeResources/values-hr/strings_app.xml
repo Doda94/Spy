@@ -28,4 +28,14 @@
     <string name="common_done">Gotovo</string>
     <string name="a11y_sr_warning_aloud">Imam slušalice</string>
     <string name="a11y_sr_warning_silent">Bez izgovora, krupan tekst</string>
+    <plurals name="a11y_minutes">
+        <item quantity="one">%1$d minuta</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minuta</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="one">%1$d sekunda</item>
+        <item quantity="few">%1$d sekunde</item>
+        <item quantity="other">%1$d sekundi</item>
+    </plurals>
 </resources>

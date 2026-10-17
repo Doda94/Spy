@@ -65,10 +65,13 @@ import app.spijun.resources.Res
 import app.spijun.resources.a11y_card_hidden
 import app.spijun.resources.a11y_citizen
 import app.spijun.resources.a11y_other_spies
+import app.spijun.resources.a11y_seconds
+import app.spijun.resources.a11y_minutes
 import app.spijun.resources.a11y_spy
 import app.spijun.resources.a11y_sr_warning
 import app.spijun.resources.a11y_sr_warning_aloud
 import app.spijun.resources.a11y_sr_warning_silent
+import app.spijun.resources.a11y_timer
 import app.spijun.resources.in_game
 import app.spijun.resources.out_count
 import app.spijun.resources.quit_a11y
@@ -281,6 +284,21 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         }
     }
     val tension = if (inDiscussion) tensionFor(remaining) else Tension.Calm
+
+    // Screen readers hear the countdown politely at full minutes, 30 s, 10 s and 0, never every
+    // second, and not the starting value (decisions.md §9).
+    val left = remaining
+    val timerAnnouncement = when {
+        !inDiscussion || total == null || left == null || left >= total + extraSeconds -> null
+        left == 0 -> stringResource(Res.string.round_time_up)
+        left == Rules.WARNING_SECONDS || left == Rules.NERVOUS_SECONDS ->
+            stringResource(Res.string.a11y_timer, pluralStringResource(Res.plurals.a11y_seconds, left, left))
+        left % 60 == 0 -> stringResource(Res.string.a11y_timer, pluralStringResource(Res.plurals.a11y_minutes, left / 60, left / 60))
+        else -> null
+    }
+    LaunchedEffect(timerAnnouncement) {
+        if (screenReader && timerAnnouncement != null) announce(timerAnnouncement)
+    }
 
     // ── Camera ────────────────────────────────────────────────────────────────────
     val focusing = reveal != null && phase != RevealPhase.Dealing
