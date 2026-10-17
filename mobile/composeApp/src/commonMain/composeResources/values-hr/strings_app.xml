@@ -26,6 +26,8 @@
     <string name="quit_a11y">Prekini igru</string>
     <string name="setup_selected_summary">%1$s · %2$s</string>
     <string name="common_done">Gotovo</string>
+    <string name="home_hero_word">Bolnica</string>
+    <string name="home_hero_category">Mjesta</string>
     <string name="a11y_sr_warning_aloud">Imam slušalice</string>
     <string name="a11y_sr_warning_silent">Bez izgovora, krupan tekst</string>
     <plurals name="a11y_minutes">
