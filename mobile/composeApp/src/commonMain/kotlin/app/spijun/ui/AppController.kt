@@ -1,0 +1,113 @@
+package app.spijun.ui
+
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import app.spijun.engine.GameConfig
+import app.spijun.engine.GameEngine
+import app.spijun.engine.GameState
+import app.spijun.engine.Player
+import app.spijun.engine.Rules
+import app.spijun.engine.SetupProblem
+import app.spijun.engine.SetupValidation
+import app.spijun.engine.VotingMode
+import app.spijun.engine.Word
+import app.spijun.ui.data.Dictionary
+import app.spijun.ui.data.categoryKey
+
+enum class Route { Home, Setup, Game }
+
+data class SetupState(
+    val players: Int = 4,
+    val spies: Int = 1,
+    /** Typed names by seat; blank means "use the default name" (only allowed when voting out loud). */
+    val names: List<String> = List(Rules.MAX_PLAYERS) { "" },
+    val timerSeconds: Int? = 300,
+    val voting: VotingMode = VotingMode.InApp,
+    val dictionaries: Set<String> = emptySet(),
+    val categories: Set<String> = emptySet(),
+)
+
+@Stable
+class AppController {
+    var route by mutableStateOf(Route.Home)
+        private set
+    var setup by mutableStateOf(SetupState())
+        private set
+    var dictionaries by mutableStateOf<List<Dictionary>?>(null)
+        private set
+    var game by mutableStateOf<GameState?>(null)
+        private set
+
+    fun onDictionariesLoaded(list: List<Dictionary>, preferredId: String) {
+        dictionaries = list
+        val initial = list.firstOrNull { it.id == preferredId } ?: list.first()
+        setup = setup.copy(
+            dictionaries = setOf(initial.id),
+            categories = initial.categories.keys.map { categoryKey(initial.id, it) }.toSet(),
+        )
+    }
+
+    fun update(transform: (SetupState) -> SetupState) {
+        val next = transform(setup)
+        setup = next.copy(spies = Rules.clampSpies(next.spies, next.players))
+    }
+
+    fun toggleDictionary(id: String) {
+        val dict = dictionaries?.firstOrNull { it.id == id } ?: return
+        update { s ->
+            val keys = dict.categories.keys.map { categoryKey(id, it) }.toSet()
+            if (id in s.dictionaries) s.copy(dictionaries = s.dictionaries - id, categories = s.categories - keys)
+            else s.copy(dictionaries = s.dictionaries + id, categories = s.categories + keys)
+        }
+    }
+
+    fun toggleCategory(key: String) = update { s ->
+        s.copy(categories = if (key in s.categories) s.categories - key else s.categories + key)
+    }
+
+    fun setAllCategories(selected: Boolean) = update { s ->
+        val all = dictionaries.orEmpty().filter { it.id in s.dictionaries }
+            .flatMap { d -> d.categories.keys.map { categoryKey(d.id, it) } }.toSet()
+        s.copy(categories = if (selected) s.categories + all else s.categories - all)
+    }
+
+    /** Words from every selected category of every selected dictionary. */
+    fun pool(): List<Word> = dictionaries.orEmpty().filter { it.id in setup.dictionaries }.flatMap { dict ->
+        dict.categories.keys.filter { categoryKey(dict.id, it) in setup.categories }.flatMap { dict.words(it) }
+    }
+
+    fun selectedCategoryCount(): Int = dictionaries.orEmpty().filter { it.id in setup.dictionaries }
+        .sumOf { d -> d.categories.keys.count { categoryKey(d.id, it) in setup.categories } }
+
+    fun problem(): SetupProblem? = SetupValidation.check(
+        setup.players, setup.spies, setup.voting, setup.names, selectedCategoryCount(), pool().size,
+    )
+
+    fun openSetup() { route = Route.Setup }
+    fun goHome() { route = Route.Home; game = null }
+
+    /** [defaultName] fills blanks; it only matters when voting out loud. */
+    fun startGame(defaultName: (Int) -> String) {
+        if (problem() != null) return
+        val players = List(setup.players) { i ->
+            Player(i, setup.names[i].trim().ifEmpty { defaultName(i + 1) })
+        }
+        val config = GameConfig(players, setup.spies, setup.timerSeconds, setup.voting)
+        game = GameEngine.newGame(config, pool())
+        route = Route.Game
+    }
+
+    fun playAgain() { game = game?.let { GameEngine.playAgain(it, pool()) } }
+
+    fun finishReveal() = apply { GameEngine.finishReveal(it) }
+    fun openVote() = apply { GameEngine.openVote(it) }
+    fun castVote(target: Int) = apply { GameEngine.castVote(it, target) }
+    fun knockOutLoud(playerId: Int?) = apply { GameEngine.knockOutLoud(it, playerId) }
+    fun continueAfterResult() = apply { GameEngine.continueAfterResult(it) }
+
+    private fun apply(step: (GameState) -> GameState) {
+        game = game?.let(step)
+    }
+}
