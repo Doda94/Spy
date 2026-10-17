@@ -35,11 +35,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -130,6 +132,7 @@ import app.spijun.ui.platform.OnAppBackground
 import app.spijun.ui.platform.SecureWhile
 import app.spijun.ui.platform.rememberAnnouncer
 import app.spijun.ui.platform.rememberScreenReaderOn
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
@@ -169,14 +172,17 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     var dealt by remember { mutableStateOf(false) }
     val flip = remember { Animatable(0f) }
     val lift = remember { Animatable(0f) }
-    val barProgress = remember { Animatable(1f) }
+    // Auto-hide runs on a clock, not an animation: with "Remove animations" (duration scale 0)
+    // Compose ends animations at once, which would hide the card before anyone could read it.
+    var barProgress by remember { mutableFloatStateOf(1f) }
+    var autoHide by remember { mutableStateOf<Job?>(null) }
     val faceAlpha = remember { Animatable(1f) }
     // Set synchronously when the app leaves the screen, so the face is gone from the very next frame
     // even before the animations below are reset.
     var faceHidden by remember { mutableStateOf(false) }
     // Animation values are read in graphicsLayer/draw; composition only sees these thresholds.
     val lifted by remember { derivedStateOf { lift.value > 0.01f } }
-    val secondsLeft by remember { derivedStateOf { ceil(barProgress.value * AUTO_HIDE_MS / 1000f).toInt() } }
+    val secondsLeft by remember { derivedStateOf { ceil(barProgress * AUTO_HIDE_MS / 1000f).toInt() } }
 
     LaunchedEffect(reveal?.seat) {
         if (reveal == null) return@LaunchedEffect
@@ -197,6 +203,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     fun hideAndPass() {
         if (phase != RevealPhase.Revealed) return
         phase = RevealPhase.Hiding
+        autoHide?.cancel()
         scope.launch {
             haptics.perform(SpyHaptic.HideCard)
             if (reduce) { flip.snapTo(0f) } else flip.animateTo(0f, tween(SpyMotion.FLIP_BACK_MS, easing = SpyMotion.Emphasized))
@@ -238,9 +245,15 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 flip.animateTo(180f, SpyMotion.card())
             }
         }
-        scope.launch {
-            barProgress.snapTo(1f)
-            barProgress.animateTo(0f, tween(AUTO_HIDE_MS, easing = LinearEasing))
+        autoHide?.cancel()
+        autoHide = scope.launch {
+            val start = TimeSource.Monotonic.markNow()
+            while (true) {
+                val left = 1f - start.elapsedNow().inWholeMilliseconds.toFloat() / AUTO_HIDE_MS
+                barProgress = left.coerceAtLeast(0f)
+                if (left <= 0f) break
+                withFrameMillis { }
+            }
             hideAndPass()
         }
     }
@@ -250,7 +263,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         if (phase == RevealPhase.Revealed || phase == RevealPhase.Hiding) faceHidden = true
         if (phase == RevealPhase.Revealed) {
             phase = RevealPhase.Handoff
-            scope.launch { flip.snapTo(0f); barProgress.snapTo(1f) }
+            autoHide?.cancel()
+            barProgress = 1f
+            scope.launch { flip.snapTo(0f) }
         }
     }
     SecureWhile(reveal != null)
@@ -443,7 +458,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                         name = game.player(seat).name,
                         last = seat == n - 1,
                         secondsLeft = secondsLeft,
-                        bar = { barProgress.value },
+                        bar = { barProgress },
                         onFlip = ::flipUp,
                         onHide = ::hideAndPass,
                     )
