@@ -122,15 +122,28 @@ actual fun OnAppBackground(onBackground: () -> Unit) {
     }
 }
 
+/** Active [SecureWhile] holders per window: overlapping screens (e.g. a crossfade) share the flag. */
+private val secureHolds = WeakHashMap<Window, Int>()
+
 @Composable
 actual fun SecureWhile(active: Boolean) {
     val view = LocalView.current
     // Debug builds skip the flag so screenshots and screen recording work during development.
     val debuggable = (view.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
     DisposableEffect(active, view) {
-        val window = (view.context as? Activity)?.window
-        if (active && !debuggable) window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        onDispose { if (active && !debuggable) window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE) }
+        val window = view.context.findActivity()?.window
+        if (!active || debuggable || window == null) return@DisposableEffect onDispose {}
+        val holds = (secureHolds[window] ?: 0) + 1
+        secureHolds[window] = holds
+        if (holds == 1) window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        onDispose {
+            val left = (secureHolds[window] ?: 1) - 1
+            if (left > 0) secureHolds[window] = left
+            else {
+                secureHolds.remove(window)
+                window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
+        }
     }
 }
 
