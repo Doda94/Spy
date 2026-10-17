@@ -28,6 +28,9 @@ Treba JDK 21+ i Android SDK (`sdk.dir` u `mobile/local.properties` ili `ANDROID_
 U debug buildu se `FLAG_SECURE` ne postavlja da bi snimke zaslona radile; u release buildu
 je uključen tijekom otkrivanja uloge.
 
+CI (`.github/workflows/mobile.yml`) pokreće testove pravila na JVM-u i na iOS simulatoru, gradi
+debug APK i iOS aplikaciju za simulator, na PR-ovima prema `v2` i složenim `feat/v2-*` PR-ovima.
+
 ---
 
 Društvena igra "Špijun" za jedan telefon — svi igrači redom pogledaju svoju ulogu na

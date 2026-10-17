@@ -2,11 +2,17 @@ name: Mobile
 
 on:
   pull_request:
-    branches: [v2]
+    # Filters on the PR's base: v2, and the stacked feat/v2-* PRs that build on each other.
+    branches: [v2, "feat/v2-**"]
     paths: ["mobile/**", ".github/workflows/mobile.yml"]
   push:
     branches: [v2]
-    paths: ["mobile/**"]
+    paths: ["mobile/**", ".github/workflows/mobile.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   android:
@@ -36,5 +42,16 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
-      - name: iOS framework
-        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('mobile/gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+      - name: Engine tests on the iOS simulator
+        run: ./gradlew :shared:iosSimulatorArm64Test
+      - name: iOS app for the simulator
+        run: >
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp
+          -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO build
