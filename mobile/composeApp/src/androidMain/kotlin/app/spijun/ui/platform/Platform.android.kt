@@ -56,11 +56,30 @@ private class AndroidHaptics(private val view: View, context: Context, private v
         view.performHapticFeedback(c)
     }
 
+    /** Fallback when compositions are unavailable: a one-shot waveform (off/on timings). */
     private fun pattern(vararg timings: Long) {
         val v = vibrator ?: return
         if (!v.hasVibrator()) return
-        val amplitudes = IntArray(timings.size) { if (it % 2 == 0) 0 else 255 }
-        v.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+        if (v.hasAmplitudeControl()) {
+            val amplitudes = IntArray(timings.size) { if (it % 2 == 0) 0 else 255 }
+            v.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+        } else {
+            v.vibrate(VibrationEffect.createWaveform(timings, -1))
+        }
+    }
+
+    /**
+     * Plays [primitives] (primitive to delay before it, ms) as one `VibrationEffect.Composition`
+     * (motion.md §7). Returns false when the device can't play all of them, so the caller falls back.
+     */
+    private fun composition(vararg primitives: Pair<Int, Int>): Boolean {
+        if (Build.VERSION.SDK_INT < 30) return false
+        val v = vibrator ?: return false
+        if (!v.hasVibrator() || !v.areAllPrimitivesSupported(*primitives.map { it.first }.toIntArray())) return false
+        val effect = VibrationEffect.startComposition()
+        for ((primitive, delay) in primitives) effect.addPrimitive(primitive, 1f, delay)
+        v.vibrate(effect.compose())
+        return true
     }
 
     private fun tick() = feedback(
@@ -74,13 +93,16 @@ private class AndroidHaptics(private val view: View, context: Context, private v
     override fun perform(h: SpyHaptic) {
         if (!enabled) return
         when (h) {
-            SpyHaptic.StepperTick, SpyHaptic.SuspenseTick -> tick()
+            SpyHaptic.StepperTick -> tick()
+            SpyHaptic.SuspenseTick -> if (!composition(PRIMITIVE_TICK to 0)) tick()
             SpyHaptic.HideCard -> feedback(HapticFeedbackConstants.CLOCK_TICK)
             SpyHaptic.RevealCitizen, SpyHaptic.VoteCast, SpyHaptic.ScanFound -> confirm()
-            SpyHaptic.RevealSpy -> pattern(0, 45, 90, 70)
-            SpyHaptic.KnockOut -> pattern(0, 90)
-            SpyHaptic.GameOverReveal -> pattern(0, 60, 100, 80, 160, 30)
-            SpyHaptic.ThirtySeconds -> pattern(0, 25, 60, 25)
+            SpyHaptic.RevealSpy -> if (!composition(PRIMITIVE_THUD to 0, PRIMITIVE_THUD to 90)) pattern(0, 45, 90, 70)
+            SpyHaptic.KnockOut -> if (!composition(PRIMITIVE_THUD to 0)) pattern(0, 90)
+            SpyHaptic.GameOverReveal ->
+                if (composition(PRIMITIVE_THUD to 0, PRIMITIVE_THUD to 100)) view.postDelayed({ confirm() }, 260)
+                else pattern(0, 60, 100, 80, 160, 30)
+            SpyHaptic.ThirtySeconds -> if (!composition(PRIMITIVE_QUICK_RISE to 0)) pattern(0, 25, 60, 25)
             SpyHaptic.TimeUp -> pattern(0, 300, 200, 300, 200, 300)
             SpyHaptic.Error -> feedback(
                 if (Build.VERSION.SDK_INT >= 30) HapticFeedbackConstants.REJECT else HapticFeedbackConstants.LONG_PRESS,
