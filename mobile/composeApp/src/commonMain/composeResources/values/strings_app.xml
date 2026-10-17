@@ -25,5 +25,7 @@
     <string name="reveal_hold_hint">%1$s, tap the card.</string>
     <string name="quit_a11y">Quit game</string>
     <string name="setup_selected_summary">%1$s · %2$s</string>
+    <string name="a11y_sr_warning_aloud">I have headphones</string>
+    <string name="a11y_sr_warning_silent">Silent, large text</string>
     <string name="common_done">Done</string>
 </resources>

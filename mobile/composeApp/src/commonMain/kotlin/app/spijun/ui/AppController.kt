@@ -19,6 +19,9 @@ import app.spijun.ui.data.categoryKey
 
 enum class Route { Home, Setup, Game }
 
+/** How a screen-reader user chose to see their role, asked once before the first reveal. */
+enum class ScreenReaderReveal { Aloud, Silent }
+
 data class SetupState(
     val players: Int = 4,
     val spies: Int = 1,
@@ -40,6 +43,8 @@ class AppController {
         private set
     var game by mutableStateOf<GameState?>(null)
         private set
+    /** Null until a screen-reader user has answered `a11y_sr_warning` (once per app run). */
+    var screenReaderReveal by mutableStateOf<ScreenReaderReveal?>(null)
 
     fun onDictionariesLoaded(list: List<Dictionary>, preferredId: String) {
         dictionaries = list

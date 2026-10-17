@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,10 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -62,6 +62,9 @@ import app.spijun.resources.a11y_card_hidden
 import app.spijun.resources.a11y_citizen
 import app.spijun.resources.a11y_other_spies
 import app.spijun.resources.a11y_spy
+import app.spijun.resources.a11y_sr_warning
+import app.spijun.resources.a11y_sr_warning_aloud
+import app.spijun.resources.a11y_sr_warning_silent
 import app.spijun.resources.in_game
 import app.spijun.resources.out_count
 import app.spijun.resources.quit_a11y
@@ -98,6 +101,7 @@ import app.spijun.resources.round_to_vote
 import app.spijun.resources.round_vote_opens
 import app.spijun.resources.round_who
 import app.spijun.ui.AppController
+import app.spijun.ui.ScreenReaderReveal
 import app.spijun.ui.design.ButtonKind
 import app.spijun.ui.design.CardBack
 import app.spijun.ui.design.CitizenFace
@@ -116,6 +120,8 @@ import app.spijun.ui.design.cameraRotationFor
 import app.spijun.ui.design.cardShadow
 import app.spijun.ui.platform.OnAppBackground
 import app.spijun.ui.platform.SecureWhile
+import app.spijun.ui.platform.rememberAnnouncer
+import app.spijun.ui.platform.rememberScreenReaderOn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
@@ -141,6 +147,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     val n = game.players.size
     val names = remember(game.players) { game.players.map { it.name } }
     val outSeats = remember(game.eliminated) { game.eliminated.toSet() }
+
+    val screenReader = rememberScreenReaderOn()
+    val announce = rememberAnnouncer()
+    var askScreenReader by remember { mutableStateOf(false) }
 
     val reveal = game.stage as? Stage.Reveal
     val inDiscussion = game.stage == Stage.Discussion
@@ -181,17 +191,35 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         }
     }
 
+    // What the screen reader may say about the card. The role is spoken once, at the flip, and only
+    // after the player was warned (decisions.md §9); focus never re-reads it.
+    val player = game.player(seat)
+    val role = game.roleOf(player.id)
+    val others = game.otherSpiesOf(player.id).map { it.name }
+    val hiddenDesc = stringResource(Res.string.a11y_card_hidden, player.name)
+    val roleAnnouncement = if (role == Role.Citizen) stringResource(Res.string.a11y_citizen, game.word, game.category)
+    else stringResource(Res.string.a11y_spy, game.category) +
+        if (others.isNotEmpty()) " " + stringResource(Res.string.a11y_other_spies, others.joinToString(", ")) else ""
+
     fun flipUp() {
         if (phase != RevealPhase.Handoff) return
+        if (screenReader && controller.screenReaderReveal == null) {
+            askScreenReader = true
+            return
+        }
         phase = RevealPhase.Revealed
-        val role = game.roleOf(seat)
+        val speak = screenReader && controller.screenReaderReveal == ScreenReaderReveal.Aloud
+        val swap = {
+            haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+            if (speak) announce(roleAnnouncement)
+        }
         scope.launch {
             if (reduce) {
                 flip.snapTo(180f)
-                haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+                swap()
             } else {
                 flip.animateTo(90f, tween(SpyMotion.FLIP_IN_MS, easing = LinearEasing))
-                haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+                swap()
                 flip.animateTo(180f, SpyMotion.card())
             }
         }
@@ -254,6 +282,14 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         label = "camera-scale",
     )
 
+    if (askScreenReader) {
+        ScreenReaderWarning { choice ->
+            askScreenReader = false
+            controller.screenReaderReveal = choice
+            flipUp()
+        }
+    }
+
     BoxWithConstraints(Modifier.fillMaxSize().background(c.bg)) {
         val unit = minOf(maxWidth.value / 390f, maxHeight.value / 844f).coerceIn(0.7f, 1.3f)
         val cardWidth = (300 * unit).dp
@@ -312,13 +348,6 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
             // The lifted role card (reveal only)
             if (reveal != null && lift.value > 0.01f) {
-                val player = game.player(seat)
-                val role = game.roleOf(player.id)
-                val others = game.otherSpiesOf(player.id).map { it.name }
-                val hiddenDesc = stringResource(Res.string.a11y_card_hidden, player.name)
-                val shownDesc = if (role == Role.Citizen) stringResource(Res.string.a11y_citizen, game.word, game.category)
-                else stringResource(Res.string.a11y_spy, game.category) +
-                    if (others.isNotEmpty()) " " + stringResource(Res.string.a11y_other_spies, others.joinToString(", ")) else ""
                 Box(
                     Modifier
                         .align(Alignment.Center)
@@ -331,9 +360,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                             alpha = if (reduce) faceAlpha.value * l else l.coerceIn(0f, 1f)
                             rotationZ = if (phase == RevealPhase.Revealed) -2f else 0f
                         }
-                        .semantics {
-                            contentDescription = if (phase == RevealPhase.Revealed) shownDesc else hiddenDesc
-                            liveRegion = LiveRegionMode.Polite
+                        // Replaces the faces' own text nodes, which would read the secret on focus.
+                        .clearAndSetSemantics {
+                            contentDescription = if (phase == RevealPhase.Revealed) player.name else hiddenDesc
+                            if (phase == RevealPhase.Handoff) onClick { flipUp(); true }
                         },
                 ) {
                     val modifier = Modifier.cardShadow(cardWidth)
@@ -417,6 +447,27 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             }
         }
     }
+}
+
+/** Asked once, before the first reveal with a screen reader on (decisions.md §9, screens.md P1·04). */
+@Composable
+private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
+    val c = Spy.colors
+    AlertDialog(
+        onDismissRequest = {},
+        containerColor = c.surface2,
+        text = { Text(stringResource(Res.string.a11y_sr_warning), style = Spy.type.bodyLarge, color = c.text) },
+        confirmButton = {
+            TextButton(onClick = { onChoice(ScreenReaderReveal.Aloud) }) {
+                Text(stringResource(Res.string.a11y_sr_warning_aloud), color = c.text, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onChoice(ScreenReaderReveal.Silent) }) {
+                Text(stringResource(Res.string.a11y_sr_warning_silent), color = c.text)
+            }
+        },
+    )
 }
 
 @Composable

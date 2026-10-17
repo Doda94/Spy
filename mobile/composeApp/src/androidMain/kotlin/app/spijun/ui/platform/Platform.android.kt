@@ -16,6 +16,7 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -142,6 +143,29 @@ actual fun OnAppBackground(onBackground: () -> Unit) {
         owner.lifecycle.addObserver(observer)
         onDispose { owner.lifecycle.removeObserver(observer) }
     }
+}
+
+@Composable
+actual fun rememberScreenReaderOn(): Boolean {
+    val context = LocalContext.current
+    val manager = remember(context) { context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager }
+    var on by remember(manager) { mutableStateOf(manager.isTouchExplorationEnabled) }
+    DisposableEffect(manager) {
+        val listener = AccessibilityManager.TouchExplorationStateChangeListener { on = it }
+        manager.addTouchExplorationStateChangeListener(listener)
+        on = manager.isTouchExplorationEnabled
+        onDispose { manager.removeTouchExplorationStateChangeListener(listener) }
+    }
+    return on
+}
+
+@Composable
+actual fun rememberAnnouncer(): (String) -> Unit {
+    val view = LocalView.current
+    // Deprecated in API 36 in favour of live regions, but a live region re-announces whenever its
+    // text changes or it gains focus, and a secret role must be spoken exactly once.
+    @Suppress("DEPRECATION")
+    return remember(view) { { text -> view.announceForAccessibility(text) } }
 }
 
 /** Active [SecureWhile] holders per window: overlapping screens (e.g. a crossfade) share the flag. */
