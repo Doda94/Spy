@@ -182,6 +182,14 @@ class GameEngineTest {
     }
 
     @Test
+    fun toStringKeepsTheSecretOut() {
+        val s = game(5, setOf(3))
+        val text = s.toString()
+        assertTrue(s.word !in text, text)
+        assertTrue("spy" !in text.lowercase(), text)
+    }
+
+    @Test
     fun playAgainKeepsSettingsAndResetsState() {
         val over = game(5, setOf(4)).vote5Out(4)
         val again = GameEngine.playAgain(over, pool, Random(9))

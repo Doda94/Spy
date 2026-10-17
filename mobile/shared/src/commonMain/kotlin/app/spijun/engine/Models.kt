@@ -76,6 +76,8 @@ sealed interface Stage {
 @Serializable
 data class RoundRecord(val round: Int, val knockedOut: Int?)
 
+// TODO(Continue game): the discussion timer (start time, +1 min) lives only in the UI; move it
+//  into this serialisable state when Continue game is built.
 @Serializable
 data class GameState(
     val config: GameConfig,
@@ -95,4 +97,8 @@ data class GameState(
     fun player(id: Int): Player = players.first { it.id == id }
     fun roleOf(id: Int): Role = if (id in spyIds) Role.Spy else Role.Citizen
     fun otherSpiesOf(id: Int): List<Player> = players.filter { it.id in spyIds && it.id != id }
+
+    /** Leaves out [word] and [spyIds] so the secret never reaches logs or crash reports. */
+    override fun toString(): String =
+        "GameState(players=${players.size}, round=$round, stage=${stage::class.simpleName}, eliminated=$eliminated)"
 }
