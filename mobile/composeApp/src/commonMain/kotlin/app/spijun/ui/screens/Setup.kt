@@ -318,7 +318,11 @@ private fun NameField(value: String, placeholder: String, duplicate: Boolean, on
         singleLine = true,
         textStyle = Spy.type.bodyLarge.copy(color = c.text),
         cursorBrush = SolidColor(c.text),
-        modifier = Modifier.fillMaxWidth().then(Modifier),
+        modifier = Modifier
+            .fillMaxWidth()
+            .onFocusChanged { focused = it.isFocused }
+            // The placeholder disappears once a name is typed; keep the seat as the field's label.
+            .semantics { contentDescription = placeholder },
         decorationBox = { inner ->
             Box(
                 Modifier.fillMaxWidth().height(52.dp).clip(RoundedCornerShape(12.dp)).background(c.surface)
