@@ -2,13 +2,7 @@ package app.spijun.ui.design
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.StartOffset
-import androidx.compose.animation.core.StartOffsetType
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
@@ -24,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -83,11 +79,18 @@ fun SpyTable(
     val c = Spy.colors
     val reduce = LocalReduceMotion.current
     val n = names.size
-    val ambient = if (idle && !reduce && tension != Tension.Frozen) {
-        val t = rememberInfiniteTransition(label = "table-turn")
-        val deg by t.animateFloat(0f, 360f, infiniteRepeatable(tween(SpyMotion.AMBIENT_TURN_MS, easing = LinearEasing)), label = "deg")
-        deg
-    } else 0f
+    // Ambient turn: read only in graphicsLayer, so the table doesn't recompose every frame.
+    // Leaving idle (Frozen, pick mode) pauses it where it is (motion.md §3); reduce motion resets it.
+    val ambient = remember { Animatable(0f) }
+    val turning = idle && !reduce && tension != Tension.Frozen
+    LaunchedEffect(turning, reduce) {
+        if (reduce) ambient.snapTo(0f)
+        while (turning) {
+            val from = ambient.value % 360f
+            ambient.snapTo(from)
+            ambient.animateTo(from + 360f, tween(SpyMotion.AMBIENT_TURN_MS, easing = LinearEasing))
+        }
+    }
     val ringColor = if (tension == Tension.Uneasy || tension == Tension.Nervous || tension == Tension.Frozen) c.warning else c.tableRing
 
     Box(
@@ -96,7 +99,7 @@ fun SpyTable(
             .graphicsLayer { scaleX = cameraScale; scaleY = cameraScale },
         contentAlignment = Alignment.Center,
     ) {
-        Box(Modifier.fillMaxSize().graphicsLayer { rotationZ = cameraRotation + ambient }, contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxSize().graphicsLayer { rotationZ = cameraRotation + ambient.value }, contentAlignment = Alignment.Center) {
             Canvas(Modifier.fillMaxSize()) {
                 drawCircle(c.table)
                 drawCircle(ringColor, style = Stroke(1.5f * density * unit.coerceAtLeast(0.8f)))
@@ -120,7 +123,7 @@ fun SpyTable(
                     idle = idle,
                     deal = deal,
                     selected = selectedSeat == i,
-                    onTap = onSeatTap?.takeIf { i !in outSeats }?.let { f -> { f(i) } },
+                    onSeatTap = onSeatTap,
                     description = seatDescription(i),
                 )
             }
@@ -145,7 +148,7 @@ private fun Seat(
     idle: Boolean,
     deal: Boolean,
     selected: Boolean,
-    onTap: (() -> Unit)?,
+    onSeatTap: ((Int) -> Unit)?,
     description: String,
 ) {
     val c = Spy.colors
@@ -163,40 +166,60 @@ private fun Seat(
     val alpha by animateFloatAsState(if (dim) 0.4f else 1f, SpyMotion.standard(), label = "seat-alpha")
     val lift by animateFloatAsState(if (selected) 1.2f else 1f, SpyMotion.card(), label = "seat-lift")
 
-    // Idle tension: drift, quicker when uneasy, tremble when nervous (motion.md §3).
-    var driftRot = 0f
-    var driftY = 0f
-    if (idle && !reduce && !out && !lifted && tension != Tension.Frozen) {
-        val (ms, amp) = when (tension) {
-            Tension.Calm -> (3200 + (index * 370) % 1400) to 1.4f
-            Tension.Uneasy -> (1300 + (index * 150) % 600) to 1.4f
-            else -> (290) to 1f
+    // Idle tension: drift, quicker when uneasy, tremble when nervous (motion.md §3). [drift] runs
+    // -1 ↔ 1 and is read only in graphicsLayer; Frozen stops it in place, keeping the last pose.
+    val drift = remember { Animatable(0f) }
+    var pose by remember { mutableStateOf<Tension?>(null) }
+    val drifting = idle && !reduce && !out && !lifted
+    LaunchedEffect(drifting, tension) {
+        if (!drifting) {
+            pose = null
+            drift.snapTo(0f)
+            return@LaunchedEffect
         }
-        val t = rememberInfiniteTransition(label = "seat-$index")
-        val v by t.animateFloat(
-            -1f, 1f,
-            infiniteRepeatable(tween(ms, easing = LinearEasing), RepeatMode.Reverse, StartOffset(index * 600 % ms, StartOffsetType.FastForward)),
-            label = "drift",
-        )
-        driftRot = v * amp
-        driftY = if (tension == Tension.Nervous) v * 1f else -1.5f - v * 2.5f
+        if (tension == Tension.Frozen) return@LaunchedEffect
+        val ms = when (tension) {
+            Tension.Calm -> 3200 + (index * 370) % 1400
+            Tension.Uneasy -> 1300 + (index * 150) % 600
+            else -> 290
+        }
+        // Phase offset per seat so the cards never move in unison.
+        if (pose == null) drift.snapTo(-1f + 2f * (index * 600 % ms) / ms)
+        pose = tension
+        var target = 1f
+        while (true) {
+            val left = (kotlin.math.abs(target - drift.value) / 2f * ms).toInt()
+            drift.animateTo(target, tween(left, easing = LinearEasing))
+            target = -target
+        }
     }
 
     val w = (SEAT_W * unit).dp
     val h = (SEAT_H * unit).dp
+    val tappable = onSeatTap != null && !out
     Box(
         Modifier
-            .offset { IntOffset((dx * density * progress.value).toInt(), (dy * density * progress.value).toInt()) }
+            .offset {
+                // Reduce motion deals in place: full offset, only alpha fades (motion.md §9).
+                val p = if (reduce) 1f else progress.value
+                IntOffset((dx * density * p).toInt(), (dy * density * p).toInt())
+            }
             .size(w, h)
             .graphicsLayer {
-                rotationZ = angleDeg - 90f + driftRot
-                translationY = driftY * density
+                val v = drift.value
+                val amp = if (pose == Tension.Calm || pose == Tension.Uneasy) 1.4f else 1f
+                rotationZ = angleDeg - 90f + if (pose != null) v * amp else 0f
+                translationY = density * when (pose) {
+                    null -> 0f
+                    Tension.Nervous, Tension.Frozen -> v
+                    else -> -1.5f - v * 2.5f
+                }
                 this.alpha = alpha * progress.value
-                val s = (0.6f + 0.4f * progress.value) * lift
+                val s = (if (reduce) 1f else 0.6f + 0.4f * progress.value) * lift
                 scaleX = s; scaleY = s
             }
             .then(
-                if (onTap != null) Modifier.clickable(role = Role.Button, onClick = onTap).semantics { contentDescription = description }
+                if (tappable) Modifier.clickable(role = Role.Button) { onSeatTap(index) }.semantics { contentDescription = description }
                 else Modifier,
             ),
         contentAlignment = Alignment.Center,
