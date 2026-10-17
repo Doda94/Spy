@@ -163,6 +163,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     val lift = remember { Animatable(0f) }
     val barProgress = remember { Animatable(1f) }
     val faceAlpha = remember { Animatable(1f) }
+    // Set synchronously when the app leaves the screen, so the face is gone from the very next frame
+    // even before the animations below are reset.
+    var faceHidden by remember { mutableStateOf(false) }
 
     LaunchedEffect(reveal?.seat) {
         if (reveal == null) return@LaunchedEffect
@@ -208,6 +211,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             return
         }
         phase = RevealPhase.Revealed
+        faceHidden = false
         val speak = screenReader && controller.screenReaderReveal == ScreenReaderReveal.Aloud
         val swap = {
             haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
@@ -232,8 +236,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
     // Privacy: the instant the app leaves the screen, a face-up card flips back with no animation.
     OnAppBackground {
+        if (phase == RevealPhase.Revealed || phase == RevealPhase.Hiding) faceHidden = true
         if (phase == RevealPhase.Revealed) {
-            scope.launch { flip.snapTo(0f); barProgress.snapTo(1f); phase = RevealPhase.Handoff }
+            phase = RevealPhase.Handoff
+            scope.launch { flip.snapTo(0f); barProgress.snapTo(1f) }
         }
     }
     SecureWhile(reveal != null)
@@ -362,7 +368,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                         }
                         // Replaces the faces' own text nodes, which would read the secret on focus.
                         .clearAndSetSemantics {
-                            contentDescription = if (phase == RevealPhase.Revealed) player.name else hiddenDesc
+                            contentDescription = if (phase == RevealPhase.Revealed && !faceHidden) player.name else hiddenDesc
                             if (phase == RevealPhase.Handoff) onClick { flipUp(); true }
                         },
                 ) {
@@ -384,7 +390,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                             }
                         },
                         front = {
-                            if (role == Role.Citizen) {
+                            if (faceHidden) CardBack(cardWidth)
+                            else if (role == Role.Citizen) {
                                 CitizenFace(game.word, game.category, stringResource(Res.string.reveal_category, game.category), stringResource(Res.string.reveal_secret_word), cardWidth)
                             } else {
                                 SpyFace(
