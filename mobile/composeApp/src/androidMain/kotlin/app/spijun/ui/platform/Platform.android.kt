@@ -2,28 +2,39 @@ package app.spijun.ui.platform
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.database.ContentObserver
 import android.content.pm.ApplicationInfo
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.provider.Settings
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import app.spijun.ui.design.SpyHaptic
+import android.os.VibrationEffect.Composition.PRIMITIVE_QUICK_RISE
+import android.os.VibrationEffect.Composition.PRIMITIVE_THUD
+import android.os.VibrationEffect.Composition.PRIMITIVE_TICK
 import app.spijun.ui.design.SpyHaptics
+import java.util.WeakHashMap
 
 @Composable
 actual fun rememberSpyHaptics(enabled: Boolean): SpyHaptics {
@@ -78,12 +89,21 @@ private class AndroidHaptics(private val view: View, context: Context, private v
     }
 }
 
+/** Follows "Remove animations" live: the setting can change while the app is open. */
 @Composable
 actual fun rememberReduceMotion(): Boolean {
-    val context = LocalContext.current
-    return remember {
-        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
+    val resolver = LocalContext.current.contentResolver
+    fun read() = Settings.Global.getFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
+    var reduce by remember(resolver) { mutableStateOf(read()) }
+    DisposableEffect(resolver) {
+        val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean) { reduce = read() }
+        }
+        resolver.registerContentObserver(Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), false, observer)
+        reduce = read()
+        onDispose { resolver.unregisterContentObserver(observer) }
     }
+    return reduce
 }
 
 @Composable
@@ -112,6 +132,12 @@ actual fun SecureWhile(active: Boolean) {
         if (active && !debuggable) window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         onDispose { if (active && !debuggable) window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE) }
     }
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 actual val isIos: Boolean = false
