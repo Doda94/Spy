@@ -61,4 +61,5 @@
     <string name="toast_copy_made">Kopija je spremljena u Moje rječnike</string>
     <string name="import_stat_categories">Kategorije</string>
     <string name="import_stat_words">Riječi</string>
+    <string name="setup_names_missing">Upiši imena svih igrača za glasanje u aplikaciji ili odaberi glasanje naglas.</string>
 </resources>

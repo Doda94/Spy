@@ -59,4 +59,5 @@
     <string name="toast_copy_made">Copy saved under My dictionaries</string>
     <string name="import_stat_categories">Categories</string>
     <string name="import_stat_words">Words</string>
+    <string name="setup_names_missing">Enter every player’s name to vote in the app, or switch to voting out loud.</string>
 </resources>
