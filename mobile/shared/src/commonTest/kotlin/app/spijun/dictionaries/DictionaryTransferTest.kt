@@ -195,3 +195,46 @@ class DictionaryTransferTest {
         assertEquals("party PACK", DictionaryTransfer.saveAsNew(incoming, "d9", emptyList()).name)
     }
 }
+
+class DictionaryLinkAndLibraryTest {
+    private val dict = CustomDictionary(
+        "d1", "Ljeto na Visu", WordLanguage.Croatian,
+        listOf(DictionaryCategory("Šuma", listOf("Čežnja", "Žaba")), DictionaryCategory("Hrana", listOf("Pizza"))),
+    )
+
+    @Test
+    fun linkRoundTripsAndCarriesNoPaddingOrSlashes() {
+        val link = DictionaryTransfer.toLink(dict)
+        assertTrue(link.startsWith(DictionaryTransfer.LINK_PREFIX))
+        val payload = link.removePrefix(DictionaryTransfer.LINK_PREFIX)
+        assertTrue(payload.none { it == '=' || it == '/' || it == '+' || it == ' ' })
+        val json = assertNotNull(DictionaryTransfer.fromLink("  $link \n"))
+        assertEquals(
+            ImportedDictionary("Ljeto na Visu", WordLanguage.Croatian, dict.categories),
+            assertIs<ImportResult.Success>(DictionaryTransfer.parse(json)).dictionary,
+        )
+    }
+
+    @Test
+    fun foreignOrDamagedLinksAreNull() {
+        assertNull(DictionaryTransfer.fromLink("https://example.com/?d=abc"))
+        assertNull(DictionaryTransfer.fromLink(DictionaryTransfer.LINK_PREFIX + "***not base64***"))
+        // Valid base64, but not UTF-8.
+        assertNull(DictionaryTransfer.fromLink(DictionaryTransfer.LINK_PREFIX + "_w"))
+    }
+
+    @Test
+    fun libraryRoundTrips() {
+        val text = DictionaryLibrary.encode(listOf(dict))
+        assertEquals(listOf(dict), DictionaryLibrary.decode(text))
+        assertEquals(emptyList(), DictionaryLibrary.decode(DictionaryLibrary.encode(emptyList())))
+    }
+
+    @Test
+    fun unreadableLibraryIsNullNotEmpty() {
+        assertNull(DictionaryLibrary.decode(""))
+        assertNull(DictionaryLibrary.decode("{broken"))
+        assertNull(DictionaryLibrary.decode("""{"version":2,"dictionaries":[]}"""))
+        assertNull(DictionaryLibrary.decode("""{"version":1,"dictionaries":[{"id":1}]}"""))
+    }
+}

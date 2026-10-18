@@ -1,5 +1,7 @@
 package app.spijun.dictionaries
 
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -61,9 +63,29 @@ data class ImportPreview(
 /** What "Spoji" did, for the button label and the `toast_imported` toast. */
 data class MergeResult(val dictionary: CustomDictionary, val addedWords: Int)
 
+@OptIn(ExperimentalEncodingApi::class)
 object DictionaryTransfer {
     const val FORMAT = "spijun-dictionary"
     const val VERSION = 1
+
+    /** A link (and a QR code) is this prefix plus the transfer JSON, URL-safe base64 without padding. */
+    const val LINK_PREFIX = "spijun://dictionary?d="
+
+    private val base64 = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+
+    fun toLink(dictionary: CustomDictionary): String =
+        LINK_PREFIX + base64.encode(export(dictionary).encodeToByteArray())
+
+    /** The JSON inside a link, or null when [link] isn't one of ours; [parse] then judges the JSON. */
+    fun fromLink(link: String): String? {
+        val trimmed = link.trim()
+        if (!trimmed.startsWith(LINK_PREFIX)) return null
+        return try {
+            base64.decode(trimmed.removePrefix(LINK_PREFIX)).decodeToString(throwOnInvalidSequence = true)
+        } catch (_: Exception) {
+            null
+        }
+    }
 
     private val json = Json { ignoreUnknownKeys = true }
     private val compact = Json { encodeDefaults = true }
