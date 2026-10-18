@@ -30,6 +30,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.qrose)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

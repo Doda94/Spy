@@ -41,4 +41,24 @@
         <item quantity="few">%1$d sekunde</item>
         <item quantity="other">%1$d sekundi</item>
     </plurals>
+    <string name="dict_edit_details">Naziv i jezik</string>
+    <string name="dict_edit_title">Uredi rječnik</string>
+    <string name="dict_more">Više</string>
+    <string name="dict_share">Podijeli</string>
+    <string name="dict_edit_word">Uredi riječ</string>
+    <string name="dict_rename_category">Preimenuj kategoriju</string>
+    <string name="dict_delete_category">Izbriši kategoriju</string>
+    <string name="dict_delete_category_body">Kategorija i %1$s trajno će se obrisati s ovog telefona. Ovo se ne može poništiti.</string>
+    <string name="dict_category_name">Naziv kategorije</string>
+    <string name="dict_name_taken">Već imaš rječnik s tim nazivom.</string>
+    <string name="dict_category_taken">Ta kategorija već postoji.</string>
+    <string name="dict_selected">Odabrano: %1$d</string>
+    <string name="dict_empty_words">Još nema riječi. Dodaj prvu iznad.</string>
+    <string name="dict_no_results">Nema odgovarajućih riječi.</string>
+    <string name="dict_no_categories">Još nema kategorija. Dodaj prvu ispod.</string>
+    <string name="toast_word_deleted">Izbrisano: „%1$s“</string>
+    <string name="toast_link_copied">Poveznica je kopirana</string>
+    <string name="toast_copy_made">Kopija je spremljena u Moje rječnike</string>
+    <string name="import_stat_categories">Kategorije</string>
+    <string name="import_stat_words">Riječi</string>
 </resources>

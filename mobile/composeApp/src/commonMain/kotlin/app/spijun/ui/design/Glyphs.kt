@@ -77,6 +77,18 @@ object SpyIcons {
     const val Timer = "M12 7v5l3 2"
     val TimerRing = "M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0z"
     val Voted = "M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0zM8 12l3 3 5-6"
+    const val Import = "M12 4v11M7 10l5 5 5-5M5 20h14"
+    const val Share = "M12 15V3M7 8l5-5 5 5M5 13v7h14v-7"
+    val Search = "M18 11a7 7 0 1 1-14 0a7 7 0 0 1 14 0zM20 20l-4-4"
+    val Lock = rr(5f, 11f, 14f, 10f, 2f) + "M8 11V7a4 4 0 0 1 8 0v4"
+    const val More = "M5 12h.01M12 12h.01M19 12h.01"
+    const val Delete = "M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"
+    const val FileInvalid = "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" + "M14 3v5h5M10 12l4 4M14 12l-4 4"
+    const val File = "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"
+    const val Link = "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"
+    const val TabPlay = "M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"
+    const val TabPlaySelected = TabPlay + "M12 9l3 3-3 3-3-3z"
+    const val TabDictionaries = "M4 5h7v15H4zM13 5h7v15h-7z"
 }
 
 @Composable
