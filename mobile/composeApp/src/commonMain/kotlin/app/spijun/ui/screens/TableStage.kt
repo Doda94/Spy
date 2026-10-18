@@ -279,6 +279,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     var picked by remember(game.round) { mutableStateOf<Int?>(null) }
     var timeUp by remember(game.round) { mutableStateOf(false) }
 
+    // The discussion is wall-clock time and never pauses: not while the quit dialog is open, not
+    // while the app is in the background (the table keeps talking). Owner's decision.
     LaunchedEffect(game.round, inDiscussion, total, extraSeconds) {
         if (!inDiscussion || total == null) return@LaunchedEffect
         while (true) {
