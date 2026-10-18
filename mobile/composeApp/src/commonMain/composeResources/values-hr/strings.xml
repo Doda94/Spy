@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from docs/design/copy.json. Locale: hr. Proposed keys are included and marked. -->
+<resources>
+
+    <!-- Common -->
+    <string name="common_back">Natrag</string>
+    <string name="common_close">Zatvori</string>
+    <string name="common_cancel">Odustani</string>
+    <string name="common_save">Spremi</string>
+    <string name="common_retry">Pokušaj ponovno</string>
+    <string name="common_ok">U redu</string>
+
+    <!-- Tab bar -->
+    <string name="tab_play">Igraj</string>
+    <string name="tab_dictionaries">Rječnici</string>
+    <string name="tab_settings">Postavke</string>
+
+    <!-- Home -->
+    <string name="home_tagline">Jedna tajna riječ i špijun među vama.</string>
+    <string name="home_new_game">Nova igra</string>
+    <string name="home_join">Uđi s kodom</string>
+    <string name="home_continue_label">IGRA U TIJEKU</string>
+    <string name="home_continue">Nastavi igru</string>
+    <string name="home_continue_end">Završi</string>
+
+    <!-- Mode chooser -->
+    <string name="mode_title">Kako igrate?</string>
+    <string name="mode_one_phone">Jedan telefon</string>
+    <string name="mode_one_phone_desc">Telefon kruži, svatko pogleda svoju kartu.</string>
+    <string name="mode_multi">Svaki na svom telefonu</string>
+    <string name="mode_multi_desc">Domaćin otvara sobu, ostali ulaze kodom ili QR-om.</string>
+    <string name="mode_note">Pravila su ista. Za drugi način treba internet.</string>
+
+    <!-- Game setup -->
+    <string name="setup_title">Postavke igre</string>
+    <string name="setup_players">Igrači</string>
+    <string name="setup_player_names">Imena igrača</string>
+    <string name="setup_player_names_hint">potrebna za glasanje u aplikaciji</string>
+    <string name="setup_names_filled">%1$d od %2$d</string>
+    <string name="setup_spies">Špijuni</string>
+    <string name="setup_spies_max">najviše %1$d</string>
+    <string name="setup_players_from_room">ulaze kodom kad otvoriš sobu · 3–12</string>
+    <string name="setup_timer">TIMER PO RUNDI</string>
+    <string name="setup_timer_off">Bez</string>
+    <string name="setup_timer_minutes">%1$d min</string>
+    <string name="setup_timer_custom">Svoje…</string>
+    <string name="setup_timer_synced">Isti timer na svim telefonima.</string>
+    <string name="setup_voting">GLASANJE</string>
+    <string name="setup_vote_app">U aplikaciji</string>
+    <string name="setup_vote_loud">Naglas</string>
+    <string name="setup_vote_app_hint">Tajno glasanje — rezultat se vidi kad svi glasaju.</string>
+    <string name="setup_dictionaries">RJEČNICI</string>
+    <string name="setup_categories">KATEGORIJE</string>
+    <string name="setup_select_all">Odaberi sve</string>
+    <string name="setup_start">Započni igru</string>
+    <string name="setup_open_room">Otvori sobu</string>
+    <string name="setup_privacy_hint">U sobu putuje samo izvučena riječ, ne tvoj rječnik.</string>
+    <string name="setup_none_selected">Odaberi barem jednu kategoriju.</string>
+    <string name="setup_empty_pool">U odabranim kategorijama nema riječi.</string>
+    <string name="setup_add_words">Dodaj riječi</string>
+    <string name="setup_loading">Učitavanje rječnika…</string>
+    <string name="setup_offline">Nema veze sa serverom. Igraš sa spremljenim rječnicima.</string>
+
+    <!-- Lobby -->
+    <string name="lobby_title">Soba</string>
+    <string name="lobby_code_label">KOD SOBE</string>
+    <string name="lobby_share">Podijeli</string>
+    <string name="lobby_players_count">%1$d od %2$d</string>
+    <string name="lobby_host">Domaćin</string>
+    <string name="lobby_you">(ti)</string>
+    <string name="lobby_connected">Na vezi</string>
+    <string name="lobby_connecting">Povezuje se…</string>
+    <string name="lobby_ready">Svi su tu? Možeš krenuti.</string>
+    <string name="lobby_waiting_slot">Čeka se igrač…</string>
+    <string name="lobby_waiting_host">Čeka se da %1$s započne igru</string>
+    <string name="lobby_in_room">U sobi si</string>
+    <string name="lobby_rules">PRAVILA OVE IGRE</string>
+    <string name="lobby_leave">Napusti sobu</string>
+    <string name="lobby_edit">Uredi</string>
+
+    <!-- Join -->
+    <string name="join_title">Uđi u sobu</string>
+    <string name="join_code_hint">Upiši kod od 4 znaka s domaćinova ekrana.</string>
+    <string name="join_or">ili</string>
+    <string name="join_next">Dalje</string>
+    <string name="join_scan">Skeniraj QR kod</string>
+    <string name="join_nick_title">Kako da te zovemo?</string>
+    <string name="join_nick_label">Nadimak</string>
+    <string name="join_nick_hint">Vide ga samo igrači u ovoj sobi.</string>
+    <string name="join_enter">Uđi u sobu</string>
+    <string name="join_err_not_found">Soba %1$s ne postoji. Provjeri kod ili skeniraj QR.</string>
+    <string name="join_err_nick_taken">Netko u sobi već se zove %1$s.</string>
+    <string name="join_err_started_title">Igra je već počela</string>
+    <string name="join_err_started_body">Uđi kad krene sljedeća — kod ostaje isti.</string>
+    <string name="join_err_full_title">Soba je puna</string>
+    <string name="join_err_full_body">U sobi je već 12 igrača.</string>
+    <string name="join_wait_next">Čekaj sljedeću igru</string>
+
+    <!-- Role reveal -->
+    <string name="reveal_player_of">Igrač %1$d od %2$d</string>
+    <string name="reveal_pass_to">Telefon ide: %1$s</string>
+    <string name="reveal_tap_card">%1$s, dodirni kartu.</string>
+    <string name="reveal_nobody_look">Neka nitko drugi ne gleda.</string>
+    <string name="reveal_show">Prikaži ulogu</string>
+    <string name="reveal_secret_word">TAJNA RIJEČ</string>
+    <string name="reveal_category">Kategorija · %1$s</string>
+    <string name="reveal_you_are">TI SI</string>
+    <string name="reveal_spy">Špijun</string>
+    <string name="reveal_spy_alone">Sam si. Slušaj, blefiraj i ne odaj se.</string>
+    <string name="reveal_other_spies">OSTALI ŠPIJUNI</string>
+    <string name="reveal_hide_next">Sakrij i dalje</string>
+    <string name="reveal_hide_start">Sakrij i započni raspravu</string>
+    <string name="reveal_autohide">Sakriva se za %1$d s</string>
+    <string name="reveal_starts_when_all">Rasprava počinje kad svi pogledaju.</string>
+    <string name="reveal_peek_again">Pogledaj ponovno</string>
+    <string name="reveal_seen_count">%1$d / %2$d</string>
+    <string name="reveal_seen_label">pogledalo kartu</string>
+
+    <!-- Round & discussion -->
+    <string name="round_label">RUNDA %1$d</string>
+    <string name="round_category_pill">Kategorija · %1$s</string>
+    <string name="round_who">Tko ne zna riječ?</string>
+    <string name="round_talk">Razgovarajte</string>
+    <string name="round_no_timer">bez timera</string>
+    <string name="round_almost">Još malo!</string>
+    <string name="round_time_up">Vrijeme!</string>
+    <string name="round_led_by">Vodi %1$s</string>
+    <string name="round_end_discussion">Završi raspravu</string>
+    <string name="round_add_minute">+1 min</string>
+    <string name="round_to_vote">Na glasanje</string>
+    <string name="round_vote_opens">Kad vrijeme istekne, otvara se glasanje.</string>
+    <string name="round_own_card">Pogledaj svoju kartu</string>
+    <string name="round_loud_title">Koga ste izbacili?</string>
+    <string name="round_loud_tap">Dodirni kartu tog igrača.</string>
+    <string name="round_loud_vote">Glasajte naglas</string>
+    <string name="round_knock_out">Izbaci · %1$s</string>
+    <string name="round_nobody">Nitko ne ispada</string>
+
+    <!-- Voting -->
+    <string name="vote_title">Tko je špijun?</string>
+    <string name="vote_secret">Glas je tajan. Rezultat se vidi kad svi glasaju.</string>
+    <string name="vote_confirm">Glasaj · %1$s</string>
+    <string name="vote_locked">Nakon potvrde glas se ne može promijeniti.</string>
+    <string name="vote_self">ti</string>
+    <string name="vote_cast">Glas je predan</string>
+    <string name="vote_not_yet">JOŠ NISU GLASALI</string>
+    <string name="vote_close">Zatvori glasanje</string>
+    <string name="vote_close_hint">Zatvaranje broji samo predane glasove.</string>
+    <string name="vote_progress">Glasalo %1$d od %2$d</string>
+    <string name="vote_i_am">Ja sam %1$s · glasam</string>
+    <string name="vote_pass_secret">Glas je tajan — neka nitko ne gleda.</string>
+    <string name="vote_spectating">Gledaš</string>
+    <string name="vote_spectator_title">Izvan igre si od runde %1$d</string>
+    <string name="vote_spectator_body">Gledaš do kraja, ali ne glasaš. Ne odaj ništa — uloge se otkrivaju na kraju.</string>
+
+    <!-- Round result -->
+    <string name="result_pill">Runda %1$d · rezultat</string>
+    <string name="result_out">%1$s ispada iz igre</string>
+    <string name="result_out_stamp">IZVAN IGRE</string>
+    <string name="result_roles_end">Uloge se otkrivaju na kraju igre.</string>
+    <string name="result_votes">GLASOVI</string>
+    <string name="result_next_round">Sljedeća runda</string>
+    <string name="result_tie">Neriješeno</string>
+    <string name="result_tie_body">Ponovno glasanje: %1$s ili %2$s.</string>
+    <string name="result_revote">Glasaj ponovno · %1$s ili %2$s</string>
+    <string name="result_tie_again">Opet neriješeno</string>
+    <string name="result_tie_again_body">Nitko ne ispada. Igra se nastavlja.</string>
+    <string name="result_round_n">Runda %1$d</string>
+
+    <!-- Game over -->
+    <string name="gameover_label">Kraj igre</string>
+    <string name="gameover_citizens">Građani pobjeđuju</string>
+    <string name="gameover_spies">Špijuni pobjeđuju</string>
+    <string name="gameover_play_again">Igraj ponovno</string>
+    <string name="gameover_play_again_hint">Iste postavke, nova riječ, nove uloge.</string>
+    <string name="gameover_new">Nova igra</string>
+
+    <!-- Roles -->
+    <string name="role_citizen">građanin</string>
+    <string name="role_spy">špijun</string>
+
+    <!-- Dictionaries -->
+    <string name="dict_title">Rječnici</string>
+    <string name="dict_builtin">Ugrađen</string>
+    <string name="dict_custom">Vlastiti</string>
+    <string name="dict_section_builtin">UGRAĐENI</string>
+    <string name="dict_section_mine">MOJI · SAMO NA OVOM UREĐAJU</string>
+    <string name="dict_new">Novi rječnik</string>
+    <string name="dict_import">Uvezi</string>
+    <string name="dict_new_category">Nova kategorija</string>
+    <string name="dict_add">Dodaj</string>
+    <string name="dict_new_word">Nova riječ</string>
+    <string name="dict_duplicate">„%1$s“ već postoji u ovoj kategoriji.</string>
+    <string name="dict_name">Naziv</string>
+    <string name="dict_language">Jezik riječi</string>
+    <string name="dict_local_hint">Sprema se samo na ovaj telefon. U igru putuje samo izvučena riječ.</string>
+    <string name="dict_delete_title">Izbrisati „%1$s“?</string>
+    <string name="dict_delete_body">Sve kategorije i riječi trajno će se obrisati s ovog telefona.</string>
+    <string name="dict_delete">Izbriši rječnik</string>
+    <string name="dict_delete_short">Izbriši</string>
+    <string name="dict_duplicate_dict">Kopiraj</string>
+    <string name="dict_empty_title">Još nemaš vlastitih rječnika</string>
+    <string name="dict_empty_body">Napravi svoj s riječima vaše ekipe ili uvezi datoteku od prijatelja.</string>
+    <string name="dict_category_empty">još nema riječi</string>
+    <string name="dict_readonly">Ugrađeni rječnik ne možeš mijenjati. Kopiraj ga i uredi kopiju.</string>
+    <string name="dict_copy">Napravi kopiju</string>
+    <string name="dict_updated">ažurirano %1$s</string>
+
+    <!-- Export -->
+    <string name="export_title">Podijeli rječnik</string>
+    <string name="export_file">Datoteka</string>
+    <string name="export_file_desc">Pošalji .json porukom, mailom ili spremi.</string>
+    <string name="export_link">Poveznica</string>
+    <string name="export_link_desc">Otvara se ravno u Špijunu.</string>
+    <string name="export_qr">QR kod</string>
+    <string name="export_qr_desc">Za nekoga tko sjedi pokraj tebe.</string>
+    <string name="export_too_big">Prevelik — najviše oko 80 riječi (2 KB).</string>
+    <string name="export_file_best">Najbolje za veće rječnike.</string>
+    <string name="export_qr_how">Prijatelj otvara Špijun → Rječnici → Uvezi → Skeniraj.</string>
+    <string name="export_copy_link">Kopiraj poveznicu</string>
+    <string name="export_done">Gotovo</string>
+
+    <!-- Import -->
+    <string name="import_title">Uvoz rječnika</string>
+    <string name="import_conflict">Već imaš rječnik „%1$s“. Što želiš?</string>
+    <string name="import_merge">Spoji s postojećim</string>
+    <string name="import_merge_desc">Doda nove riječi, preskoči one koje već imaš.</string>
+    <string name="import_save_new">Spremi kao novi</string>
+    <string name="import_save_new_desc">Kao „%1$s“.</string>
+    <string name="import_already_have">već imaš</string>
+    <string name="import_err_invalid">Ovo nije Špijun rječnik</string>
+    <string name="import_err_invalid_body">Datoteka se ne može pročitati. Zamoli prijatelja da je ponovno izveze iz Špijuna.</string>
+    <string name="import_err_version">Ova datoteka je iz novije verzije Špijuna — ažuriraj aplikaciju.</string>
+    <string name="import_err_empty">Rječnik je prazan — nema što uvesti.</string>
+    <string name="import_pick_other">Odaberi drugu datoteku</string>
+
+    <!-- QR scanner -->
+    <string name="scan_title">Skeniraj QR kod</string>
+    <string name="scan_hint">Sobe ili rječnika — prepoznat ćemo što je.</string>
+    <string name="scan_enter_code">Upiši kod sobe</string>
+    <string name="scan_torch">Svjetiljka</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Postavke</string>
+    <string name="settings_general">OPĆENITO</string>
+    <string name="settings_language">Jezik</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Kao sustav</string>
+    <string name="settings_theme_light">Svijetla</string>
+    <string name="settings_theme_dark">Tamna</string>
+    <string name="settings_defaults">NOVA IGRA · ZADANO</string>
+    <string name="settings_players_spies">Igrači i špijuni</string>
+    <string name="settings_reveal">OTKRIVANJE</string>
+    <string name="settings_reveal_mode">Način</string>
+    <string name="settings_reveal_tap">Dodirni za okretanje</string>
+    <string name="settings_reveal_tap_desc">Karta se okrene i sama se vrati. Preporučeno.</string>
+    <string name="settings_reveal_hold">Drži za pogled</string>
+    <string name="settings_reveal_hold_desc">Vidi se samo dok držiš prst na karti.</string>
+    <string name="settings_autohide">Automatsko skrivanje</string>
+    <string name="settings_autohide_off">Isključeno</string>
+    <string name="settings_autohide_desc">Karta se sama okrene nakon %1$d sekundi, da tajna ne ostane na ekranu.</string>
+    <string name="settings_reduce_motion">Uključeno je „Smanji pokrete“ — karta se pojavljuje bez okretanja i stol se ne vrti.</string>
+    <string name="settings_senses">OSJETILA</string>
+    <string name="settings_haptics">Vibracija</string>
+    <string name="settings_sound">Zvukovi</string>
+    <string name="settings_keep_awake">Zaslon uvijek upaljen</string>
+    <string name="settings_about">O aplikaciji</string>
+    <string name="settings_version">Verzija</string>
+    <string name="settings_admin">Uređivanje ugrađenih rječnika</string>
+
+    <!-- Admin PIN -->
+    <string name="admin_title">Administrator</string>
+    <string name="admin_body">Unesi PIN za uređivanje ugrađenih rječnika. Izmjene vide svi igrači.</string>
+    <string name="admin_wrong_pin">Pogrešan PIN. Pokušaj ponovno.</string>
+
+    <!-- Connection & edge states -->
+    <string name="conn_lost">Veza je prekinuta</string>
+    <string name="conn_reconnecting">Ponovno spajanje… Igra se nastavlja, vraćamo te čim uhvatiš signal.</string>
+    <string name="conn_card_saved">Tvoja karta je spremljena na ovom telefonu.</string>
+    <string name="conn_player_dropped">%1$s nije na vezi</string>
+    <string name="conn_player_dropped_body">Čekamo još %1$s. Ako ga izbaciš, ide među izbačene — uloga se otkriva tek na kraju.</string>
+    <string name="conn_wait_for">Čekaj · %1$s</string>
+    <string name="conn_remove">Izbaci iz igre</string>
+    <string name="conn_host_left">Domaćin je napustio igru</string>
+    <string name="conn_host_left_body">Netko mora preuzeti vođenje da biste nastavili — uloge ostaju iste.</string>
+    <string name="conn_paused">pauzirano</string>
+    <string name="conn_take_over">Preuzmi vođenje</string>
+    <string name="conn_end_game">Završi igru</string>
+    <string name="conn_removed">Domaćin te uklonio iz igre</string>
+    <string name="conn_removed_body">Možeš ući ponovno kad počne sljedeća igra, s istim kodom sobe.</string>
+    <string name="conn_to_home">Na početak</string>
+    <string name="conn_offline_title">Nema interneta</string>
+    <string name="conn_offline_body">Za igru „svaki na svom telefonu“ treba veza. Na jednom telefonu možeš igrati i bez nje.</string>
+    <string name="conn_offline_one_phone">Igraj na jednom telefonu</string>
+    <string name="conn_back">Opet si tu</string>
+    <string name="conn_back_body">Runda %1$d je još u tijeku. Ništa ti nije promaknulo.</string>
+
+    <!-- Toasts -->
+    <string name="toast_word_added">Dodano: „%1$s“</string>
+    <string name="toast_undo">Poništi</string>
+    <string name="toast_imported">Rječnik uvezen</string>
+
+    <!-- Quit game -->
+    <string name="quit_title">Prekinuti igru?</string>
+    <string name="quit_body">Igra završava za sve igrače u sobi. Uloge i riječ neće se otkriti.</string>
+    <string name="quit_confirm">Prekini igru</string>
+    <string name="quit_keep">Nastavi igrati</string>
+
+    <!-- Camera permission -->
+    <string name="camera_title">Kamera za QR kod</string>
+    <string name="camera_body">Koristimo je samo dok skeniraš kod sobe ili rječnika. Ništa se ne snima ni ne šalje.</string>
+    <string name="camera_allow">Dopusti kameru</string>
+    <string name="camera_settings">Otvori postavke</string>
+    <string name="camera_manual">Upiši kod ručno</string>
+
+    <!-- Accessibility (VoiceOver/TalkBack) -->
+    <string name="a11y_card_hidden">Karta za igrača %1$s. Dvaput dodirni za prikaz uloge.</string>
+    <string name="a11y_citizen">Građanin. Tajna riječ: %1$s. Kategorija: %2$s.</string>
+    <string name="a11y_spy">Špijun. Ne znaš riječ. Kategorija: %1$s.</string>
+    <string name="a11y_other_spies">Ostali špijuni: %1$s.</string>
+    <string name="a11y_role_hidden">Uloga skrivena.</string>
+    <string name="a11y_timer">Preostalo %1$s</string>
+    <string name="a11y_sr_warning">Uloga će se izgovoriti naglas. Stavi slušalice.</string>
+    <string name="a11y_vote_selected">%1$s, odabrano</string>
+    <string name="a11y_vote_self">%1$s, to si ti, nije moguće</string>
+    <string name="a11y_knocked_out">%1$s ispada. Uloge se otkrivaju na kraju igre.</string>
+
+    <!-- Game setup -->
+    <string name="setup_vote_app_hint_one_phone">Tajno glasanje — telefon kruži, rezultat se vidi kad svi glasaju.</string> <!-- proposed -->
+    <string name="setup_dicts_and_categories">RJEČNICI I KATEGORIJE</string> <!-- proposed -->
+
+    <!-- Game setup (host) -->
+    <string name="setup_players_you_plus">ti + ostali</string> <!-- proposed -->
+    <string name="setup_names_checked_later">provjera kad svi uđu</string> <!-- proposed -->
+
+    <!-- Game setup -->
+    <string name="setup_dict_builtin_inline">%1$s · ugrađen</string> <!-- proposed -->
+    <string name="setup_dict_custom_inline">%1$s · vlastiti</string> <!-- proposed -->
+    <string name="setup_categories_of">KATEGORIJE · %1$s</string> <!-- proposed -->
+    <string name="setup_empty_pool_body">Ove kategorije još nemaju riječi.</string> <!-- proposed -->
+    <string name="setup_offline_dated">Nema veze sa serverom. Igraš sa spremljenim rječnicima (%1$s).</string> <!-- proposed -->
+
+    <!-- Lobby -->
+    <string name="lobby_players_label">IGRAČI</string> <!-- proposed -->
+
+    <!-- Lobby (guest) -->
+    <string name="lobby_guest_header">Soba: %1$s · igraš kao %2$s</string> <!-- proposed -->
+
+    <!-- Lobby -->
+    <string name="lobby_rules_timer">timer %1$d min</string> <!-- proposed -->
+    <string name="lobby_rules_no_timer">bez timera</string> <!-- proposed -->
+    <string name="lobby_rules_vote_app">glasanje u aplikaciji</string> <!-- proposed -->
+    <string name="lobby_rules_vote_loud">glasanje naglas</string> <!-- proposed -->
+
+    <!-- Role reveal (own phone) -->
+    <string name="reveal_room_pill">Soba %1$s</string> <!-- proposed -->
+    <string name="reveal_own_card_hint">Tvoja karta je dolje. Dodirni je ako trebaš ponovno pogledati.</string> <!-- proposed -->
+
+    <!-- Voting -->
+    <string name="vote_option_out">izvan igre</string> <!-- proposed -->
+    <string name="vote_player_dropped">%1$s · prekid veze</string> <!-- proposed -->
+
+    <!-- Voting (spectator) -->
+    <string name="vote_spectator_voting_tag">GLASA</string> <!-- proposed -->
+
+    <!-- Round result -->
+    <string name="result_tie_again_cards">Nitko ne ispada. Obje karte ostaju na stolu.</string> <!-- proposed -->
+    <string name="result_missing_vote">bez glasa: %1$s</string> <!-- proposed -->
+
+    <!-- Game over -->
+    <string name="gameover_unmasked_spies">Neotkriveni: %1$s</string> <!-- proposed -->
+
+    <!-- Dictionaries -->
+    <string name="dict_delete_body_counts">%1$s i %2$s trajno će se obrisati s ovog telefona. Ovo se ne može poništiti.</string> <!-- proposed -->
+
+    <!-- Export -->
+    <string name="export_meta">„%1$s“ · %2$s · %3$s KB</string> <!-- proposed -->
+
+    <!-- Import -->
+    <string name="import_merge_desc_counts">Doda %1$s, preskoči %2$s koje već imaš.</string> <!-- proposed -->
+    <string name="import_merge_button">Spoji · %1$s</string> <!-- proposed -->
+    <string name="import_err_invalid_named">Datoteka „%1$s“ se ne može pročitati. Zamoli prijatelja da je ponovno izveze iz Špijuna.</string> <!-- proposed -->
+
+    <!-- Settings -->
+    <string name="settings_timer">Timer</string> <!-- proposed -->
+    <string name="settings_voting">Glasanje</string> <!-- proposed -->
+    <string name="settings_reveal_title">Otkrivanje uloge</string> <!-- proposed -->
+
+    <!-- Settings › Reveal -->
+    <string name="settings_reveal_mode_label">NAČIN</string> <!-- proposed -->
+    <string name="settings_autohide_label">AUTOMATSKO SKRIVANJE</string> <!-- proposed -->
+
+    <!-- Settings -->
+    <string name="settings_seconds">%1$d s</string> <!-- proposed -->
+    <string name="settings_licenses">Licence</string> <!-- proposed -->
+    <string name="settings_touch">Dodir</string> <!-- proposed -->
+
+    <!-- Connection -->
+    <string name="conn_host_left_named">%1$s više nije u igri.</string> <!-- proposed -->
+
+    <!-- Connection (back from background) -->
+    <string name="conn_snapshot_blurred">U pregledu aplikacija ekran je uvijek zamagljen.</string> <!-- proposed -->
+
+    <!-- Plurals -->
+    <plurals name="words_in_selection">
+        <item quantity="one">%1$d riječ u odabiru</item>
+        <item quantity="few">%1$d riječi u odabiru</item>
+        <item quantity="other">%1$d riječi u odabiru</item>
+    </plurals>
+    <plurals name="words">
+        <item quantity="one">%1$d riječ</item>
+        <item quantity="few">%1$d riječi</item>
+        <item quantity="other">%1$d riječi</item>
+    </plurals>
+    <plurals name="categories">
+        <item quantity="one">%1$d kategorija</item>
+        <item quantity="few">%1$d kategorije</item>
+        <item quantity="other">%1$d kategorija</item>
+    </plurals>
+    <plurals name="players">
+        <item quantity="one">%1$d igrač</item>
+        <item quantity="few">%1$d igrača</item>
+        <item quantity="other">%1$d igrača</item>
+    </plurals>
+    <plurals name="spies_in_game">
+        <item quantity="one">U igri je %1$d špijun</item>
+        <item quantity="few">U igri su %1$d špijuna</item>
+        <item quantity="other">U igri je %1$d špijuna</item>
+    </plurals>
+    <plurals name="waiting_players">
+        <item quantity="one">Čeka se još %1$d igrač</item>
+        <item quantity="few">Čeka se još %1$d igrača</item>
+        <item quantity="other">Čeka se još %1$d igrača</item>
+    </plurals>
+    <plurals name="need_more_players">
+        <item quantity="one">Treba još barem %1$d igrač.</item>
+        <item quantity="few">Treba još barem %1$d igrača.</item>
+        <item quantity="other">Treba još barem %1$d igrača.</item>
+    </plurals>
+    <plurals name="start_with_players">
+        <item quantity="one">Započni igru · %1$d igrač</item>
+        <item quantity="few">Započni igru · %1$d igrača</item>
+        <item quantity="other">Započni igru · %1$d igrača</item>
+    </plurals>
+    <plurals name="votes">
+        <item quantity="one">%1$d glas</item>
+        <item quantity="few">%1$d glasa</item>
+        <item quantity="other">%1$d glasova</item>
+    </plurals>
+    <plurals name="rounds">
+        <item quantity="one">%1$d runda</item>
+        <item quantity="few">%1$d runde</item>
+        <item quantity="other">%1$d rundi</item>
+    </plurals>
+    <plurals name="search_words">
+        <item quantity="one">Traži u %1$d riječi</item>
+        <item quantity="few">Traži u %1$d riječi</item>
+        <item quantity="other">Traži u %1$d riječi</item>
+    </plurals>
+    <plurals name="in_game">
+        <item quantity="one">%1$d u igri</item>
+        <item quantity="few">%1$d u igri</item>
+        <item quantity="other">%1$d u igri</item>
+    </plurals>
+    <plurals name="spies_short"> <!-- proposed -->
+        <item quantity="one">%1$d špijun</item>
+        <item quantity="few">%1$d špijuna</item>
+        <item quantity="other">%1$d špijuna</item>
+    </plurals>
+    <plurals name="out_count"> <!-- proposed -->
+        <item quantity="one">%1$d izvan igre</item>
+        <item quantity="few">%1$d izvan igre</item>
+        <item quantity="other">%1$d izvan igre</item>
+    </plurals>
+    <plurals name="new_words"> <!-- proposed -->
+        <item quantity="one">%1$d novu riječ</item>
+        <item quantity="few">%1$d nove riječi</item>
+        <item quantity="other">%1$d novih riječi</item>
+    </plurals>
+    <plurals name="spies_caught"> <!-- proposed -->
+        <item quantity="one">Špijun je otkriven.</item>
+        <item quantity="few">Svi špijuni su otkriveni.</item>
+        <item quantity="other">Svi špijuni su otkriveni.</item>
+    </plurals>
+</resources>

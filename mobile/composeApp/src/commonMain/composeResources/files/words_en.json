@@ -1,0 +1,15 @@
+{
+  "Places": [
+    "Beach", "Hospital", "Airport", "Library", "Space station", "Police station",
+    "Football stadium", "Supermarket", "Cinema", "Train station", "Casino", "Zoo",
+    "Lighthouse", "Ski resort", "Submarine", "Circus", "Bakery", "Castle"
+  ],
+  "Professions": [
+    "Doctor", "Firefighter", "Pilot", "Teacher", "Chef", "Plumber", "Dentist",
+    "Detective", "Lifeguard", "Journalist", "Astronaut", "Electrician"
+  ],
+  "Objects": [
+    "Umbrella", "Hammer", "Backpack", "Candle", "Compass", "Telescope", "Toothbrush",
+    "Scissors", "Alarm clock", "Hourglass", "Ladder", "Camera"
+  ]
+}

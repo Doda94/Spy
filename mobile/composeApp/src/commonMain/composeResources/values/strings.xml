@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from docs/design/copy.json. Locale: en. Proposed keys are included and marked. -->
+<resources>
+
+    <!-- Common -->
+    <string name="common_back">Back</string>
+    <string name="common_close">Close</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_retry">Try again</string>
+    <string name="common_ok">OK</string>
+
+    <!-- Tab bar -->
+    <string name="tab_play">Play</string>
+    <string name="tab_dictionaries">Dictionaries</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="home_tagline">One secret word, and a spy among you.</string>
+    <string name="home_new_game">New game</string>
+    <string name="home_join">Join with code</string>
+    <string name="home_continue_label">GAME IN PROGRESS</string>
+    <string name="home_continue">Continue game</string>
+    <string name="home_continue_end">End</string>
+
+    <!-- Mode chooser -->
+    <string name="mode_title">How are you playing?</string>
+    <string name="mode_one_phone">One phone</string>
+    <string name="mode_one_phone_desc">Pass the phone; everyone looks at their own card.</string>
+    <string name="mode_multi">Each on their own phone</string>
+    <string name="mode_multi_desc">The host opens a room; others join with a code or QR.</string>
+    <string name="mode_note">Same rules. The second mode needs internet.</string>
+
+    <!-- Game setup -->
+    <string name="setup_title">Game setup</string>
+    <string name="setup_players">Players</string>
+    <string name="setup_player_names">Player names</string>
+    <string name="setup_player_names_hint">needed for in-app voting</string>
+    <string name="setup_names_filled">%1$d of %2$d</string>
+    <string name="setup_spies">Spies</string>
+    <string name="setup_spies_max">at most %1$d</string>
+    <string name="setup_players_from_room">join with the code once you open the room · 3–12</string>
+    <string name="setup_timer">TIMER PER ROUND</string>
+    <string name="setup_timer_off">Off</string>
+    <string name="setup_timer_minutes">%1$d min</string>
+    <string name="setup_timer_custom">Custom…</string>
+    <string name="setup_timer_synced">Same timer on every phone.</string>
+    <string name="setup_voting">VOTING</string>
+    <string name="setup_vote_app">In the app</string>
+    <string name="setup_vote_loud">Out loud</string>
+    <string name="setup_vote_app_hint">Secret vote — results show once everyone has voted.</string>
+    <string name="setup_dictionaries">DICTIONARIES</string>
+    <string name="setup_categories">CATEGORIES</string>
+    <string name="setup_select_all">Select all</string>
+    <string name="setup_start">Start game</string>
+    <string name="setup_open_room">Open room</string>
+    <string name="setup_privacy_hint">Only the drawn word goes to the room — never your dictionary.</string>
+    <string name="setup_none_selected">Pick at least one category.</string>
+    <string name="setup_empty_pool">The selected categories have no words.</string>
+    <string name="setup_add_words">Add words</string>
+    <string name="setup_loading">Loading dictionaries…</string>
+    <string name="setup_offline">No connection to the server. Playing with saved dictionaries.</string>
+
+    <!-- Lobby -->
+    <string name="lobby_title">Room</string>
+    <string name="lobby_code_label">ROOM CODE</string>
+    <string name="lobby_share">Share</string>
+    <string name="lobby_players_count">%1$d of %2$d</string>
+    <string name="lobby_host">Host</string>
+    <string name="lobby_you">(you)</string>
+    <string name="lobby_connected">Connected</string>
+    <string name="lobby_connecting">Connecting…</string>
+    <string name="lobby_ready">Everyone here? You can start.</string>
+    <string name="lobby_waiting_slot">Waiting for a player…</string>
+    <string name="lobby_waiting_host">Waiting for %1$s to start</string>
+    <string name="lobby_in_room">You’re in</string>
+    <string name="lobby_rules">THIS GAME’S RULES</string>
+    <string name="lobby_leave">Leave room</string>
+    <string name="lobby_edit">Edit</string>
+
+    <!-- Join -->
+    <string name="join_title">Join a room</string>
+    <string name="join_code_hint">Enter the 4-character code from the host’s screen.</string>
+    <string name="join_or">or</string>
+    <string name="join_next">Next</string>
+    <string name="join_scan">Scan QR code</string>
+    <string name="join_nick_title">What should we call you?</string>
+    <string name="join_nick_label">Nickname</string>
+    <string name="join_nick_hint">Only players in this room see it.</string>
+    <string name="join_enter">Join room</string>
+    <string name="join_err_not_found">Room %1$s doesn’t exist. Check the code or scan the QR.</string>
+    <string name="join_err_nick_taken">Someone in the room is already called %1$s.</string>
+    <string name="join_err_started_title">The game has already started</string>
+    <string name="join_err_started_body">Join when the next one starts — the code stays the same.</string>
+    <string name="join_err_full_title">The room is full</string>
+    <string name="join_err_full_body">The room already has 12 players.</string>
+    <string name="join_wait_next">Wait for the next game</string>
+
+    <!-- Role reveal -->
+    <string name="reveal_player_of">Player %1$d of %2$d</string>
+    <string name="reveal_pass_to">Pass the phone to %1$s</string>
+    <string name="reveal_tap_card">%1$s, tap the card.</string>
+    <string name="reveal_nobody_look">Make sure nobody else is looking.</string>
+    <string name="reveal_show">Show role</string>
+    <string name="reveal_secret_word">SECRET WORD</string>
+    <string name="reveal_category">Category · %1$s</string>
+    <string name="reveal_you_are">YOU ARE</string>
+    <string name="reveal_spy">Spy</string>
+    <string name="reveal_spy_alone">You’re alone. Listen, bluff, don’t give yourself away.</string>
+    <string name="reveal_other_spies">OTHER SPIES</string>
+    <string name="reveal_hide_next">Hide and pass on</string>
+    <string name="reveal_hide_start">Hide and start the discussion</string>
+    <string name="reveal_autohide">Hides in %1$d s</string>
+    <string name="reveal_starts_when_all">The discussion starts once everyone has looked.</string>
+    <string name="reveal_peek_again">Look again</string>
+    <string name="reveal_seen_count">%1$d / %2$d</string>
+    <string name="reveal_seen_label">have looked</string>
+
+    <!-- Round & discussion -->
+    <string name="round_label">ROUND %1$d</string>
+    <string name="round_category_pill">Category · %1$s</string>
+    <string name="round_who">Who doesn’t know the word?</string>
+    <string name="round_talk">Talk it out</string>
+    <string name="round_no_timer">no timer</string>
+    <string name="round_almost">Almost up!</string>
+    <string name="round_time_up">Time’s up!</string>
+    <string name="round_led_by">Run by %1$s</string>
+    <string name="round_end_discussion">End discussion</string>
+    <string name="round_add_minute">+1 min</string>
+    <string name="round_to_vote">To the vote</string>
+    <string name="round_vote_opens">When time runs out, voting opens.</string>
+    <string name="round_own_card">Look at your card</string>
+    <string name="round_loud_title">Who did you vote out?</string>
+    <string name="round_loud_tap">Tap that player’s card.</string>
+    <string name="round_loud_vote">Vote out loud</string>
+    <string name="round_knock_out">Knock out · %1$s</string>
+    <string name="round_nobody">Nobody’s out</string>
+
+    <!-- Voting -->
+    <string name="vote_title">Who’s the spy?</string>
+    <string name="vote_secret">Your vote is secret. Results show once everyone has voted.</string>
+    <string name="vote_confirm">Vote · %1$s</string>
+    <string name="vote_locked">Once confirmed, your vote can’t be changed.</string>
+    <string name="vote_self">you</string>
+    <string name="vote_cast">Vote cast</string>
+    <string name="vote_not_yet">NOT VOTED YET</string>
+    <string name="vote_close">Close voting</string>
+    <string name="vote_close_hint">Closing counts only the votes already cast.</string>
+    <string name="vote_progress">%1$d of %2$d voted</string>
+    <string name="vote_i_am">I’m %1$s · vote</string>
+    <string name="vote_pass_secret">Your vote is secret — don’t let anyone look.</string>
+    <string name="vote_spectating">Watching</string>
+    <string name="vote_spectator_title">You’ve been out since round %1$d</string>
+    <string name="vote_spectator_body">You’re watching till the end but can’t vote. Don’t give anything away — roles are revealed at the end.</string>
+
+    <!-- Round result -->
+    <string name="result_pill">Round %1$d · result</string>
+    <string name="result_out">%1$s is out</string>
+    <string name="result_out_stamp">OUT</string>
+    <string name="result_roles_end">Roles are revealed at the end of the game.</string>
+    <string name="result_votes">VOTES</string>
+    <string name="result_next_round">Next round</string>
+    <string name="result_tie">It’s a tie</string>
+    <string name="result_tie_body">Re-vote: %1$s or %2$s.</string>
+    <string name="result_revote">Vote again · %1$s or %2$s</string>
+    <string name="result_tie_again">Tied again</string>
+    <string name="result_tie_again_body">Nobody’s out. The game goes on.</string>
+    <string name="result_round_n">Round %1$d</string>
+
+    <!-- Game over -->
+    <string name="gameover_label">Game over</string>
+    <string name="gameover_citizens">Citizens win</string>
+    <string name="gameover_spies">Spies win</string>
+    <string name="gameover_play_again">Play again</string>
+    <string name="gameover_play_again_hint">Same settings, new word, new roles.</string>
+    <string name="gameover_new">New game</string>
+
+    <!-- Roles -->
+    <string name="role_citizen">citizen</string>
+    <string name="role_spy">spy</string>
+
+    <!-- Dictionaries -->
+    <string name="dict_title">Dictionaries</string>
+    <string name="dict_builtin">Built-in</string>
+    <string name="dict_custom">Custom</string>
+    <string name="dict_section_builtin">BUILT-IN</string>
+    <string name="dict_section_mine">MINE · ON THIS DEVICE ONLY</string>
+    <string name="dict_new">New dictionary</string>
+    <string name="dict_import">Import</string>
+    <string name="dict_new_category">New category</string>
+    <string name="dict_add">Add</string>
+    <string name="dict_new_word">New word</string>
+    <string name="dict_duplicate">“%1$s” is already in this category.</string>
+    <string name="dict_name">Name</string>
+    <string name="dict_language">Word language</string>
+    <string name="dict_local_hint">Saved only on this phone. Only the drawn word goes into a game.</string>
+    <string name="dict_delete_title">Delete “%1$s”?</string>
+    <string name="dict_delete_body">All its categories and words will be permanently deleted from this phone.</string>
+    <string name="dict_delete">Delete dictionary</string>
+    <string name="dict_delete_short">Delete</string>
+    <string name="dict_duplicate_dict">Duplicate</string>
+    <string name="dict_empty_title">No dictionaries of your own yet</string>
+    <string name="dict_empty_body">Make one with your group’s words, or import a file from a friend.</string>
+    <string name="dict_category_empty">no words yet</string>
+    <string name="dict_readonly">Built-in dictionaries can’t be edited. Make a copy and edit that.</string>
+    <string name="dict_copy">Make a copy</string>
+    <string name="dict_updated">updated %1$s</string>
+
+    <!-- Export -->
+    <string name="export_title">Share dictionary</string>
+    <string name="export_file">File</string>
+    <string name="export_file_desc">Send the .json by message or email, or save it.</string>
+    <string name="export_link">Link</string>
+    <string name="export_link_desc">Opens straight in Špijun.</string>
+    <string name="export_qr">QR code</string>
+    <string name="export_qr_desc">For someone sitting next to you.</string>
+    <string name="export_too_big">Too big — about 80 words (2 KB) max.</string>
+    <string name="export_file_best">Best for bigger dictionaries.</string>
+    <string name="export_qr_how">Your friend opens Špijun → Dictionaries → Import → Scan.</string>
+    <string name="export_copy_link">Copy link</string>
+    <string name="export_done">Done</string>
+
+    <!-- Import -->
+    <string name="import_title">Import dictionary</string>
+    <string name="import_conflict">You already have “%1$s”. What would you like to do?</string>
+    <string name="import_merge">Merge into existing</string>
+    <string name="import_merge_desc">Adds the new words and skips the ones you already have.</string>
+    <string name="import_save_new">Save as new</string>
+    <string name="import_save_new_desc">As “%1$s”.</string>
+    <string name="import_already_have">you have</string>
+    <string name="import_err_invalid">This isn’t a Špijun dictionary</string>
+    <string name="import_err_invalid_body">The file can’t be read. Ask your friend to export it from Špijun again.</string>
+    <string name="import_err_version">This file is from a newer version of Špijun — update the app.</string>
+    <string name="import_err_empty">The dictionary is empty — nothing to import.</string>
+    <string name="import_pick_other">Choose another file</string>
+
+    <!-- QR scanner -->
+    <string name="scan_title">Scan a QR code</string>
+    <string name="scan_hint">A room or a dictionary — we’ll work out which.</string>
+    <string name="scan_enter_code">Enter room code</string>
+    <string name="scan_torch">Torch</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_general">GENERAL</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">Same as system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_defaults">NEW GAME · DEFAULTS</string>
+    <string name="settings_players_spies">Players and spies</string>
+    <string name="settings_reveal">REVEAL</string>
+    <string name="settings_reveal_mode">Style</string>
+    <string name="settings_reveal_tap">Tap to flip</string>
+    <string name="settings_reveal_tap_desc">The card flips and turns back by itself. Recommended.</string>
+    <string name="settings_reveal_hold">Hold to peek</string>
+    <string name="settings_reveal_hold_desc">Visible only while your finger is on the card.</string>
+    <string name="settings_autohide">Auto-hide</string>
+    <string name="settings_autohide_off">Off</string>
+    <string name="settings_autohide_desc">The card turns back after %1$d seconds so the secret never lingers.</string>
+    <string name="settings_reduce_motion">“Reduce Motion” is on — the card appears without flipping and the table doesn’t turn.</string>
+    <string name="settings_senses">SENSES</string>
+    <string name="settings_haptics">Haptics</string>
+    <string name="settings_sound">Sounds</string>
+    <string name="settings_keep_awake">Keep screen on</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_admin">Edit built-in dictionaries</string>
+
+    <!-- Admin PIN -->
+    <string name="admin_title">Administrator</string>
+    <string name="admin_body">Enter the PIN to edit built-in dictionaries. Every player sees the changes.</string>
+    <string name="admin_wrong_pin">Wrong PIN. Try again.</string>
+
+    <!-- Connection & edge states -->
+    <string name="conn_lost">Connection lost</string>
+    <string name="conn_reconnecting">Reconnecting… The game goes on; you’ll be back as soon as you have signal.</string>
+    <string name="conn_card_saved">Your card is saved on this phone.</string>
+    <string name="conn_player_dropped">%1$s lost connection</string>
+    <string name="conn_player_dropped_body">Waiting %1$s more. If you remove them they count as out — their role is still revealed only at the end.</string>
+    <string name="conn_wait_for">Wait for %1$s</string>
+    <string name="conn_remove">Remove from game</string>
+    <string name="conn_host_left">The host has left</string>
+    <string name="conn_host_left_body">Someone needs to take over to carry on — roles stay the same.</string>
+    <string name="conn_paused">paused</string>
+    <string name="conn_take_over">Take over as host</string>
+    <string name="conn_end_game">End game</string>
+    <string name="conn_removed">The host removed you from the game</string>
+    <string name="conn_removed_body">You can rejoin when the next game starts, with the same room code.</string>
+    <string name="conn_to_home">Back to start</string>
+    <string name="conn_offline_title">No internet</string>
+    <string name="conn_offline_body">“Each on their own phone” needs a connection. One-phone play works without it.</string>
+    <string name="conn_offline_one_phone">Play on one phone</string>
+    <string name="conn_back">You’re back</string>
+    <string name="conn_back_body">Round %1$d is still going. You haven’t missed anything.</string>
+
+    <!-- Toasts -->
+    <string name="toast_word_added">Added: “%1$s”</string>
+    <string name="toast_undo">Undo</string>
+    <string name="toast_imported">Dictionary imported</string>
+
+    <!-- Quit game -->
+    <string name="quit_title">End the game?</string>
+    <string name="quit_body">The game ends for everyone in the room. Roles and the word won’t be revealed.</string>
+    <string name="quit_confirm">End game</string>
+    <string name="quit_keep">Keep playing</string>
+
+    <!-- Camera permission -->
+    <string name="camera_title">Camera for QR codes</string>
+    <string name="camera_body">Used only while you scan a room or dictionary code. Nothing is recorded or sent.</string>
+    <string name="camera_allow">Allow camera</string>
+    <string name="camera_settings">Open settings</string>
+    <string name="camera_manual">Enter code manually</string>
+
+    <!-- Accessibility (VoiceOver/TalkBack) -->
+    <string name="a11y_card_hidden">Card for %1$s. Double-tap to show your role.</string>
+    <string name="a11y_citizen">Citizen. Secret word: %1$s. Category: %2$s.</string>
+    <string name="a11y_spy">Spy. You don’t know the word. Category: %1$s.</string>
+    <string name="a11y_other_spies">Other spies: %1$s.</string>
+    <string name="a11y_role_hidden">Role hidden.</string>
+    <string name="a11y_timer">%1$s left</string>
+    <string name="a11y_sr_warning">Your role will be read aloud. Put on headphones.</string>
+    <string name="a11y_vote_selected">%1$s, selected</string>
+    <string name="a11y_vote_self">%1$s, that’s you, not available</string>
+    <string name="a11y_knocked_out">%1$s is out. Roles are revealed at the end of the game.</string>
+
+    <!-- Game setup -->
+    <string name="setup_vote_app_hint_one_phone">Secret vote — the phone goes round; results show once everyone has voted.</string> <!-- proposed -->
+    <string name="setup_dicts_and_categories">DICTIONARIES &amp; CATEGORIES</string> <!-- proposed -->
+
+    <!-- Game setup (host) -->
+    <string name="setup_players_you_plus">you + the others</string> <!-- proposed -->
+    <string name="setup_names_checked_later">checked once everyone’s in</string> <!-- proposed -->
+
+    <!-- Game setup -->
+    <string name="setup_dict_builtin_inline">%1$s · built-in</string> <!-- proposed -->
+    <string name="setup_dict_custom_inline">%1$s · custom</string> <!-- proposed -->
+    <string name="setup_categories_of">CATEGORIES · %1$s</string> <!-- proposed -->
+    <string name="setup_empty_pool_body">These categories have no words yet.</string> <!-- proposed -->
+    <string name="setup_offline_dated">No connection to the server. Playing with saved dictionaries (%1$s).</string> <!-- proposed -->
+
+    <!-- Lobby -->
+    <string name="lobby_players_label">PLAYERS</string> <!-- proposed -->
+
+    <!-- Lobby (guest) -->
+    <string name="lobby_guest_header">%1$s’s room · you’re %2$s</string> <!-- proposed -->
+
+    <!-- Lobby -->
+    <string name="lobby_rules_timer">%1$d min timer</string> <!-- proposed -->
+    <string name="lobby_rules_no_timer">no timer</string> <!-- proposed -->
+    <string name="lobby_rules_vote_app">voting in the app</string> <!-- proposed -->
+    <string name="lobby_rules_vote_loud">voting out loud</string> <!-- proposed -->
+
+    <!-- Role reveal (own phone) -->
+    <string name="reveal_room_pill">Room %1$s</string> <!-- proposed -->
+    <string name="reveal_own_card_hint">Your card is at the bottom. Tap it if you need another look.</string> <!-- proposed -->
+
+    <!-- Voting -->
+    <string name="vote_option_out">out</string> <!-- proposed -->
+    <string name="vote_player_dropped">%1$s · disconnected</string> <!-- proposed -->
+
+    <!-- Voting (spectator) -->
+    <string name="vote_spectator_voting_tag">VOTING</string> <!-- proposed -->
+
+    <!-- Round result -->
+    <string name="result_tie_again_cards">Nobody’s out. Both cards stay on the table.</string> <!-- proposed -->
+    <string name="result_missing_vote">didn’t vote: %1$s</string> <!-- proposed -->
+
+    <!-- Game over -->
+    <string name="gameover_unmasked_spies">Never caught: %1$s</string> <!-- proposed -->
+
+    <!-- Dictionaries -->
+    <string name="dict_delete_body_counts">%1$s and %2$s will be permanently deleted from this phone. This can’t be undone.</string> <!-- proposed -->
+
+    <!-- Export -->
+    <string name="export_meta">“%1$s” · %2$s · %3$s KB</string> <!-- proposed -->
+
+    <!-- Import -->
+    <string name="import_merge_desc_counts">Adds %1$s and skips %2$s you already have.</string> <!-- proposed -->
+    <string name="import_merge_button">Merge · %1$s</string> <!-- proposed -->
+    <string name="import_err_invalid_named">“%1$s” can’t be read. Ask your friend to export it from Špijun again.</string> <!-- proposed -->
+
+    <!-- Settings -->
+    <string name="settings_timer">Timer</string> <!-- proposed -->
+    <string name="settings_voting">Voting</string> <!-- proposed -->
+    <string name="settings_reveal_title">Role reveal</string> <!-- proposed -->
+
+    <!-- Settings › Reveal -->
+    <string name="settings_reveal_mode_label">STYLE</string> <!-- proposed -->
+    <string name="settings_autohide_label">AUTO-HIDE</string> <!-- proposed -->
+
+    <!-- Settings -->
+    <string name="settings_seconds">%1$d s</string> <!-- proposed -->
+    <string name="settings_licenses">Licences</string> <!-- proposed -->
+    <string name="settings_touch">Tap</string> <!-- proposed -->
+
+    <!-- Connection -->
+    <string name="conn_host_left_named">%1$s has left.</string> <!-- proposed -->
+
+    <!-- Connection (back from background) -->
+    <string name="conn_snapshot_blurred">The screen is always blurred in the app switcher.</string> <!-- proposed -->
+
+    <!-- Plurals -->
+    <plurals name="words_in_selection">
+        <item quantity="one">%1$d word in selection</item>
+        <item quantity="other">%1$d words in selection</item>
+    </plurals>
+    <plurals name="words">
+        <item quantity="one">%1$d word</item>
+        <item quantity="other">%1$d words</item>
+    </plurals>
+    <plurals name="categories">
+        <item quantity="one">%1$d category</item>
+        <item quantity="other">%1$d categories</item>
+    </plurals>
+    <plurals name="players">
+        <item quantity="one">%1$d player</item>
+        <item quantity="other">%1$d players</item>
+    </plurals>
+    <plurals name="spies_in_game">
+        <item quantity="one">There is %1$d spy</item>
+        <item quantity="other">There are %1$d spies</item>
+    </plurals>
+    <plurals name="waiting_players">
+        <item quantity="one">Waiting for %1$d more player</item>
+        <item quantity="other">Waiting for %1$d more players</item>
+    </plurals>
+    <plurals name="need_more_players">
+        <item quantity="one">Need at least %1$d more player.</item>
+        <item quantity="other">Need at least %1$d more players.</item>
+    </plurals>
+    <plurals name="start_with_players">
+        <item quantity="one">Start game · %1$d player</item>
+        <item quantity="other">Start game · %1$d players</item>
+    </plurals>
+    <plurals name="votes">
+        <item quantity="one">%1$d vote</item>
+        <item quantity="other">%1$d votes</item>
+    </plurals>
+    <plurals name="rounds">
+        <item quantity="one">%1$d round</item>
+        <item quantity="other">%1$d rounds</item>
+    </plurals>
+    <plurals name="search_words">
+        <item quantity="one">Search %1$d word</item>
+        <item quantity="other">Search %1$d words</item>
+    </plurals>
+    <plurals name="in_game">
+        <item quantity="one">%1$d still in</item>
+        <item quantity="other">%1$d still in</item>
+    </plurals>
+    <plurals name="spies_short"> <!-- proposed -->
+        <item quantity="one">%1$d spy</item>
+        <item quantity="other">%1$d spies</item>
+    </plurals>
+    <plurals name="out_count"> <!-- proposed -->
+        <item quantity="one">%1$d out</item>
+        <item quantity="other">%1$d out</item>
+    </plurals>
+    <plurals name="new_words"> <!-- proposed -->
+        <item quantity="one">%1$d new word</item>
+        <item quantity="other">%1$d new words</item>
+    </plurals>
+    <plurals name="spies_caught"> <!-- proposed -->
+        <item quantity="one">The spy was caught.</item>
+        <item quantity="other">All the spies were caught.</item>
+    </plurals>
+</resources>
