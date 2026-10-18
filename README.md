@@ -1,5 +1,38 @@
 # Špijun
 
+> **v2 (ova grana):** nativne iOS i Android aplikacije u Kotlin Multiplatform + Compose
+> Multiplatform nalaze se u [`mobile/`](mobile). Dizajn je u [`docs/design`](docs/design).
+> Web aplikacija opisana ispod ostaje u repozitoriju dok je ne zamijeni v2.
+
+## Mobilne aplikacije (`mobile/`)
+
+| Modul | Što je |
+| --- | --- |
+| `shared` | Pravila igre bez UI-ja (uloge, runde, glasanje, neriješeno, pobjeda) + jedinični testovi |
+| `composeApp` | Zajednički Compose UI, tema (tokeni iz dizajna), fontovi, tekstovi HR/EN |
+| `androidApp` | Android ljuska (`MainActivity`) |
+| `iosApp` | Xcode projekt (SwiftUI ljuska koja prikazuje Compose) |
+
+Što radi: igra na jednom telefonu od početka do kraja (početna, postavke, otkrivanje uloga na
+okruglom stolu, rasprava s timerom, glasanje u aplikaciji ili naglas, rezultat runde, kraj igre).
+Najviše špijuna je ⌊(igrači − 1) / 2⌋ (odluka vlasnika, `Rules.maxSpies`).
+
+```bash
+cd mobile
+./gradlew :shared:testAndroidHostTest      # testovi pravila igre
+./gradlew :androidApp:installDebug         # Android (emulator ili uređaj)
+open iosApp/iosApp.xcodeproj               # iOS: Run na simulatoru (Gradle se pokreće iz Xcodea)
+```
+
+Treba JDK 21+ i Android SDK (`sdk.dir` u `mobile/local.properties` ili `ANDROID_HOME`).
+U debug buildu se `FLAG_SECURE` ne postavlja da bi snimke zaslona radile; u release buildu
+je uključen tijekom otkrivanja uloge.
+
+CI (`.github/workflows/mobile.yml`) pokreće testove pravila na JVM-u i na iOS simulatoru, gradi
+debug APK i iOS aplikaciju za simulator, na PR-ovima prema `v2` i složenim `feat/v2-*` PR-ovima.
+
+---
+
 Društvena igra "Špijun" za jedan telefon — svi igrači redom pogledaju svoju ulogu na
 istom uređaju, a zatim slijedi rasprava uživo. Sučelje je u cijelosti na hrvatskom.
 
