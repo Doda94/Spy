@@ -5,6 +5,7 @@
     <string name="player_default_name">Igrač %1$d</string>
     <string name="mode_multi_soon">Uskoro</string>
     <string name="setup_names_title">Imena igrača</string>
+    <string name="setup_names_duplicate">Imena igrača moraju biti različita.</string>
     <string name="setup_name_field">Igrač %1$d</string>
     <string name="setup_timer_custom_title">Trajanje runde</string>
     <string name="dict_lang_hr">Hrvatski</string>
@@ -26,4 +27,18 @@
     <string name="quit_a11y">Prekini igru</string>
     <string name="setup_selected_summary">%1$s · %2$s</string>
     <string name="common_done">Gotovo</string>
+    <string name="home_hero_word">Bolnica</string>
+    <string name="home_hero_category">Mjesta</string>
+    <string name="a11y_sr_warning_aloud">Imam slušalice</string>
+    <string name="a11y_sr_warning_silent">Bez izgovora, krupan tekst</string>
+    <plurals name="a11y_minutes">
+        <item quantity="one">%1$d minuta</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minuta</item>
+    </plurals>
+    <plurals name="a11y_seconds">
+        <item quantity="one">%1$d sekunda</item>
+        <item quantity="few">%1$d sekunde</item>
+        <item quantity="other">%1$d sekundi</item>
+    </plurals>
 </resources>

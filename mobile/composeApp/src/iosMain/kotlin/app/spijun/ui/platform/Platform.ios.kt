@@ -11,7 +11,11 @@ import app.spijun.ui.design.SpyHaptic
 import app.spijun.ui.design.SpyHaptics
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
+import platform.UIKit.UIAccessibilityAnnouncementNotification
 import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
+import platform.UIKit.UIAccessibilityIsVoiceOverRunning
+import platform.UIKit.UIAccessibilityPostNotification
+import platform.UIKit.UIAccessibilityVoiceOverStatusDidChangeNotification
 import platform.UIKit.UIAccessibilityReduceMotionStatusDidChangeNotification
 import platform.UIKit.UIApplicationWillResignActiveNotification
 import platform.UIKit.UIImpactFeedbackGenerator
@@ -104,6 +108,26 @@ actual fun OnAppBackground(onBackground: () -> Unit) {
         ) { _ -> current() }
         onDispose { NSNotificationCenter.defaultCenter.removeObserver(token) }
     }
+}
+
+@Composable
+actual fun rememberScreenReaderOn(): Boolean {
+    var on by remember { mutableStateOf(UIAccessibilityIsVoiceOverRunning()) }
+    DisposableEffect(Unit) {
+        val token = NSNotificationCenter.defaultCenter.addObserverForName(
+            name = UIAccessibilityVoiceOverStatusDidChangeNotification,
+            `object` = null,
+            queue = NSOperationQueue.mainQueue,
+        ) { _ -> on = UIAccessibilityIsVoiceOverRunning() }
+        on = UIAccessibilityIsVoiceOverRunning()
+        onDispose { NSNotificationCenter.defaultCenter.removeObserver(token) }
+    }
+    return on
+}
+
+@Composable
+actual fun rememberAnnouncer(): (String) -> Unit = remember {
+    { text -> UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, text) }
 }
 
 @Composable

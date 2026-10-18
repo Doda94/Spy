@@ -19,6 +19,14 @@ expect fun PlatformBackHandler(enabled: Boolean, onBack: () -> Unit)
 @Composable
 expect fun OnAppBackground(onBackground: () -> Unit)
 
+/** True while TalkBack / VoiceOver is running; follows changes. */
+@Composable
+expect fun rememberScreenReaderOn(): Boolean
+
+/** Speaks a one-off announcement through TalkBack / VoiceOver; nothing happens when neither is on. */
+@Composable
+expect fun rememberAnnouncer(): (String) -> Unit
+
 /** Blocks screenshots and app-switcher thumbnails while a role can be on screen (Android FLAG_SECURE). */
 @Composable
 expect fun SecureWhile(active: Boolean)
