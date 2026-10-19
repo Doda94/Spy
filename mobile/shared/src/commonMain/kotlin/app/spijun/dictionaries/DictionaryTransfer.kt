@@ -96,9 +96,14 @@ object DictionaryTransfer {
             Envelope(FORMAT, VERSION, dictionary.name, dictionary.language, dictionary.categories),
         )
 
-    /** Link and QR are only offered under the limit; above it the file route is promoted (P2·10). */
-    fun fitsInLinkOrQr(dictionary: CustomDictionary): Boolean =
-        export(dictionary).encodeToByteArray().size <= DictionaryRules.TRANSFER_MAX_BYTES
+    /**
+     * Link and QR are only offered under the limit; above it the file route is promoted (P2·10).
+     * The limit is on the link itself, since that is what the QR code has to hold.
+     */
+    fun fitsInLinkOrQr(dictionary: CustomDictionary): Boolean = fitsInLinkOrQr(toLink(dictionary))
+
+    /** The same check for a link that is already built. */
+    fun fitsInLinkOrQr(link: String): Boolean = link.length <= DictionaryRules.TRANSFER_MAX_BYTES
 
     /**
      * Reads untrusted text. Anything that is not exactly our format is [ImportResult.Invalid]; a
@@ -126,7 +131,7 @@ object DictionaryTransfer {
             return ImportResult.Invalid
         }
 
-        val name = DictionaryRules.clean(envelope.name).take(DictionaryRules.MAX_NAME_LENGTH)
+        val name = DictionaryRules.truncate(DictionaryRules.clean(envelope.name), DictionaryRules.MAX_NAME_LENGTH)
         if (name.isEmpty()) return ImportResult.Invalid
 
         val categories = sanitize(envelope.categories)
@@ -178,8 +183,9 @@ object DictionaryTransfer {
     private fun sanitize(categories: List<DictionaryCategory>): List<DictionaryCategory> {
         val seen = LinkedHashMap<String, DictionaryCategory>()
         for (raw in categories) {
-            val name = DictionaryRules.clean(raw.name)
-            if (name.isEmpty() || name.length > DictionaryRules.MAX_CATEGORY_LENGTH) continue
+            // An overlong name is shortened like the dictionary's own, so its words are not lost.
+            val name = DictionaryRules.truncate(DictionaryRules.clean(raw.name), DictionaryRules.MAX_CATEGORY_LENGTH)
+            if (name.isEmpty()) continue
             val words = LinkedHashMap<String, String>()
             for (w in raw.words) {
                 val word = DictionaryRules.clean(w)

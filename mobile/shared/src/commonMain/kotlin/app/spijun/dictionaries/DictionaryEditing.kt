@@ -78,6 +78,24 @@ object DictionaryEditing {
     fun deleteWord(dictionary: CustomDictionary, category: String, word: String): CustomDictionary =
         dictionary.mapCategory(category) { c -> c.copy(words = c.words.filter { it != word }) }
 
+    /**
+     * Undo of deleting [deleted] from [category]: puts them back where they were in [before] and
+     * keeps every change made since. Words that are back already, or a category that is gone, are
+     * left alone, so undoing never overwrites newer edits.
+     */
+    fun restoreWords(dictionary: CustomDictionary, category: String, before: List<String>, deleted: Collection<String>): CustomDictionary {
+        val current = dictionary.category(category) ?: return dictionary
+        val have = current.words.mapTo(HashSet()) { DictionaryRules.key(it) }
+        val back = deleted.filterTo(HashSet()) { DictionaryRules.key(it) !in have }
+        if (back.isEmpty()) return dictionary
+        val now = current.words.toHashSet()
+        val inOldOrder = before.filter { it in now || it in back }
+        val placed = inOldOrder.toHashSet()
+        // Words added or edited since were not in the old list; they stay, at the end.
+        val since = current.words.filter { it !in placed }
+        return dictionary.mapCategory(current.name) { it.copy(words = inOldOrder + since) }
+    }
+
     private fun CustomDictionary.mapCategory(name: String, change: (DictionaryCategory) -> DictionaryCategory) =
         copy(categories = categories.map { if (it.name == name) change(it) else it })
 }

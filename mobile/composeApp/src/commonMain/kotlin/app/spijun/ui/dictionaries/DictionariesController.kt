@@ -61,10 +61,20 @@ enum class ImportChoice { Merge, SaveAsNew }
  */
 @Stable
 class DictionariesController(private val newId: () -> String = { "c" + Random.nextLong().toULong().toString(36) }) {
-    var customs by mutableStateOf<List<CustomDictionary>>(emptyList())
-        private set
+    private var library by mutableStateOf<List<CustomDictionary>>(emptyList())
 
-    /** False until the file has been read; the screens show nothing editable before then. */
+    var customs: List<CustomDictionary>
+        get() = library
+        private set(value) {
+            library = value
+            // A screen whose dictionary or category is gone would draw nothing, and on iOS offer no way back.
+            stack = stack.takeWhile { value.has(it) }
+        }
+
+    /**
+     * False until the file has been read. Anything added before then would be replaced when the
+     * file arrives, so the screens offer no adding and these actions ignore it.
+     */
     var loaded by mutableStateOf(false)
         private set
 
@@ -108,8 +118,9 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
     // Dictionaries
 
     /** Null on success (the new dictionary opens); otherwise why the name was refused. */
-    fun create(rawName: String, language: WordLanguage): TextProblem? =
-        when (val edit = DictionaryEditing.create(newId(), rawName, language, names)) {
+    fun create(rawName: String, language: WordLanguage): TextProblem? {
+        if (!loaded) return null
+        return when (val edit = DictionaryEditing.create(newId(), rawName, language, names)) {
             is Edit.Refused -> edit.problem
             is Edit.Done -> {
                 customs = customs + edit.dictionary
@@ -118,6 +129,7 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
                 null
             }
         }
+    }
 
     fun update(id: String, rawName: String, language: WordLanguage): TextProblem? {
         val dictionary = custom(id) ?: return null
@@ -131,10 +143,10 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         }
     }
 
+    /** Its screens close with it (see [customs]). */
     fun delete(id: String) {
         customs = customs.filter { it.id != id }
         sheet = null
-        stack = listOf(DictRoute.List)
     }
 
     /** "Duplicate" in the ⋯ menu. */
@@ -146,6 +158,7 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
 
     /** "Napravi kopiju" on a built-in dictionary: an editable copy under Moji. [displayName] is its localised name. */
     fun copyBuiltIn(builtIn: Dictionary, displayName: String) {
+        if (!loaded) return
         val copy = CustomDictionary(
             id = newId(),
             name = uniqueName(displayName, names),
@@ -166,34 +179,36 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         return when (val edit = DictionaryEditing.renameCategory(dictionary, category, raw)) {
             is Edit.Refused -> edit.problem
             is Edit.Done -> {
-                replace(edit.dictionary)
-                sheet = null
-                // The open category screen follows the new name.
+                // The open category screen follows the new name. Renamed first, so the change
+                // below doesn't close it as gone.
                 stack = stack.map {
                     if (it is DictRoute.Category && it.dictId == dictId && it.name == category) DictRoute.Category(dictId, edit.text) else it
                 }
+                replace(edit.dictionary)
+                sheet = null
                 null
             }
         }
     }
 
+    /** Its screen closes with it (see [customs]). */
     fun deleteCategory(dictId: String, category: String) {
         val dictionary = custom(dictId) ?: return
         replace(DictionaryEditing.deleteCategory(dictionary, category))
         sheet = null
-        // Leave the category screen if it was open.
-        stack = stack.filterNot { it is DictRoute.Category && it.dictId == dictId && it.name == category }
     }
 
     // Words
+    // Undo reverses only its own change on the dictionary as it is now, so edits made while the
+    // toast is up are kept.
 
     fun addWord(dictId: String, category: String, raw: String): TextProblem? {
-        val before = custom(dictId) ?: return null
-        return when (val edit = DictionaryEditing.addWord(before, category, raw)) {
+        val dictionary = custom(dictId) ?: return null
+        return when (val edit = DictionaryEditing.addWord(dictionary, category, raw)) {
             is Edit.Refused -> edit.problem
             is Edit.Done -> {
                 replace(edit.dictionary)
-                showToast(ToastKind.WordAdded(edit.text)) { restore(before) }
+                showToast(ToastKind.WordAdded(edit.text)) { change(dictId) { DictionaryEditing.deleteWord(it, category, edit.text) } }
                 null
             }
         }
@@ -206,18 +221,21 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
     }
 
     fun deleteWords(dictId: String, category: String, words: Set<String>) {
-        val before = custom(dictId) ?: return
-        val present = before.category(category)?.words.orEmpty().filter { it in words }
+        val dictionary = custom(dictId) ?: return
+        val before = dictionary.category(category)?.words.orEmpty()
+        val present = before.filter { it in words }
         if (present.isEmpty()) return
-        replace(present.fold(before) { d, w -> DictionaryEditing.deleteWord(d, category, w) })
-        showToast(ToastKind.WordsDeleted(present.first(), present.size)) { restore(before) }
+        replace(present.fold(dictionary) { d, w -> DictionaryEditing.deleteWord(d, category, w) })
+        showToast(ToastKind.WordsDeleted(present.first(), present.size)) {
+            change(dictId) { DictionaryEditing.restoreWords(it, category, before, present) }
+        }
     }
 
     // Import
 
     /** [text] is what a file, link or QR gave us; null means the player cancelled the picker. */
     fun beginImport(text: String?) {
-        if (text == null) return
+        if (text == null || !loaded) return
         val json = DictionaryTransfer.fromLink(text) ?: text
         sheet = when (val result = DictionaryTransfer.parse(json)) {
             is ImportResult.Success -> DictSheet.ImportPreviewSheet(result.dictionary, DictionaryTransfer.preview(result.dictionary, customs))
@@ -256,8 +274,15 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         customs = customs.map { if (it.id == dictionary.id) dictionary else it }
     }
 
-    /** Undo: put one dictionary back as it was, unless it has been deleted since. */
-    private fun restore(before: CustomDictionary) {
-        if (custom(before.id) != null) replace(before)
+    /** Applies [edit] to the dictionary as it is now; nothing when it has been deleted since. */
+    private fun change(dictId: String, edit: (CustomDictionary) -> CustomDictionary) {
+        custom(dictId)?.let { replace(edit(it)) }
     }
+}
+
+/** Whether [route]'s dictionary and category still exist. */
+private fun List<CustomDictionary>.has(route: DictRoute): Boolean = when (route) {
+    DictRoute.List, is DictRoute.BuiltIn -> true
+    is DictRoute.Custom -> any { it.id == route.id }
+    is DictRoute.Category -> firstOrNull { it.id == route.dictId }?.category(route.name) != null
 }

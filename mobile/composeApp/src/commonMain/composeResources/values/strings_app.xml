@@ -55,6 +55,7 @@
     <string name="dict_no_results">No matching words.</string>
     <string name="dict_no_categories">No categories yet. Add the first one below.</string>
     <string name="toast_word_deleted">Deleted: “%1$s”</string>
+    <string name="toast_words_deleted">Deleted %1$s</string>
     <string name="toast_link_copied">Link copied</string>
     <string name="toast_copy_made">Copy saved under My dictionaries</string>
     <string name="import_stat_categories">Categories</string>

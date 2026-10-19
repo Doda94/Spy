@@ -131,6 +131,55 @@ class DictionaryEditingTest {
     }
 
     @Test
+    fun aFreeNameStillFitsTheLimitAndCanBeSavedAgain() {
+        val longest = "a".repeat(DictionaryRules.MAX_NAME_LENGTH)
+        val copy = DictionaryEditing.copyOf(base.copy(name = longest), "d2", listOf(longest))
+        assertEquals("a".repeat(DictionaryRules.MAX_NAME_LENGTH - 4) + " (2)", copy.name)
+        // Saving the copy's details unchanged (only the language) must not be refused as too long.
+        assertIs<Edit.Done>(DictionaryEditing.rename(copy, copy.name, listOf(longest)))
+        // The cut drops a space it would end on.
+        assertEquals("Ljeto na (2)", uniqueName("Ljeto na Visu", listOf("Ljeto na Visu"), maxLength = 13))
+        assertEquals("x".repeat(DictionaryRules.MAX_NAME_LENGTH), uniqueName("x".repeat(60), emptyList()))
+    }
+
+    @Test
+    fun truncateNeverEndsOnASpaceOrHalfAnEmoji() {
+        assertEquals("abc", DictionaryRules.truncate("abc", 5))
+        assertEquals("ab", DictionaryRules.truncate("ab cd", 3))
+        assertEquals("a", DictionaryRules.truncate("a😀", 2))
+    }
+
+    @Test
+    fun restoreWordsUndoesADeleteWithoutLosingNewerEdits() {
+        val before = base.category("Filmovi")!!.words
+        val deleted = DictionaryEditing.deleteWord(base, "Filmovi", "Titanic")
+        // Nothing else changed: undo gives back exactly what was there.
+        assertEquals(base, DictionaryEditing.restoreWords(deleted, "Filmovi", before, listOf("Titanic")))
+
+        // A word added and a category renamed in between both survive the undo.
+        val later = DictionaryEditing.addWord(deleted, "Filmovi", "Matrix").dictionary()
+            .let { DictionaryEditing.renameCategory(it, "Hrana", "Jela").dictionary() }
+        val undone = DictionaryEditing.restoreWords(later, "Filmovi", before, listOf("Titanic"))
+        assertEquals(listOf("Titanic", "Shrek", "Matrix"), undone.category("Filmovi")!!.words)
+        assertEquals(listOf("Filmovi", "Jela"), undone.categories.map { it.name })
+
+        // Already back, or the category is gone: nothing to do.
+        assertEquals(base, DictionaryEditing.restoreWords(base, "Filmovi", before, listOf("Titanic")))
+        val gone = DictionaryEditing.deleteCategory(deleted, "Filmovi")
+        assertEquals(gone, DictionaryEditing.restoreWords(gone, "Filmovi", before, listOf("Titanic")))
+    }
+
+    @Test
+    fun alphabeticalPutsCroatianLettersInPlace() {
+        val words = listOf("zebra", "Čaj", "cesta", "šuma", "Ćup", "sat", "đak", "dan", "žaba", "123", "Éclair")
+        assertEquals(
+            listOf("123", "cesta", "Čaj", "Ćup", "dan", "đak", "sat", "šuma", "zebra", "žaba", "Éclair"),
+            words.sortedWith(DictionaryRules.alphabetical),
+        )
+        assertEquals(listOf("ab", "Abc"), listOf("Abc", "ab").sortedWith(DictionaryRules.alphabetical))
+    }
+
+    @Test
     fun countsAndEngineWords() {
         assertEquals(2, base.categoryCount)
         assertEquals(2, base.wordCount)

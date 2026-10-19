@@ -57,6 +57,7 @@
     <string name="dict_no_results">Nema odgovarajućih riječi.</string>
     <string name="dict_no_categories">Još nema kategorija. Dodaj prvu ispod.</string>
     <string name="toast_word_deleted">Izbrisano: „%1$s“</string>
+    <string name="toast_words_deleted">Izbrisano: %1$s</string>
     <string name="toast_link_copied">Poveznica je kopirana</string>
     <string name="toast_copy_made">Kopija je spremljena u Moje rječnike</string>
     <string name="import_stat_categories">Kategorije</string>

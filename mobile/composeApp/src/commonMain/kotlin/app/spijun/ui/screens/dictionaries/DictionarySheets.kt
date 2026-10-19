@@ -215,9 +215,12 @@ private fun kilobytes(bytes: Int, language: String): String {
 @Composable
 fun ExportSheet(dictionary: CustomDictionary, files: FileActions, onQr: () -> Unit, onClose: () -> Unit) {
     val c = Spy.colors
+    // Built once per dictionary: the file, the link and the size all come from these two strings.
     val json = remember(dictionary) { DictionaryTransfer.export(dictionary) }
-    val fits = remember(dictionary) { DictionaryTransfer.fitsInLinkOrQr(dictionary) }
-    val size = kilobytes(json.encodeToByteArray().size, Locale.current.language)
+    val link = remember(dictionary) { DictionaryTransfer.toLink(dictionary) }
+    val bytes = remember(json) { json.encodeToByteArray().size }
+    val fits = DictionaryTransfer.fitsInLinkOrQr(link)
+    val size = kilobytes(bytes, Locale.current.language)
     SpySheet(onClose) {
         Text(stringResource(Res.string.export_title), style = Spy.type.titleLarge.copy(fontSize = 28.sp, lineHeight = 34.sp), color = c.text, modifier = Modifier.semantics { heading() })
         Text(
@@ -236,7 +239,7 @@ fun ExportSheet(dictionary: CustomDictionary, files: FileActions, onQr: () -> Un
         OptionCard(
             enabled = fits,
             dashed = !fits,
-            onClick = { files.shareText(DictionaryTransfer.toLink(dictionary)); onClose() },
+            onClick = { files.shareText(link); onClose() },
             leading = { IconTile(SpyIcons.Link, if (fits) c.text else c.textMuted) },
         ) {
             OptionTitle(stringResource(Res.string.export_link), fits)

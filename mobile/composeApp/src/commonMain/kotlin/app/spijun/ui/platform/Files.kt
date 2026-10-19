@@ -4,11 +4,16 @@ import androidx.compose.runtime.Composable
 
 /** Small private text files that live only on this phone (the player's own dictionaries). */
 interface TextStorage {
-    /** Null when the file doesn't exist yet. */
+    /** Null only when the file doesn't exist yet; throws when it exists but can't be read as UTF-8. */
     suspend fun read(name: String): String?
 
     /** Replaces the whole file; a crash mid-write must leave the old file intact. */
     suspend fun write(name: String, text: String)
+
+    suspend fun exists(name: String): Boolean
+
+    /** Renames [from] to [to]; throws when that fails. [to] must not exist. */
+    suspend fun rename(from: String, to: String)
 }
 
 @Composable

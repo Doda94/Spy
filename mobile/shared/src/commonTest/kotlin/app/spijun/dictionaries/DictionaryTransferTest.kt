@@ -52,14 +52,17 @@ class DictionaryTransferTest {
     }
 
     @Test
-    fun transferLimitCountsBytesNotCharacters() {
-        // "č" is two bytes in UTF-8: 1000 of them plus the envelope is over 2048 bytes
-        // although the text is under 2048 characters.
-        val heavy = mine.copy(categories = listOf(DictionaryCategory("K", List(100) { "čččččččččč$it" })))
+    fun transferLimitIsOnTheLinkTheQrCarries() {
+        // The link is base64 of the UTF-8 bytes, about 4/3 of the JSON ("č" is two bytes), so a
+        // dictionary whose JSON is under the limit can still make a link that is over it.
+        val heavy = mine.copy(categories = listOf(DictionaryCategory("K", List(100) { "ččččč$it" })))
         val json = DictionaryTransfer.export(heavy)
-        assertTrue(json.length < DictionaryRules.TRANSFER_MAX_BYTES)
-        assertTrue(json.encodeToByteArray().size > DictionaryRules.TRANSFER_MAX_BYTES)
+        val link = DictionaryTransfer.toLink(heavy)
+        assertTrue(json.encodeToByteArray().size < DictionaryRules.TRANSFER_MAX_BYTES)
+        assertTrue(link.length > DictionaryRules.TRANSFER_MAX_BYTES)
         assertFalse(DictionaryTransfer.fitsInLinkOrQr(heavy))
+        assertFalse(DictionaryTransfer.fitsInLinkOrQr(link))
+        assertTrue(DictionaryTransfer.fitsInLinkOrQr(DictionaryTransfer.toLink(mine)))
     }
 
     @Test
@@ -106,7 +109,7 @@ class DictionaryTransferTest {
     }
 
     @Test
-    fun importCleansDropsAndFoldsDuplicates() {
+    fun importCleansShortensDropsAndFoldsDuplicates() {
         val tooLongWord = "w".repeat(DictionaryRules.MAX_WORD_LENGTH + 1)
         val tooLongName = "c".repeat(DictionaryRules.MAX_CATEGORY_LENGTH + 1)
         val text = file(
@@ -123,12 +126,14 @@ class DictionaryTransferTest {
         assertEquals(
             listOf(
                 DictionaryCategory("Filmovi", listOf("Titanic", "Zov divljine", "Shrek")),
+                // An overlong category name is shortened, not dropped with its words.
+                DictionaryCategory("c".repeat(DictionaryRules.MAX_CATEGORY_LENGTH), listOf("x")),
                 DictionaryCategory("Prazno", emptyList()),
             ),
             imported.categories,
         )
-        assertEquals(2, imported.categoryCount)
-        assertEquals(3, imported.wordCount)
+        assertEquals(3, imported.categoryCount)
+        assertEquals(4, imported.wordCount)
     }
 
     @Test
@@ -137,6 +142,12 @@ class DictionaryTransferTest {
             file("""$ok,"name":"${"n".repeat(100)}","language":"hr","categories":[{"name":"K","words":["a"]}]"""),
         )
         assertEquals(DictionaryRules.MAX_NAME_LENGTH, imported.name.length)
+
+        // The cut never leaves a trailing space.
+        val spaced = parsed(
+            file("""$ok,"name":"${"n".repeat(39)} ${"m".repeat(20)}","language":"hr","categories":[{"name":"K","words":["a"]}]"""),
+        )
+        assertEquals("n".repeat(39), spaced.name)
     }
 
     private val incoming = ImportedDictionary(

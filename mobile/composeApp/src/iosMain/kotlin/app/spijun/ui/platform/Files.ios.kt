@@ -43,13 +43,23 @@ private class IosTextStorage : TextStorage {
         base
     }
 
-    override suspend fun read(name: String): String? =
-        NSString.stringWithContentsOfFile("$dir/$name", NSUTF8StringEncoding, null)
+    // stringWithContentsOfFile is also null for a file that exists but isn't UTF-8, so check first.
+    override suspend fun read(name: String): String? {
+        val path = "$dir/$name"
+        if (!NSFileManager.defaultManager.fileExistsAtPath(path)) return null
+        return checkNotNull(NSString.stringWithContentsOfFile(path, NSUTF8StringEncoding, null)) { "Could not read $name" }
+    }
 
     // `atomically` writes to a temporary file and swaps it in, so a crash keeps the old file.
     override suspend fun write(name: String, text: String) {
         val ok = NSString.create(string = text).writeToFile("$dir/$name", true, NSUTF8StringEncoding, null)
         check(ok) { "Could not write $name" }
+    }
+
+    override suspend fun exists(name: String): Boolean = NSFileManager.defaultManager.fileExistsAtPath("$dir/$name")
+
+    override suspend fun rename(from: String, to: String) {
+        check(NSFileManager.defaultManager.moveItemAtPath("$dir/$from", toPath = "$dir/$to", error = null)) { "Could not rename $from" }
     }
 }
 

@@ -20,9 +20,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxDefaults
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +60,7 @@ import app.spijun.ui.design.dashedBorder
 import app.spijun.ui.dictionaries.DictRoute
 import app.spijun.ui.dictionaries.DictSheet
 import app.spijun.ui.dictionaries.DictionariesController
+import app.spijun.ui.platform.PlatformBackHandler
 import app.spijun.ui.platform.isIos
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -76,9 +78,12 @@ fun DictionaryListScreen(controller: DictionariesController, builtIns: List<Dict
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp).heightIn(min = 64.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.weight(1f))
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                SpyIconButton(SpyIcons.Import, stringResource(Res.string.dict_import), onImport)
-                SpyIconButton(SpyIcons.Add, stringResource(Res.string.dict_new), { controller.open(DictSheet.Create) })
+            // Nothing can be added until the saved dictionaries are in, or the file would replace it.
+            if (controller.loaded) {
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    SpyIconButton(SpyIcons.Import, stringResource(Res.string.dict_import), onImport)
+                    SpyIconButton(SpyIcons.Add, stringResource(Res.string.dict_new), { controller.open(DictSheet.Create) })
+                }
             }
         }
         LazyColumn(Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -216,7 +221,7 @@ fun BuiltInScreen(controller: DictionariesController, dictionary: Dictionary) {
             }
         }
         StickyFooter {
-            SpyButton(stringResource(Res.string.dict_copy), onClick = { controller.copyBuiltIn(dictionary, name) })
+            SpyButton(stringResource(Res.string.dict_copy), onClick = { controller.copyBuiltIn(dictionary, name) }, enabled = controller.loaded)
         }
     }
 }
@@ -309,6 +314,8 @@ fun CategoryScreen(controller: DictionariesController, dictionary: CustomDiction
     var menu by remember { mutableStateOf(false) }
     // Android: long-press starts a multi-select, shown in a contextual top bar (screens.md P1·09 c).
     var selected by remember { mutableStateOf(setOf<String>()) }
+    // System back ends the selection first, like the bar's own back arrow.
+    PlatformBackHandler(enabled = selected.isNotEmpty()) { selected = emptySet() }
 
     fun add() {
         if (draft.isBlank()) return
@@ -318,7 +325,7 @@ fun CategoryScreen(controller: DictionariesController, dictionary: CustomDiction
 
     val shown = remember(category.words, query) {
         val key = DictionaryRules.key(query)
-        val all = category.words.sortedBy { DictionaryRules.key(it) }
+        val all = category.words.sortedWith(DictionaryRules.alphabetical)
         if (key.isEmpty()) all else all.filter { key in DictionaryRules.key(it) }
     }
 
@@ -431,7 +438,11 @@ private fun WordRow(word: String, selected: Boolean, onTap: () -> Unit, onLongPr
         }
     }
     if (isIos) {
-        val state = rememberSwipeToDismissBoxState(confirmValueChange = { it == SwipeToDismissBoxValue.EndToStart })
+        // Plain `remember`, not the saveable rememberSwipeToDismissBoxState: the list keeps saved
+        // state per word, so a word brought back by Undo (or typed again) would return already
+        // swiped away and be deleted again at once.
+        val threshold = SwipeToDismissBoxDefaults.positionalThreshold
+        val state = remember { SwipeToDismissBoxState(SwipeToDismissBoxValue.Settled, threshold) }
         androidx.compose.runtime.LaunchedEffect(state.currentValue) {
             if (state.currentValue == SwipeToDismissBoxValue.EndToStart) onSwipeDelete()
         }

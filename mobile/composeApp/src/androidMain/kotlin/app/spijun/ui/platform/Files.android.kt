@@ -14,10 +14,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
+import androidx.core.util.AtomicFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 
 @Composable
 actual fun rememberTextStorage(): TextStorage {
@@ -25,19 +28,29 @@ actual fun rememberTextStorage(): TextStorage {
     return remember(context) { AndroidTextStorage(context.filesDir) }
 }
 
+/** Reads and writes through [AtomicFile], which syncs the new file to disk before swapping it in. */
 private class AndroidTextStorage(private val dir: File) : TextStorage {
     override suspend fun read(name: String): String? = withContext(Dispatchers.IO) {
-        File(dir, name).takeIf { it.isFile }?.readText()
+        val file = AtomicFile(File(dir, name))
+        if (!file.baseFile.exists()) null else file.readFully().decodeToString(throwOnInvalidSequence = true)
     }
 
     override suspend fun write(name: String, text: String) = withContext(Dispatchers.IO) {
-        val target = File(dir, name)
-        val temp = File(dir, "$name.tmp")
-        temp.writeText(text)
-        if (!temp.renameTo(target)) {
-            target.delete()
-            check(temp.renameTo(target)) { "Could not replace $name" }
+        val file = AtomicFile(File(dir, name))
+        val out = file.startWrite()
+        try {
+            out.write(text.encodeToByteArray())
+        } catch (e: Exception) {
+            file.failWrite(out)
+            throw e
         }
+        file.finishWrite(out)
+    }
+
+    override suspend fun exists(name: String): Boolean = withContext(Dispatchers.IO) { File(dir, name).exists() }
+
+    override suspend fun rename(from: String, to: String) = withContext(Dispatchers.IO) {
+        check(File(dir, from).renameTo(File(dir, to))) { "Could not rename $from" }
     }
 }
 
@@ -72,11 +85,23 @@ actual fun rememberFileActions(onPicked: (String?) -> Unit): FileActions {
 /** A file bigger than [MAX_PICKED_BYTES] comes back as an unparsable stub, so it reads as "not a dictionary". */
 private fun readLimited(context: Context, uri: Uri): String? = try {
     context.contentResolver.openInputStream(uri)?.use { input ->
-        val bytes = input.readNBytes(MAX_PICKED_BYTES + 1)
+        val bytes = input.readAtMost(MAX_PICKED_BYTES + 1)
         if (bytes.size > MAX_PICKED_BYTES) "" else bytes.decodeToString()
     }
 } catch (_: Exception) {
     ""
+}
+
+/** `InputStream.readNBytes` only exists from API 33; this works on every version we support. */
+private fun InputStream.readAtMost(limit: Int): ByteArray {
+    val out = ByteArrayOutputStream()
+    val buffer = ByteArray(8 * 1024)
+    while (out.size() < limit) {
+        val n = read(buffer, 0, minOf(buffer.size, limit - out.size()))
+        if (n < 0) break
+        out.write(buffer, 0, n)
+    }
+    return out.toByteArray()
 }
 
 private fun shareFile(context: Context, fileName: String, text: String) {

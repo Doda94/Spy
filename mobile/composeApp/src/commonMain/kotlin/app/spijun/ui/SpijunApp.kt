@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
+import app.spijun.dictionaries.CustomDictionary
 import app.spijun.dictionaries.DictionaryLibrary
 import app.spijun.resources.Res
 import app.spijun.resources.tab_dictionaries
@@ -29,6 +30,7 @@ import app.spijun.ui.design.TabItem
 import app.spijun.ui.dictionaries.DictRoute
 import app.spijun.ui.dictionaries.DictSheet
 import app.spijun.ui.dictionaries.DictionariesController
+import app.spijun.ui.platform.TextStorage
 import app.spijun.ui.platform.rememberReduceMotion
 import app.spijun.ui.platform.rememberSpyHaptics
 import app.spijun.ui.platform.rememberTextStorage
@@ -45,8 +47,33 @@ private enum class Tab { Play, Dictionaries }
 
 private const val LIBRARY_FILE = "dictionaries.json"
 
-/** An unreadable library is kept under this name, so a bad read never costs the player their words. */
-private const val DAMAGED_FILE = "dictionaries.damaged.json"
+/** An unusable library is moved aside under this name (then "-2", "-3"…), never deleted. */
+private const val DAMAGED_PREFIX = "dictionaries.damaged"
+
+private fun damagedName(n: Int) = if (n == 1) "$DAMAGED_PREFIX.json" else "$DAMAGED_PREFIX-$n.json"
+
+/**
+ * The player's saved dictionaries. A file that exists but can't be used (unreadable, damaged or
+ * from a newer app) is first moved aside, so the next save can't replace it. Null when even that
+ * failed: then nothing may be written this session.
+ */
+private suspend fun readLibrary(storage: TextStorage): List<CustomDictionary>? {
+    val list = try {
+        val text = storage.read(LIBRARY_FILE) ?: return emptyList()
+        DictionaryLibrary.decode(text)
+    } catch (_: Exception) {
+        null
+    }
+    if (list != null) return list
+    return try {
+        var n = 1
+        while (storage.exists(damagedName(n))) n++
+        storage.rename(LIBRARY_FILE, damagedName(n))
+        emptyList()
+    } catch (_: Exception) {
+        null
+    }
+}
 
 @Composable
 fun SpijunApp(
@@ -54,7 +81,7 @@ fun SpijunApp(
     dictionaries: DictionariesController = remember { DictionariesController() },
 ) {
     val language = Locale.current.language
-    var tabRequest by remember { mutableStateOf<Tab?>(null) }
+    var tab by remember { mutableStateOf(Tab.Play) }
     val storage = rememberTextStorage()
 
     LaunchedEffect(Unit) {
@@ -65,13 +92,11 @@ fun SpijunApp(
 
     // Load the player's own dictionaries once, then write the file after every change.
     LaunchedEffect(Unit) {
-        if (dictionaries.loaded) return@LaunchedEffect
-        val text = try { storage.read(LIBRARY_FILE) } catch (_: Exception) { null }
-        val list = text?.let { DictionaryLibrary.decode(it) }
-        if (text != null && list == null) {
-            try { storage.write(DAMAGED_FILE, text) } catch (_: Exception) {}
+        if (!dictionaries.loaded) {
+            // Unusable and stuck in place: `loaded` stays false, so nothing can be edited or saved over it.
+            val list = readLibrary(storage) ?: return@LaunchedEffect
+            dictionaries.onLoaded(list)
         }
-        dictionaries.onLoaded(list.orEmpty())
         snapshotFlow { dictionaries.customs }.drop(1).collect { customs ->
             try {
                 withContext(Dispatchers.Default) { storage.write(LIBRARY_FILE, DictionaryLibrary.encode(customs)) }
@@ -85,15 +110,13 @@ fun SpijunApp(
     val link = IncomingLinks.pending
     LaunchedEffect(link, dictionaries.loaded, controller.route) {
         if (link != null && dictionaries.loaded && controller.route == Route.Home) {
-            tabRequest = Tab.Dictionaries
+            tab = Tab.Dictionaries
             dictionaries.beginImport(link)
             IncomingLinks.consume()
         }
     }
 
     SpyTheme(haptics = rememberSpyHaptics(enabled = true), reduceMotion = rememberReduceMotion()) {
-        var tab by remember { mutableStateOf(Tab.Play) }
-        tabRequest?.let { tab = it; tabRequest = null }
         val inGame = controller.route != Route.Home
         val showTabs = !inGame && when (tab) {
             Tab.Play -> true

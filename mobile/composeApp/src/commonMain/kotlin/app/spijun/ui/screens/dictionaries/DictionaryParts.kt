@@ -124,7 +124,7 @@ fun toastText(kind: ToastKind): String = when (kind) {
     is ToastKind.WordAdded -> stringResource(Res.string.toast_word_added, kind.word)
     is ToastKind.WordsDeleted ->
         if (kind.count == 1) stringResource(Res.string.toast_word_deleted, kind.first)
-        else stringResource(Res.string.toast_word_deleted, pluralStringResource(Res.plurals.words, kind.count, kind.count))
+        else stringResource(Res.string.toast_words_deleted, pluralStringResource(Res.plurals.words, kind.count, kind.count))
     ToastKind.LinkCopied -> stringResource(Res.string.toast_link_copied)
     ToastKind.CopyMade -> stringResource(Res.string.toast_copy_made)
     ToastKind.Imported -> stringResource(Res.string.toast_imported)
