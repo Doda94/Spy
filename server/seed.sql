@@ -1,6 +1,5 @@
--- Generirano iz data/words.json (node scripts/generate-seed.mjs).
+-- Generirano iz data/words.json (node server/scripts/generate-seed.mjs).
 -- Ne uređivati ručno; uredi words.json pa ponovno pokreni skriptu.
--- Primjena:  npx wrangler d1 execute spy-words --remote --file=./seed.sql
 --
 -- "OR IGNORE" znači da ponovno pokretanje ne stvara duplikate i ne dira
 -- riječi koje si u međuvremenu dodao ili obrisao kroz aplikaciju.

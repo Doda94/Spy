@@ -1,7 +1,7 @@
--- Shema baze riječi (Cloudflare D1) — za novu, praznu bazu.
--- Postojeću bazu nadograđuje migrations/0001_add_category.sql.
---
--- Primjena:  npx wrangler d1 execute spy-words --remote --file=./schema.sql
+-- Shema stare, ravne baze riječi (jedna tablica `words`) iz web aplikacije na `main`.
+-- Na `v2` je samo preseljena kao polazište; zamjenjuje je shema rječnika
+-- (rječnik -> kategorija -> riječ) u sljedećem PR-u. Ne primjenjivati je na
+-- produkcijsku bazu `spy-words`.
 
 CREATE TABLE IF NOT EXISTS words (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,

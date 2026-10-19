@@ -1,12 +1,15 @@
-// Pretvara data/words.json u seed.sql.
-// Pokretanje:  node scripts/generate-seed.mjs
+// Pretvara data/words.json u server/seed.sql.
+// Pokretanje (iz mape server/):  node scripts/generate-seed.mjs
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const byCategory = JSON.parse(readFileSync(join(root, "data/words.json"), "utf8"));
+// server/scripts/ -> server/ (mapa u koju se piše seed.sql) -> korijen repozitorija (data/words.json).
+const serverDir = join(dirname(fileURLToPath(import.meta.url)), "..");
+const byCategory = JSON.parse(
+  readFileSync(join(serverDir, "..", "data", "words.json"), "utf8")
+);
 
 const quote = (value) => `'${value.replace(/'/g, "''")}'`;
 const clean = (value) => String(value).trim().replace(/\s+/g, " ");
@@ -28,9 +31,8 @@ for (const [rawCategory, words] of Object.entries(byCategory)) {
   }
 }
 
-const sql = `-- Generirano iz data/words.json (node scripts/generate-seed.mjs).
+const sql = `-- Generirano iz data/words.json (node server/scripts/generate-seed.mjs).
 -- Ne uređivati ručno; uredi words.json pa ponovno pokreni skriptu.
--- Primjena:  npx wrangler d1 execute spy-words --remote --file=./seed.sql
 --
 -- "OR IGNORE" znači da ponovno pokretanje ne stvara duplikate i ne dira
 -- riječi koje si u međuvremenu dodao ili obrisao kroz aplikaciju.
@@ -39,7 +41,7 @@ INSERT OR IGNORE INTO words (text, normalized, category) VALUES
 ${rows.join(",\n")};
 `;
 
-writeFileSync(join(root, "seed.sql"), sql);
+writeFileSync(join(serverDir, "seed.sql"), sql);
 console.log(
   `seed.sql: ${rows.length} riječi u ${Object.keys(byCategory).length} kategorija`
 );
