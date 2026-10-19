@@ -1,6 +1,7 @@
 /**
- * Pravila za riječi i kategorije, zajednička klijentu i Cloudflare funkcijama,
- * da obje strane jednako čiste unos i jednako prepoznaju duplikate.
+ * Pravila za riječi i kategorije: kako se unos čisti i kako se prepoznaju duplikati.
+ * Preseljeno iz web aplikacije (`lib/words.ts` na `main`), gdje su ih dijelili klijent
+ * i Cloudflare funkcije; na `v2` ih koristi samo server.
  */
 
 export const MAX_WORD_LENGTH = 60;

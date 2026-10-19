@@ -1,0 +1,8 @@
+{
+  "name": "spy-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed:generate": "node scripts/generate-seed.mjs"
+  }
+}
