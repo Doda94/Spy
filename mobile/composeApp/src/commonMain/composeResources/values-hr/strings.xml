@@ -338,6 +338,7 @@
     <string name="setup_dict_custom_inline">%1$s · vlastiti</string> <!-- proposed -->
     <string name="setup_categories_of">KATEGORIJE · %1$s</string> <!-- proposed -->
     <string name="setup_empty_pool_body">Ove kategorije još nemaju riječi.</string> <!-- proposed -->
+    <string name="setup_dict_no_categories">Ovaj rječnik još nema kategorija.</string> <!-- proposed -->
     <string name="setup_offline_dated">Nema veze sa serverom. Igraš sa spremljenim rječnicima (%1$s).</string> <!-- proposed -->
 
     <!-- Lobby -->

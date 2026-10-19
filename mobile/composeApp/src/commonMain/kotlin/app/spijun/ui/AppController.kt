@@ -4,6 +4,11 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import app.spijun.dictionaries.CustomDictionary
+import app.spijun.dictionaries.SetupPicks
+import app.spijun.dictionaries.SetupSelection
+import app.spijun.dictionaries.SetupSource
+import app.spijun.dictionaries.asSetupSource
 import app.spijun.engine.GameConfig
 import app.spijun.engine.GameEngine
 import app.spijun.engine.GameState
@@ -15,7 +20,7 @@ import app.spijun.engine.Stage
 import app.spijun.engine.VotingMode
 import app.spijun.engine.Word
 import app.spijun.ui.data.Dictionary
-import app.spijun.ui.data.categoryKey
+import app.spijun.ui.data.asSetupSource
 
 enum class Route { Home, Setup, Game }
 
@@ -41,18 +46,43 @@ class AppController {
         private set
     var dictionaries by mutableStateOf<List<Dictionary>?>(null)
         private set
+    /** The player's own dictionaries, once they have been read from the phone; empty before. */
+    var customs by mutableStateOf<List<CustomDictionary>>(emptyList())
+        private set
+    /** Built-ins, then customs, as setup offers them. Null while the built-ins are loading. */
+    var sources by mutableStateOf<List<SetupSource>?>(null)
+        private set
     var game by mutableStateOf<GameState?>(null)
         private set
     /** Null until a screen-reader user has answered `a11y_sr_warning` (once per app run). */
     var screenReaderReveal by mutableStateOf<ScreenReaderReveal?>(null)
 
+    private val picks get() = SetupPicks(setup.dictionaries, setup.categories)
+    private val offered get() = sources.orEmpty()
+
     fun onDictionariesLoaded(list: List<Dictionary>, preferredId: String) {
         dictionaries = list
+        refreshSources()
         val initial = list.firstOrNull { it.id == preferredId } ?: list.first()
         setup = setup.copy(
             dictionaries = setOf(initial.id),
-            categories = initial.categories.keys.map { categoryKey(initial.id, it) }.toSet(),
+            categories = initial.categories.keys.map { SetupSelection.key(initial.id, it) }.toSet(),
         )
+    }
+
+    /**
+     * The Rječnici tab changed the player's dictionaries. Anything ticked that is gone, or was
+     * renamed, leaves the selection here instead of lingering as a key nothing matches.
+     */
+    fun onCustomsChanged(list: List<CustomDictionary>) {
+        customs = list
+        refreshSources()
+        val kept = SetupSelection.reconcile(offered, picks)
+        if (kept != picks) setup = setup.copy(dictionaries = kept.dictionaries, categories = kept.categories)
+    }
+
+    private fun refreshSources() {
+        sources = dictionaries?.let { built -> built.map { it.asSetupSource() } + customs.map { it.asSetupSource() } }
     }
 
     fun update(transform: (SetupState) -> SetupState) {
@@ -60,32 +90,26 @@ class AppController {
         setup = next.copy(spies = Rules.clampSpies(next.spies, next.players))
     }
 
-    fun toggleDictionary(id: String) {
-        val dict = dictionaries?.firstOrNull { it.id == id } ?: return
-        update { s ->
-            val keys = dict.categories.keys.map { categoryKey(id, it) }.toSet()
-            if (id in s.dictionaries) s.copy(dictionaries = s.dictionaries - id, categories = s.categories - keys)
-            else s.copy(dictionaries = s.dictionaries + id, categories = s.categories + keys)
-        }
+    private fun pick(change: (SetupPicks) -> SetupPicks) = update { s ->
+        val next = change(SetupPicks(s.dictionaries, s.categories))
+        s.copy(dictionaries = next.dictionaries, categories = next.categories)
     }
 
-    fun toggleCategory(key: String) = update { s ->
-        s.copy(categories = if (key in s.categories) s.categories - key else s.categories + key)
-    }
+    fun toggleDictionary(id: String) = pick { SetupSelection.toggleDictionary(offered, it, id) }
 
-    fun setAllCategories(selected: Boolean) = update { s ->
-        val all = dictionaries.orEmpty().filter { it.id in s.dictionaries }
-            .flatMap { d -> d.categories.keys.map { categoryKey(d.id, it) } }.toSet()
-        s.copy(categories = if (selected) s.categories + all else s.categories - all)
-    }
+    fun toggleCategory(key: String) = pick { SetupSelection.toggleCategory(it, key) }
+
+    fun setAllCategories(selected: Boolean) = pick { SetupSelection.setAll(offered, it, selected) }
+
+    fun allCategoriesSelected(): Boolean = SetupSelection.allSelected(offered, picks)
 
     /** Words from every selected category of every selected dictionary. */
-    fun pool(): List<Word> = dictionaries.orEmpty().filter { it.id in setup.dictionaries }.flatMap { dict ->
-        dict.categories.keys.filter { categoryKey(dict.id, it) in setup.categories }.flatMap { dict.words(it) }
-    }
+    fun pool(): List<Word> = SetupSelection.pool(offered, picks)
 
-    fun selectedCategoryCount(): Int = dictionaries.orEmpty().filter { it.id in setup.dictionaries }
-        .sumOf { d -> d.categories.keys.count { categoryKey(d.id, it) in setup.categories } }
+    fun selectedCategoryCount(): Int = SetupSelection.categoryCount(offered, picks)
+
+    /** Selected dictionaries where setup offers "add words" because a selected category is empty. */
+    fun dictionariesToFill(): Set<String> = SetupSelection.withEmptyPick(offered, picks)
 
     fun problem(): SetupProblem? = SetupValidation.check(
         setup.players, setup.spies, setup.voting, setup.names, selectedCategoryCount(), pool().size,
