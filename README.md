@@ -42,17 +42,20 @@ debug APK i iOS aplikaciju za simulator, na PR-ovima prema `v2` i složenim `fea
 
 ## Server (`server/`)
 
-Cloudflare Worker s ugrađenim rječnicima (rječnik → kategorija → riječ) dolazi u zasebnom PR-u.
-Zasad `server/` sadrži samo ono što je preostalo od stare web aplikacije, a treba novom serveru:
+Cloudflare Worker `spy-v2` s D1 bazom `spy-dictionaries`: ugrađeni rječnici (rječnik → kategorija →
+riječ, jezik po rječniku; Hrvatski iz [`data/words.json`](data/words.json), English iz
+[`data/words.en.json`](data/words.en.json)). Čitanje je otvoreno, uređivanje traži zajednički PIN
+(`x-spy-pin`, secret `ADMIN_PIN`). Ugovor API-ja, postavljanje i testovi: [`server/README.md`](server/README.md).
 
-| Datoteka | Što je |
-| --- | --- |
-| [`src/words.ts`](server/src/words.ts) | pravila za riječi i kategorije (čišćenje unosa, ključ za duplikate, ograničenja duljine) |
-| [`scripts/generate-seed.mjs`](server/scripts/generate-seed.mjs) | iz [`data/words.json`](data/words.json) generira `server/seed.sql` (`node scripts/generate-seed.mjs` iz mape `server/`) |
-| `schema.sql`, `seed.sql`, `reset.sql` | SQL stare ravne baze riječi; zamjenjuje ih shema rječnika u sljedećem PR-u |
+```bash
+cd server
+npm ci
+npm test
+```
 
-Server za `v2` koristi **novi** Worker i **novu** D1 bazu, nikad produkcijske (`spy`, `spy-words`) s
-grane `main`.
+Server je potpuno odvojen od produkcije: koristi **novi** Worker i **novu** bazu, nikad `spy` i
+`spy-words` s grane `main`. CI (`.github/workflows/server.yml`) pokreće tipove, testove i provjeru
+seeda na PR-ovima prema `v2` i složenim `feat/v2-*` PR-ovima.
 
 ## Stara web aplikacija
 
