@@ -59,6 +59,7 @@ import app.spijun.resources.setup_loading
 import app.spijun.resources.setup_name_field
 import app.spijun.resources.setup_names_filled
 import app.spijun.resources.setup_names_duplicate
+import app.spijun.resources.setup_names_missing
 import app.spijun.resources.setup_names_title
 import app.spijun.resources.setup_none_selected
 import app.spijun.resources.setup_player_names
@@ -239,7 +240,7 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
             val reason = when (problem) {
                 SetupProblem.NoCategories -> stringResource(Res.string.setup_none_selected) to c.warningText
                 SetupProblem.EmptyPool -> stringResource(Res.string.setup_empty_pool) to c.danger
-                SetupProblem.MissingNames -> stringResource(Res.string.setup_player_names_hint) to c.warningText
+                SetupProblem.MissingNames -> stringResource(Res.string.setup_names_missing) to c.warningText
                 SetupProblem.DuplicateNames -> stringResource(Res.string.setup_names_duplicate) to c.warningText
                 else -> null
             }

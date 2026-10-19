@@ -14,7 +14,11 @@
 | `iosApp` | Xcode projekt (SwiftUI ljuska koja prikazuje Compose) |
 
 Što radi: igra na jednom telefonu od početka do kraja (početna, postavke, otkrivanje uloga na
-okruglom stolu, rasprava s timerom, glasanje u aplikaciji ili naglas, rezultat runde, kraj igre).
+okruglom stolu, rasprava s timerom, glasanje u aplikaciji ili naglas, rezultat runde, kraj igre)
+i kartica **Rječnici**: vlastiti rječnici (izrada, kategorije, riječi, brisanje s poništavanjem),
+izvoz (datoteka, poveznica, QR) i uvoz (datoteka ili poveznica `spijun://dictionary?d=…`) s
+pregledom i spajanjem. Vlastiti rječnici žive samo na telefonu (`dictionaries.json`); pravila su u
+`shared/.../dictionaries` i imaju testove.
 Najviše špijuna je ⌊(igrači − 1) / 2⌋ (odluka vlasnika, `Rules.maxSpies`).
 
 ```bash
