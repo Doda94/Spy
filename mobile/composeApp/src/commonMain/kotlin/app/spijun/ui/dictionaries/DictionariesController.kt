@@ -109,6 +109,13 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         return true
     }
 
+    /** Jumps to a dictionary from outside the tab (setup's "Dodaj riječi"); nothing when it is gone. */
+    fun show(dictId: String) {
+        if (custom(dictId) == null) return
+        sheet = null
+        stack = listOf(DictRoute.List, DictRoute.Custom(dictId))
+    }
+
     fun open(sheet: DictSheet) { this.sheet = sheet }
     fun closeSheet() { sheet = null }
 

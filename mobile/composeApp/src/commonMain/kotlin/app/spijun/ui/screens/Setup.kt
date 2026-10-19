@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.spijun.dictionaries.SetupSelection
 import app.spijun.engine.Rules
 import app.spijun.engine.SetupProblem
 import app.spijun.engine.VotingMode
@@ -52,7 +53,11 @@ import app.spijun.resources.dict_name_hr
 import app.spijun.resources.player_default_name
 import app.spijun.resources.words_in_selection
 import app.spijun.resources.setup_categories
+import app.spijun.resources.setup_add_words
 import app.spijun.resources.setup_dict_builtin_inline
+import app.spijun.resources.setup_dict_custom_inline
+import app.spijun.resources.setup_dict_no_categories
+import app.spijun.resources.setup_empty_pool_body
 import app.spijun.resources.setup_dictionaries
 import app.spijun.resources.setup_empty_pool
 import app.spijun.resources.setup_loading
@@ -81,7 +86,6 @@ import app.spijun.resources.setup_vote_loud
 import app.spijun.resources.setup_voting
 import app.spijun.resources.mode_one_phone
 import app.spijun.ui.AppController
-import app.spijun.ui.data.categoryKey
 import app.spijun.ui.design.ButtonKind
 import app.spijun.ui.design.CategoryRow
 import app.spijun.ui.design.Panel
@@ -106,10 +110,15 @@ import org.jetbrains.compose.resources.stringResource
 private val TIMER_PRESETS = listOf<Int?>(null, 180, 300, 480)
 
 @Composable
-fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (defaultName: (Int) -> String) -> Unit) {
+fun SetupScreen(
+    controller: AppController,
+    onBack: () -> Unit,
+    onAddWords: (dictId: String) -> Unit,
+    onStart: (defaultName: (Int) -> String) -> Unit,
+) {
     val c = Spy.colors
     val s = controller.setup
-    val dicts = controller.dictionaries
+    val sources = controller.sources
     var showNames by remember { mutableStateOf(false) }
     var showCustomTimer by remember { mutableStateOf(false) }
     PlatformBackHandler(true, onBack)
@@ -188,20 +197,24 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
                 }
             }
 
-            if (dicts != null) {
+            if (sources != null) {
+                val customNames = controller.customs.associate { it.id to it.name }
+                val builtInNames = mapOf("hr" to stringResource(Res.string.dict_name_hr), "en" to stringResource(Res.string.dict_name_en))
+                fun nameOf(id: String) = builtInNames[id] ?: customNames[id].orEmpty()
+
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SectionLabel(stringResource(Res.string.setup_dictionaries))
                     SpyChips(
-                        options = dicts,
+                        options = sources,
                         isSelected = { it.id in s.dictionaries },
-                        label = { if (it.id == "hr") stringResource(Res.string.dict_name_hr) else stringResource(Res.string.dict_name_en) },
+                        label = { nameOf(it.id) },
                         onSelect = { controller.toggleDictionary(it.id) },
                     )
                 }
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    val selectedDicts = dicts.filter { it.id in s.dictionaries }
-                    val allSelected = selectedDicts.all { d -> d.categories.keys.all { categoryKey(d.id, it) in s.categories } }
+                    val selectedDicts = sources.filter { it.id in s.dictionaries }
+                    val allSelected = controller.allCategoriesSelected()
                     SectionLabel(stringResource(Res.string.setup_categories), trailing = {
                         if (selectedDicts.isNotEmpty()) {
                             TextButton(onClick = { controller.setAllCategories(!allSelected) }) {
@@ -210,24 +223,33 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
                         }
                     })
                     val noneSelected = controller.selectedCategoryCount() == 0
+                    val toFill = controller.dictionariesToFill()
                     Column(
                         Modifier.fillMaxWidth().then(if (noneSelected) Modifier.border(1.5.dp, c.warning, RoundedCornerShape(22.dp)) else Modifier),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         selectedDicts.forEach { dict ->
-                            val dictName = if (dict.id == "hr") stringResource(Res.string.dict_name_hr) else stringResource(Res.string.dict_name_en)
+                            val builtIn = dict.id in builtInNames
+                            val label = if (builtIn) Res.string.setup_dict_builtin_inline else Res.string.setup_dict_custom_inline
                             Text(
-                                stringResource(Res.string.setup_dict_builtin_inline, dictName),
+                                stringResource(label, nameOf(dict.id)),
                                 style = Spy.type.caption.copy(fontSize = 13.sp),
                                 color = c.textMuted,
                                 modifier = Modifier.padding(horizontal = 6.dp),
                             )
-                            Panel {
-                                dict.categories.entries.forEachIndexed { index, (name, words) ->
+                            if (dict.categories.isNotEmpty()) Panel {
+                                dict.categories.forEachIndexed { index, category ->
                                     if (index > 0) PanelDivider(52.dp)
-                                    val key = categoryKey(dict.id, name)
-                                    CategoryRow(name, words.size, key in s.categories, { controller.toggleCategory(key) }, stateText = if (key in s.categories) "✓" else "")
+                                    val key = SetupSelection.key(dict.id, category.name)
+                                    CategoryRow(category.name, category.words.size, key in s.categories, { controller.toggleCategory(key) }, stateText = if (key in s.categories) "✓" else "")
                                 }
+                            }
+                            val noCategories = dict.categories.isEmpty()
+                            if (!builtIn && (noCategories || dict.id in toFill)) {
+                                EmptyDictionaryCard(
+                                    stringResource(if (noCategories) Res.string.setup_dict_no_categories else Res.string.setup_empty_pool_body),
+                                    onAddWords = { onAddWords(dict.id) },
+                                )
                             }
                         }
                     }
@@ -245,12 +267,12 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
                 else -> null
             }
             val text = when {
-                dicts == null -> stringResource(Res.string.setup_loading) to c.textMuted
+                sources == null -> stringResource(Res.string.setup_loading) to c.textMuted
                 reason != null -> reason
                 else -> pluralStringResource(Res.plurals.words_in_selection, controller.pool().size, controller.pool().size) to c.textMuted
             }
             Text(text.first, style = Spy.type.body, color = text.second, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-            SpyButton(stringResource(Res.string.setup_start), onClick = { onStart { defaultNames[it - 1] } }, enabled = dicts != null && problem == null)
+            SpyButton(stringResource(Res.string.setup_start), onClick = { onStart { defaultNames[it - 1] } }, enabled = sources != null && problem == null)
         }
     }
 
@@ -258,6 +280,23 @@ fun SetupScreen(controller: AppController, onBack: () -> Unit, onStart: (default
     if (showCustomTimer) CustomTimerDialog(s.timerSeconds, { showCustomTimer = false }) { minutes ->
         controller.update { it.copy(timerSeconds = minutes * 60) }
         showCustomTimer = false
+    }
+}
+
+/** P1·02 f: why a custom dictionary adds no words, and the way to fix it. */
+@Composable
+private fun EmptyDictionaryCard(text: String, onAddWords: () -> Unit) {
+    val c = Spy.colors
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(c.surface).padding(start = 18.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        SpyIcon(SpyIcons.Error, c.danger, size = 22.dp)
+        Text(text, style = Spy.type.body, color = c.text, modifier = Modifier.weight(1f))
+        TextButton(onClick = onAddWords) {
+            Text(stringResource(Res.string.setup_add_words), color = c.text, fontWeight = FontWeight.Bold)
+        }
     }
 }
 

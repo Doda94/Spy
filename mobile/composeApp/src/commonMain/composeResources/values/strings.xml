@@ -338,6 +338,7 @@
     <string name="setup_dict_custom_inline">%1$s · custom</string> <!-- proposed -->
     <string name="setup_categories_of">CATEGORIES · %1$s</string> <!-- proposed -->
     <string name="setup_empty_pool_body">These categories have no words yet.</string> <!-- proposed -->
+    <string name="setup_dict_no_categories">This dictionary has no categories yet.</string> <!-- proposed -->
     <string name="setup_offline_dated">No connection to the server. Playing with saved dictionaries (%1$s).</string> <!-- proposed -->
 
     <!-- Lobby -->

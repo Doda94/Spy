@@ -106,6 +106,11 @@ fun SpijunApp(
         }
     }
 
+    // Setup offers the player's dictionaries too, and drops ticked ones that were deleted or renamed.
+    LaunchedEffect(Unit) {
+        snapshotFlow { dictionaries.customs }.collect { controller.onCustomsChanged(it) }
+    }
+
     // A dictionary link opens the import preview, but only from the menu screens, never over a game.
     val link = IncomingLinks.pending
     LaunchedEffect(link, dictionaries.loaded, controller.route) {
@@ -130,7 +135,16 @@ fun SpijunApp(
                         Tab.Play -> HomeScreen(onOnePhone = controller::openSetup)
                         Tab.Dictionaries -> DictionariesScreen(dictionaries, controller.dictionaries.orEmpty())
                     }
-                    Route.Setup -> SetupScreen(controller, onBack = controller::goHome, onStart = { controller.startGame(it) })
+                    Route.Setup -> SetupScreen(
+                        controller,
+                        onBack = controller::goHome,
+                        onAddWords = { id ->
+                            controller.goHome()
+                            dictionaries.show(id)
+                            tab = Tab.Dictionaries
+                        },
+                        onStart = { controller.startGame(it) },
+                    )
                     Route.Game -> controller.game?.let { GameScreen(it, controller) }
                 }
             }

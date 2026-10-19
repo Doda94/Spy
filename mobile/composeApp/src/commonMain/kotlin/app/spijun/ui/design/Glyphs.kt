@@ -73,6 +73,7 @@ object SpyIcons {
     val OwnPhones = rr(2f, 7f, 6f, 11f, 1.2f) + rr(9f, 4f, 6f, 11f, 1.2f) + rr(16f, 7f, 6f, 11f, 1.2f)
     const val Vote = "M4 20h16M6 20V9h12v11M9 9V5h6v4M10 13l2 2 3-3"
     const val Add = "M12 5v14M5 12h14"
+    const val Error = "M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0zM12 7.5v5M12 16v.01"
     const val Warning = "M12 3l10 18H2zM12 10v5M12 18v.01"
     const val Timer = "M12 7v5l3 2"
     val TimerRing = "M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0z"

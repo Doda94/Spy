@@ -1,5 +1,7 @@
 package app.spijun.ui.data
 
+import app.spijun.dictionaries.SetupCategory
+import app.spijun.dictionaries.SetupSource
 import app.spijun.engine.Word
 import app.spijun.resources.Res
 import kotlinx.serialization.builtins.ListSerializer
@@ -17,8 +19,7 @@ data class Dictionary(
     fun words(category: String): List<Word> = categories[category].orEmpty().map { Word(it, category) }
 }
 
-/** Selection key: the same category name may exist in several dictionaries. */
-fun categoryKey(dictId: String, category: String) = "$dictId/$category"
+fun Dictionary.asSetupSource() = SetupSource(id, categories.map { (name, words) -> SetupCategory(name, words) })
 
 private val json = Json { ignoreUnknownKeys = true }
 private val serializer = MapSerializer(String.serializer(), ListSerializer(String.serializer()))
