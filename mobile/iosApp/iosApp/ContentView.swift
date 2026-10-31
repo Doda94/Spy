@@ -29,10 +29,13 @@ private struct ComposeHost: UIViewControllerRepresentable {
 }
 
 /// A Compose screen in a NavigationStack, with the native glass toolbar it asked for.
+/// When `covered` is true (a Compose sheet is up), back, swipe-back and toolbar items are disabled.
 struct HostedScreen: View {
     @StateObject private var model: ScreenModel
+    var covered: Bool
 
-    init(_ make: @escaping () -> IosScreen) {
+    init(covered: Bool = false, _ make: @escaping () -> IosScreen) {
+        self.covered = covered
         _model = StateObject(wrappedValue: ScreenModel(make()))
     }
 
@@ -44,12 +47,13 @@ struct HostedScreen: View {
             .background(Color.spyBackground.ignoresSafeArea())
             .navigationTitle(model.bar?.title ?? "")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(model.bar?.cancel != nil)
+            .navigationBarBackButtonHidden(model.bar?.cancel != nil || covered)
             .toolbar {
                 if let cancel = model.bar?.cancel {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button { model.screen.tapCancel() } label: { Image(systemName: cancel.symbol) }
                             .accessibilityLabel(cancel.label)
+                            .disabled(covered)
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -59,6 +63,7 @@ struct HostedScreen: View {
                             Button(role: item.danger ? .destructive : nil) {
                                 model.screen.tap(item: Int32(i), menuItem: -1)
                             } label: { Label(item.label, systemImage: item.symbol) }
+                                .disabled(covered)
                         } else {
                             Menu {
                                 ForEach(Array(item.menu.enumerated()), id: \.offset) { j, entry in
@@ -67,6 +72,7 @@ struct HostedScreen: View {
                                     } label: { Label(entry.label, systemImage: entry.symbol) }
                                 }
                             } label: { Label(item.label, systemImage: item.symbol) }
+                                .disabled(covered)
                         }
                     }
                 }
@@ -97,6 +103,7 @@ private struct PlayTab: View {
         NavigationStack(path: path) {
             HostedScreen { shell.home() }
                 .toolbar(.hidden, for: .navigationBar)
+                .toolbar(state.homeSheet ? .hidden : .automatic, for: .tabBar)
                 .navigationDestination(for: String.self) { _ in
                     HostedScreen { shell.setup() }
                         .toolbar(.hidden, for: .tabBar)
@@ -112,16 +119,18 @@ private struct DictionariesTab: View {
     var body: some View {
         let path = Binding<[String]>(
             get: { state.dictionaryPath },
-            set: { shell.popDictionaries(depth: Int32($0.count)) }
+            set: { shell.popDictionaries(path: $0) }
         )
-        // The full-screen QR draws its own back; sheets are Compose, so the tab bar steps aside.
+        // The full-screen QR draws its own back; sheets are Compose, so the tab bar steps aside
+        // and the native back/toolbar items are disabled while a sheet is up.
         let bars: Visibility = state.overlay == 2 ? .hidden : .automatic
+        let covered = state.overlay != 0
         NavigationStack(path: path) {
-            HostedScreen { shell.dictionaryList() }
+            HostedScreen(covered: covered) { shell.dictionaryList() }
                 .toolbar(bars, for: .navigationBar)
-                .toolbar(state.overlay == 0 ? .automatic : .hidden, for: .tabBar)
+                .toolbar(covered ? .hidden : .automatic, for: .tabBar)
                 .navigationDestination(for: String.self) { key in
-                    HostedScreen { shell.dictionary(key: key) }
+                    HostedScreen(covered: covered) { shell.dictionary(key: key) }
                         .toolbar(bars, for: .navigationBar)
                         .toolbar(.hidden, for: .tabBar)
                 }

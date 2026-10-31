@@ -293,7 +293,10 @@ private const val SEARCH_FROM = 8
 @Composable
 fun CategoryScreen(controller: DictionariesController, dictionary: CustomDictionary, categoryName: String) {
     val c = Spy.colors
-    val category = dictionary.category(categoryName) ?: return
+    // Remembered so a deleted category's screen stays drawn while the native pop slides it out.
+    val lastCategory = remember { arrayOfNulls<app.spijun.dictionaries.DictionaryCategory>(1) }
+    dictionary.category(categoryName)?.let { lastCategory[0] = it }
+    val category = lastCategory[0] ?: return
     var draft by remember { mutableStateOf("") }
     var problem by remember { mutableStateOf<TextProblem?>(null) }
     var query by remember { mutableStateOf("") }

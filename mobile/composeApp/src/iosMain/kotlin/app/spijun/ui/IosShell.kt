@@ -53,6 +53,7 @@ data class ShellState(
     val tab: Int,
     val tabTitles: List<String>,
     val setupOpen: Boolean,
+    val homeSheet: Boolean,
     val inGame: Boolean,
     /** Keys of the Rječnici screens over the list, bottom first. */
     val dictionaryPath: List<String>,
@@ -110,7 +111,16 @@ class IosScreen internal constructor(nativeBar: Boolean, content: @Composable ()
     }
 }
 
-private fun routeKey(route: DictRoute): String = route.toString()
+/**
+ * Stable across category renames: the category name is not part of the key, so renaming a category
+ * updates the existing destination in place instead of pushing a replacement controller.
+ */
+private fun routeKey(depth: Int, route: DictRoute): String = when (route) {
+    DictRoute.List -> "List"
+    is DictRoute.BuiltIn -> "$depth:BuiltIn:${route.id}"
+    is DictRoute.Custom -> "$depth:Custom:${route.id}"
+    is DictRoute.Category -> "$depth:Category:${route.dictId}"
+}
 
 /**
  * The iOS side of [AppShell]. SwiftUI owns the TabView and the NavigationStacks (components.md ›
@@ -121,11 +131,15 @@ object IosShell {
     private val shell = AppShell()
     private val scope = MainScope()
     private var tabTitles by mutableStateOf(listOf("", ""))
+    private var homeSheet by mutableStateOf(false)
 
     init {
         scope.launch { shell.run(IosTextStorage(), Locale.current.language) }
         scope.launch { tabTitles = listOf(getString(Res.string.tab_play), getString(Res.string.tab_dictionaries)) }
     }
+
+    private fun currentDictionaryPath(): List<String> =
+        shell.dictionaries.stack.drop(1).mapIndexed { i, r -> routeKey(i + 1, r) }
 
     private fun state(): ShellState {
         val d = shell.dictionaries
@@ -133,8 +147,9 @@ object IosShell {
             tab = shell.tab.ordinal,
             tabTitles = tabTitles,
             setupOpen = shell.app.route == Route.Setup,
+            homeSheet = homeSheet,
             inGame = shell.app.route == Route.Game,
-            dictionaryPath = d.stack.drop(1).map(::routeKey),
+            dictionaryPath = currentDictionaryPath(),
             overlay = when (d.sheet) {
                 null -> 0
                 is DictSheet.Qr -> 2
@@ -156,31 +171,47 @@ object IosShell {
         if (shell.app.route == Route.Setup) shell.app.goHome()
     }
 
-    /** SwiftUI popped back to [depth] screens over the list (swipe or back button). */
-    fun popDictionaries(depth: Int) = shell.dictionaries.popTo(depth)
+    /**
+     * SwiftUI popped back along the stack (swipe or back button). Only pops when [path] is a prefix
+     * of the current Kotlin stack, so a stale path echoed while Kotlin replaces the stack is ignored.
+     */
+    fun popDictionaries(path: List<String>) {
+        val current = currentDictionaryPath()
+        if (path.size < current.size && current.take(path.size) == path) {
+            shell.dictionaries.popTo(path.size)
+        }
+    }
 
-    fun home() = IosScreen(nativeBar = false) { HomeScreen(onOnePhone = shell.app::openSetup) }
+    fun home() = IosScreen(nativeBar = false) {
+        HomeScreen(onOnePhone = shell.app::openSetup, onSheetChange = { homeSheet = it })
+    }
 
     fun setup() = IosScreen(nativeBar = true) {
         SetupScreen(shell.app, onBack = ::closeSetup, onAddWords = shell::addWordsFromSetup, onStart = { shell.app.startGame(it) })
     }
 
     /** The game is immersive (no system bars); it draws its own ✕ and asks before quitting. */
-    fun game() = IosScreen(nativeBar = false) { shell.app.game?.let { GameScreen(it, shell.app) } }
+    fun game() = IosScreen(nativeBar = false) {
+        // Keeps drawing the game while the fullScreenCover slides down after quitting or Game over.
+        val last = remember { arrayOfNulls<app.spijun.engine.GameState>(1) }
+        shell.app.game?.let { last[0] = it }
+        last[0]?.let { GameScreen(it, shell.app) }
+    }
 
-    fun dictionaryList() = dictionary(routeKey(DictRoute.List))
+    fun dictionaryList() = dictionary(routeKey(0, DictRoute.List))
 
     fun dictionary(key: String) = IosScreen(nativeBar = true) { DictionaryHost(key) }
 
     @Composable
     private fun DictionaryHost(key: String) {
         val d = shell.dictionaries
+        val depth = if (key == "List") 0 else key.substringBefore(':').toIntOrNull() ?: return
         // Keeps drawing the screen while the native pop slides it away, after it left the stack.
         val last = remember { arrayOfNulls<DictRoute>(1) }
-        d.stack.firstOrNull { routeKey(it) == key }?.let { last[0] = it }
+        d.stack.getOrNull(depth)?.takeIf { routeKey(depth, it) == key }?.let { last[0] = it }
         val route = last[0] ?: return
         val files = rememberFileActions(onPicked = d::beginImport)
-        val onTop = d.route == route
+        val onTop = d.stack.lastIndex == depth && d.route == route
         Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
             DictionaryPage(d, shell.app.dictionaries.orEmpty(), route, files)
             if (onTop) ToastHost(d.toast, d::dismissToast, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))

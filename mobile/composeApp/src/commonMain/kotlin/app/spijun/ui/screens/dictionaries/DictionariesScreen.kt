@@ -46,8 +46,17 @@ fun DictionaryPage(controller: DictionariesController, builtIns: List<Dictionary
     when (route) {
         DictRoute.List -> DictionaryListScreen(controller, builtIns, onImport = files.pickFile)
         is DictRoute.BuiltIn -> builtIns.firstOrNull { it.id == route.id }?.let { BuiltInScreen(controller, it) }
-        is DictRoute.Custom -> controller.custom(route.id)?.let { CustomDictionaryScreen(controller, it) }
-        is DictRoute.Category -> controller.custom(route.dictId)?.let { CategoryScreen(controller, it, route.name) }
+        is DictRoute.Custom -> {
+            // Remembered so a deleted dictionary's screen stays drawn while the native pop slides it out.
+            val last = androidx.compose.runtime.remember(route.id) { arrayOfNulls<app.spijun.dictionaries.CustomDictionary>(1) }
+            controller.custom(route.id)?.let { last[0] = it }
+            last[0]?.let { CustomDictionaryScreen(controller, it) }
+        }
+        is DictRoute.Category -> {
+            val last = androidx.compose.runtime.remember(route.dictId) { arrayOfNulls<app.spijun.dictionaries.CustomDictionary>(1) }
+            controller.custom(route.dictId)?.let { last[0] = it }
+            last[0]?.let { CategoryScreen(controller, it, route.name) }
+        }
     }
 }
 

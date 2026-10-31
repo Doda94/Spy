@@ -75,9 +75,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onOnePhone: () -> Unit) {
+fun HomeScreen(onOnePhone: () -> Unit, onSheetChange: (Boolean) -> Unit = {}) {
     val c = Spy.colors
     var showModes by remember { mutableStateOf(false) }
+    androidx.compose.runtime.LaunchedEffect(showModes) { onSheetChange(showModes) }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(c.bg)) {
         val unit = (minOf(maxWidth.value / 390f, maxHeight.value / 844f)).coerceIn(0.7f, 1.3f)
