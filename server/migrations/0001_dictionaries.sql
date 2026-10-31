@@ -13,6 +13,15 @@ CREATE TABLE dictionaries (
   created_at INTEGER NOT NULL DEFAULT (unixepoch())
 );
 
+-- Ključevi `normalized` računaju se prema jeziku, pa bi promjena jezika ostavila stare ključeve
+-- uz nova pravila i propustila duplikate. Rječnik na drugom jeziku je novi rječnik.
+CREATE TRIGGER dictionaries_language_fixed
+BEFORE UPDATE OF language ON dictionaries
+WHEN NEW.language IS NOT OLD.language
+BEGIN
+  SELECT RAISE(ABORT, 'language of a dictionary cannot change');
+END;
+
 CREATE TABLE categories (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   dictionary_id TEXT    NOT NULL REFERENCES dictionaries (id) ON DELETE CASCADE,
@@ -38,3 +47,4 @@ CREATE TABLE words (
 );
 
 CREATE INDEX words_category ON words (category_id);
+

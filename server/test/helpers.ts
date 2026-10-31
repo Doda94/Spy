@@ -3,9 +3,9 @@ import seedSql from "../seed.sql?raw";
 
 export const PIN = "1234";
 
-/** Pojedinačne naredbe iz seed.sql (bez komentara), spremne za `db.batch`. */
-export function seedStatements(): string[] {
-  return seedSql
+/** Pojedinačne naredbe iz SQL-a seeda (bez komentara), spremne za `db.batch`. */
+export function seedStatements(sql: string = seedSql): string[] {
+  return sql
     .split("\n")
     .filter((line) => !line.startsWith("--"))
     .join("\n")
@@ -14,8 +14,9 @@ export function seedStatements(): string[] {
     .filter(Boolean);
 }
 
-export async function runSeed(): Promise<void> {
-  await env.DB.batch(seedStatements().map((statement) => env.DB.prepare(statement)));
+/** Pokreće seed.sql, ili drugi SQL iz `buildSeed` kad test treba izmijenjene podatke. */
+export async function runSeed(sql: string = seedSql): Promise<void> {
+  await env.DB.batch(seedStatements(sql).map((statement) => env.DB.prepare(statement)));
 }
 
 /** Prazna baza pa seed — svaki test kreće od istog stanja. */

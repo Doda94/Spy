@@ -1,19 +1,24 @@
 -- Generirano iz data/words.json i data/words.en.json (npm run seed:generate u mapi server/).
 -- Ne uređivati ručno; uredi JSON pa ponovno pokreni skriptu.
 --
--- Sigurno za ponovno pokretanje: rječnici se ažuriraju, a kategorije i riječi dodaju s
--- "INSERT OR IGNORE", pa nema duplikata. Riječi koje fale u bazi (npr. obrisane kroz API)
--- ponovno se dodaju: JSON je izvor istine za početni sadržaj.
--- Svako pokretanje podiže verziju rječnika, pa aplikacije ponovno dohvate sadržaj.
+-- Sigurno za ponovno pokretanje: JSON je izvor istine za početni sadržaj.
+-- - Riječi koje fale u bazi (npr. obrisane kroz API) ponovno se dodaju.
+-- - Riječ premještena u drugu kategoriju u JSON-u premješta se i u bazi.
+-- - Riječi dodane kroz API ostaju.
+-- - Verzija rječnika raste samo ako se njegov sadržaj promijenio.
 --
 -- Primjena (iz mape server/):  npm run db:setup:local   ili   npm run db:setup:remote
 
 INSERT INTO dictionaries (id, name, language, position, revision)
 VALUES ('hr', 'Hrvatski', 'hr', 0, unixepoch())
-ON CONFLICT (id) DO UPDATE SET name = excluded.name, language = excluded.language, position = excluded.position;
+ON CONFLICT (id) DO UPDATE SET name = excluded.name, language = excluded.language, position = excluded.position
+ WHERE name <> excluded.name OR language <> excluded.language OR position <> excluded.position;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'hr' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('hr', 'Mjesta', 'mjesta', 0);
+SELECT 'hr', 'Mjesta', 'mjesta', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'hr';
 
 WITH v (text, normalized) AS (VALUES
     ('Plaža', 'plaža'),
@@ -39,12 +44,17 @@ WITH v (text, normalized) AS (VALUES
     ('Vojarna', 'vojarna'),
     ('Svjetionik', 'svjetionik')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'hr', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'hr' AND c.normalized = 'mjesta';
+ WHERE c.dictionary_id = 'hr' AND c.normalized = 'mjesta'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'hr' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('hr', 'Zanimanja', 'zanimanja', 1);
+SELECT 'hr', 'Zanimanja', 'zanimanja', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'hr';
 
 WITH v (text, normalized) AS (VALUES
     ('Liječnik', 'liječnik'),
@@ -62,12 +72,17 @@ WITH v (text, normalized) AS (VALUES
     ('Ribar', 'ribar'),
     ('Sudac', 'sudac')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'hr', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'hr' AND c.normalized = 'zanimanja';
+ WHERE c.dictionary_id = 'hr' AND c.normalized = 'zanimanja'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'hr' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('hr', 'Predmeti', 'predmeti', 2);
+SELECT 'hr', 'Predmeti', 'predmeti', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'hr';
 
 WITH v (text, normalized) AS (VALUES
     ('Kišobran', 'kišobran'),
@@ -85,16 +100,29 @@ WITH v (text, normalized) AS (VALUES
     ('Četkica za zube', 'četkica za zube'),
     ('Šalica', 'šalica')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'hr', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'hr' AND c.normalized = 'predmeti';
+ WHERE c.dictionary_id = 'hr' AND c.normalized = 'predmeti'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'hr' AND changes() > 0;
+
+DELETE FROM categories
+ WHERE dictionary_id = 'hr' AND NOT EXISTS (SELECT 1 FROM words WHERE category_id = categories.id);
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'hr' AND changes() > 0;
 
 INSERT INTO dictionaries (id, name, language, position, revision)
 VALUES ('en', 'English', 'en', 1, unixepoch())
-ON CONFLICT (id) DO UPDATE SET name = excluded.name, language = excluded.language, position = excluded.position;
+ON CONFLICT (id) DO UPDATE SET name = excluded.name, language = excluded.language, position = excluded.position
+ WHERE name <> excluded.name OR language <> excluded.language OR position <> excluded.position;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'en' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('en', 'Places', 'places', 0);
+SELECT 'en', 'Places', 'places', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'en';
 
 WITH v (text, normalized) AS (VALUES
     ('Beach', 'beach'),
@@ -120,12 +148,17 @@ WITH v (text, normalized) AS (VALUES
     ('Army base', 'army base'),
     ('Lighthouse', 'lighthouse')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'en', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'en' AND c.normalized = 'places';
+ WHERE c.dictionary_id = 'en' AND c.normalized = 'places'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'en' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('en', 'Jobs', 'jobs', 1);
+SELECT 'en', 'Jobs', 'jobs', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'en';
 
 WITH v (text, normalized) AS (VALUES
     ('Doctor', 'doctor'),
@@ -143,12 +176,17 @@ WITH v (text, normalized) AS (VALUES
     ('Fisherman', 'fisherman'),
     ('Judge', 'judge')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'en', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'en' AND c.normalized = 'jobs';
+ WHERE c.dictionary_id = 'en' AND c.normalized = 'jobs'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'en' AND changes() > 0;
 
 INSERT OR IGNORE INTO categories (dictionary_id, name, normalized, position)
-VALUES ('en', 'Objects', 'objects', 2);
+SELECT 'en', 'Objects', 'objects', COALESCE(MAX(position), -1) + 1
+  FROM categories WHERE dictionary_id = 'en';
 
 WITH v (text, normalized) AS (VALUES
     ('Umbrella', 'umbrella'),
@@ -166,8 +204,15 @@ WITH v (text, normalized) AS (VALUES
     ('Toothbrush', 'toothbrush'),
     ('Mug', 'mug')
 )
-INSERT OR IGNORE INTO words (dictionary_id, category_id, text, normalized)
+INSERT INTO words (dictionary_id, category_id, text, normalized)
 SELECT 'en', c.id, v.text, v.normalized FROM v, categories c
- WHERE c.dictionary_id = 'en' AND c.normalized = 'objects';
+ WHERE c.dictionary_id = 'en' AND c.normalized = 'objects'
+ON CONFLICT (dictionary_id, normalized) DO UPDATE SET category_id = excluded.category_id, text = excluded.text
+ WHERE words.category_id <> excluded.category_id OR words.text <> excluded.text;
 
-UPDATE dictionaries SET revision = revision + 1;
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'en' AND changes() > 0;
+
+DELETE FROM categories
+ WHERE dictionary_id = 'en' AND NOT EXISTS (SELECT 1 FROM words WHERE category_id = categories.id);
+
+UPDATE dictionaries SET revision = revision + 1 WHERE id = 'en' AND changes() > 0;
