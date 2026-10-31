@@ -25,6 +25,7 @@ export async function resetDatabase(): Promise<void> {
     env.DB.prepare("DELETE FROM words"),
     env.DB.prepare("DELETE FROM categories"),
     env.DB.prepare("DELETE FROM dictionaries"),
+    env.DB.prepare("DELETE FROM pin_failures"),
     env.DB.prepare("DELETE FROM sqlite_sequence WHERE name IN ('words', 'categories')"),
   ]);
   await runSeed();

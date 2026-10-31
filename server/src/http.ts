@@ -4,9 +4,12 @@ export type Env = {
   ADMIN_PIN?: string;
 };
 
-export const NO_STORE = { "cache-control": "no-store" };
+/** Obična zaglavlja; namjerno ne `HeadersInit`, jer se spajaju razmazivanjem objekta. */
+export type HeaderMap = Record<string, string>;
 
-export function json(body: unknown, status = 200, headers: HeadersInit = NO_STORE): Response {
+export const NO_STORE: HeaderMap = { "cache-control": "no-store" };
+
+export function json(body: unknown, status = 200, headers: HeaderMap = NO_STORE): Response {
   return Response.json(body, { status, headers: { ...NO_STORE, ...headers } });
 }
 
@@ -14,7 +17,7 @@ export function fail(
   code: string,
   status: number,
   extra: Record<string, unknown> = {},
-  headers: HeadersInit = NO_STORE
+  headers: HeaderMap = NO_STORE
 ): Response {
   return json({ error: code, ...extra }, status, headers);
 }

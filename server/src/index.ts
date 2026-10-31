@@ -39,7 +39,7 @@ async function route(request: Request, env: Env): Promise<Response> {
 
   if (path === "/v1/auth") {
     if (method !== "POST") return fail("method_not_allowed", 405, {}, { allow: "POST" });
-    return requirePin(request, env) ?? json({ ok: true });
+    return (await requirePin(request, env)) ?? json({ ok: true });
   }
 
   const dictionary = path.match(/^\/v1\/dictionaries\/([^/]+)$/);
@@ -53,7 +53,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   const words = path.match(/^\/v1\/dictionaries\/([^/]+)\/words$/);
   if (words) {
     if (method !== "POST") return fail("method_not_allowed", 405, {}, { allow: "POST" });
-    const denied = requirePin(request, env);
+    const denied = await requirePin(request, env);
     if (denied) return denied;
 
     let body: unknown;
@@ -77,11 +77,12 @@ async function route(request: Request, env: Env): Promise<Response> {
   const word = path.match(/^\/v1\/dictionaries\/([^/]+)\/words\/([^/]+)$/);
   if (word) {
     if (method !== "DELETE") return fail("method_not_allowed", 405, {}, { allow: "DELETE" });
-    const denied = requirePin(request, env);
+    const denied = await requirePin(request, env);
     if (denied) return denied;
 
+    // Samo zapis cijelog broja: Number() bi prihvatio i "1e3", "0x10" ili "12.0".
+    if (!/^[1-9]\d{0,15}$/.test(word[2])) return fail("invalid_id", 400);
     const id = Number(word[2]);
-    if (!Number.isInteger(id) || id <= 0) return fail("invalid_id", 400);
 
     const result = await deleteWord(env.DB, word[1], id);
     if (!result.ok) return fail(result.error, result.status);

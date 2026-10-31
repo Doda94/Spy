@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
+import { CLIENT_LIMIT, CLIENT_WINDOW, GLOBAL_LIMIT, GLOBAL_WINDOW } from "../src/auth";
 import worker from "../src/index";
 import { body, call } from "./helpers";
 
@@ -16,11 +17,13 @@ describe("PIN", () => {
   });
 
   it("rejects a missing or wrong PIN on every write", async () => {
-    for (const pin of [null, "", "0000", "12345", "123"]) {
+    for (const [i, pin] of [null, "", "0000", "12345", "123"].entries()) {
+      // Svaki PIN s druge adrese, da se ne dođe do ograničenja pokušaja (testirano niže).
+      const headers = { "cf-connecting-ip": `10.0.0.${i}` };
       const attempts = [
-        call("/v1/auth", { method: "POST", pin }),
-        call("/v1/dictionaries/hr/words", { method: "POST", pin, json: { text: "Test", category: "Mjesta" } }),
-        call("/v1/dictionaries/hr/words/1", { method: "DELETE", pin }),
+        call("/v1/auth", { method: "POST", pin, headers }),
+        call("/v1/dictionaries/hr/words", { method: "POST", pin, headers, json: { text: "Test", category: "Mjesta" } }),
+        call("/v1/dictionaries/hr/words/1", { method: "DELETE", pin, headers }),
       ];
       for (const response of await Promise.all(attempts)) {
         expect(response.status).toBe(401);
@@ -39,6 +42,51 @@ describe("PIN", () => {
     const response = await worker.fetch(request, { ...env, ADMIN_PIN: undefined });
     expect(response.status).toBe(503);
     expect(await body(response)).toEqual({ error: "pin_not_configured" });
+  });
+
+  describe("attempt limit", () => {
+    const from = (ip: string, pin?: string) =>
+      call("/v1/auth", { method: "POST", pin, headers: { "cf-connecting-ip": ip } });
+
+    it("locks one address out after 5 wrong PINs, even for the right PIN", async () => {
+      for (let i = 0; i < CLIENT_LIMIT; i++) expect((await from("1.1.1.1", "0000")).status).toBe(401);
+
+      const locked = await from("1.1.1.1");
+      expect(locked.status).toBe(429);
+      expect(locked.headers.get("retry-after")).toBe(String(CLIENT_WINDOW));
+      expect(await body(locked)).toEqual({ error: "too_many_attempts" });
+      // Druga adresa i dalje radi.
+      expect((await from("2.2.2.2")).status).toBe(200);
+    });
+
+    it("the right PIN still works below the limit", async () => {
+      for (let i = 0; i < CLIENT_LIMIT - 1; i++) await from("1.1.1.1", "0000");
+      expect((await from("1.1.1.1")).status).toBe(200);
+    });
+
+    it("forgets failures older than the window", async () => {
+      for (let i = 0; i < CLIENT_LIMIT; i++) await from("1.1.1.1", "0000");
+      await env.DB.prepare("UPDATE pin_failures SET at = at - ?").bind(CLIENT_WINDOW + 1).run();
+      expect((await from("1.1.1.1")).status).toBe(200);
+    });
+
+    it("locks everyone out after 50 wrong PINs from many addresses", async () => {
+      for (let i = 0; i < GLOBAL_LIMIT; i++) await from(`10.1.${Math.floor(i / 4)}.${i % 4}`, "0000");
+      const locked = await from("3.3.3.3");
+      expect(locked.status).toBe(429);
+      expect(locked.headers.get("retry-after")).toBe(String(GLOBAL_WINDOW));
+    });
+
+    it("also guards writes, before touching the dictionary", async () => {
+      for (let i = 0; i < CLIENT_LIMIT; i++) await from("1.1.1.1", "0000");
+      const response = await call("/v1/dictionaries/hr/words", {
+        method: "POST",
+        headers: { "cf-connecting-ip": "1.1.1.1" },
+        json: { text: "Most", category: "Mjesta" },
+      });
+      expect(response.status).toBe(429);
+      expect((await body(await call("/v1/dictionaries"))).dictionaries[0].wordCount).toBe(50);
+    });
   });
 
   it("never caches write responses", async () => {
@@ -188,6 +236,17 @@ describe("DELETE /v1/dictionaries/:id/words/:wordId", () => {
     expect(detail.categories.map((c: any) => c.name)).toEqual(["Places", "Jobs", "Objects"]);
   });
 
+  it("a second delete of the same word is 404 and bumps nothing", async () => {
+    const id = await findWord("hr", "Banka");
+    const before = await revision("hr");
+    const [first, second] = await Promise.all([
+      call(`/v1/dictionaries/hr/words/${id}`, { method: "DELETE" }),
+      call(`/v1/dictionaries/hr/words/${id}`, { method: "DELETE" }),
+    ]);
+    expect([first.status, second.status].sort()).toEqual([204, 404]);
+    expect(await revision("hr")).toBe(before + 1);
+  });
+
   it("404 for a missing word or a word of another dictionary", async () => {
     const id = await findWord("hr", "Banka");
     expect((await call("/v1/dictionaries/hr/words/999999", { method: "DELETE" })).status).toBe(404);
@@ -198,7 +257,7 @@ describe("DELETE /v1/dictionaries/:id/words/:wordId", () => {
   });
 
   it("400 for a bad id", async () => {
-    for (const id of ["abc", "0", "-3", "1.5"]) {
+    for (const id of ["abc", "0", "-3", "1.5", "1e3", "0x10", "12.0", "01", "99999999999999999"]) {
       const response = await call(`/v1/dictionaries/hr/words/${id}`, { method: "DELETE" });
       expect(response.status).toBe(400);
       expect(await body(response)).toEqual({ error: "invalid_id" });

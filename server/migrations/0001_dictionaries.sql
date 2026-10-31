@@ -48,3 +48,11 @@ CREATE TABLE words (
 
 CREATE INDEX words_category ON words (category_id);
 
+-- Neuspjeli pokušaji PIN-a, za ograničenje pogađanja (src/auth.ts). Stari se redovi brišu sami.
+CREATE TABLE pin_failures (
+  client TEXT    NOT NULL,
+  at     INTEGER NOT NULL DEFAULT (unixepoch())
+);
+
+CREATE INDEX pin_failures_client ON pin_failures (client, at);
+CREATE INDEX pin_failures_at ON pin_failures (at);

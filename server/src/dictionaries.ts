@@ -152,14 +152,14 @@ export async function deleteWord(
   wordId: number
 ): Promise<DeleteResult> {
   if (!isDictionaryId(dictionaryId)) return { ok: false, status: 404, error: "not_found" };
-  const existing = await db
-    .prepare("SELECT id FROM words WHERE id = ? AND dictionary_id = ?")
-    .bind(wordId, dictionaryId)
-    .first();
-  if (!existing) return { ok: false, status: 404, error: "not_found" };
 
-  await db.batch([
+  // Bez prethodnog SELECT-a: dvije istodobne izmjene iste riječi ne smiju obje javiti uspjeh.
+  // Verzija raste samo ako je riječ stvarno obrisana (changes() prethodne naredbe).
+  const [deleted] = await db.batch([
     db.prepare("DELETE FROM words WHERE id = ? AND dictionary_id = ?").bind(wordId, dictionaryId),
+    db
+      .prepare("UPDATE dictionaries SET revision = revision + 1 WHERE id = ? AND changes() > 0")
+      .bind(dictionaryId),
     // Kategorije se izvode iz riječi: nestane kad se obriše zadnja riječ.
     db
       .prepare(
@@ -167,8 +167,8 @@ export async function deleteWord(
           WHERE dictionary_id = ? AND NOT EXISTS (SELECT 1 FROM words WHERE category_id = categories.id)`
       )
       .bind(dictionaryId),
-    db.prepare("UPDATE dictionaries SET revision = revision + 1 WHERE id = ?").bind(dictionaryId),
   ]);
+  if (deleted.meta.changes === 0) return { ok: false, status: 404, error: "not_found" };
   return { ok: true };
 }
 

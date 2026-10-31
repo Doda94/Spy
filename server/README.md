@@ -17,16 +17,17 @@ u zaglavlju `x-spy-pin`, isto kao u staroj aplikaciji; PIN je secret `ADMIN_PIN`
 | --- | --- |
 | [`src/index.ts`](src/index.ts) | rute i odgovori |
 | [`src/dictionaries.ts`](src/dictionaries.ts) | upiti nad D1 (popis, sadržaj, dodavanje, brisanje) |
-| [`src/auth.ts`](src/auth.ts) | provjera PIN-a |
+| [`src/auth.ts`](src/auth.ts) | provjera PIN-a i ograničenje pokušaja |
 | [`src/http.ts`](src/http.ts) | JSON odgovori, ETag / `If-None-Match` |
 | [`src/words.ts`](src/words.ts) | pravila za riječi i kategorije (iz stare aplikacije) |
 | [`migrations/0001_dictionaries.sql`](migrations/0001_dictionaries.sql) | shema baze |
 | [`seed.sql`](seed.sql) | **generirano** iz `data/*.json` (`npm run seed:generate`); ne uređivati ručno |
+| [`scripts/`](scripts) | `generate-seed.mjs` čita `data/*.json`, `seed-sql.mjs` od toga gradi SQL (zovu ga i testovi) |
 | [`test/`](test) | vitest + workerd (`@cloudflare/vitest-plugin`) |
 
 ## Razvoj i testovi
 
-Treba Node 22+.
+Treba Node 22.18+ (skripta za seed izravno uvozi `src/words.ts`).
 
 ```bash
 cd server
@@ -67,6 +68,10 @@ npx wrangler deploy                       # objavi Worker spy-v2
 npx wrangler secret put ADMIN_PIN         # upiši PIN za uređivanje
 ```
 
+Za PIN uzmi dug nasumičan niz, ne četiri znamenke (npr. `openssl rand -base64 12`). Aplikacija ga
+pamti, pa ga ne treba tipkati. Ograničenje pokušaja (niže) usporava pogađanje, ali kratki PIN i dalje
+padne za nekoliko dana pokušavanja s mnogo adresa.
+
 Provjera (adresa se ispiše pri deployu):
 
 ```bash
@@ -74,8 +79,15 @@ curl https://spy-v2.<poddomena>.workers.dev/v1/dictionaries
 ```
 
 Dok `ADMIN_PIN` nije postavljen, izmjene vraćaju `503 pin_not_configured`, a čitanje radi.
-`npm run db:setup:remote` je sigurno ponoviti: dodaje što fali i podiže verziju rječnika. Obrisane
-riječi koje su u `data/*.json` pritom se vrate (JSON je izvor istine za početni sadržaj).
+`npm run db:setup:remote` je sigurno ponoviti; JSON je izvor istine za početni sadržaj:
+
+- riječi koje fale (npr. obrisane kroz API) ponovno se dodaju;
+- riječ premještena u drugu kategoriju u JSON-u premješta se i u bazi, a kategorija koja tako
+  ostane bez riječi nestaje; kategorija bez riječi u JSON-u ne ide u bazu;
+- riječi i kategorije dodane kroz API ostaju, a nova kategorija iz JSON-a ide iza njih;
+- verzija rječnika raste samo ako se njegov sadržaj promijenio, pa ponovni seed bez promjena ne tjera
+  aplikacije da sve ponovno preuzmu;
+- jezik postojećeg rječnika ne može se promijeniti (seed tada pada): to je novi rječnik s novim `id`.
 
 ## Ugovor API-ja (v1)
 
@@ -142,6 +154,12 @@ Svaka izmjena šalje `x-spy-pin: <PIN>`. Bez PIN-a ili s krivim: `401 unauthoriz
 postavljen `ADMIN_PIN`: `503 pin_not_configured`. PIN se provjeri prije bilo čega drugog. Odgovori
 na izmjene imaju `Cache-Control: no-store`.
 
+**Ograničenje pokušaja:** nakon 5 krivih PIN-ova s iste adrese u 15 minuta, ili 50 krivih ukupno u
+sat vremena, svaka izmjena s te adrese (odnosno sa svih) dobije `429 too_many_attempts` sa zaglavljem
+`Retry-After` (sekunde), **i s ispravnim PIN-om**, da zaključavanje ne otkrije koji je PIN točan.
+Adresa je `CF-Connecting-IP`. Pokušaji se pamte u tablici `pin_failures` i brišu nakon sat vremena.
+Ukupno ograničenje znači da netko tko pogađa može na sat vremena zaključati i vlasnika.
+
 #### `POST /v1/auth`
 
 Provjera PIN-a pri otključavanju uređivanja u aplikaciji. `200 { "ok": true }`.
@@ -159,7 +177,8 @@ Tijelo: `{ "text": "Most", "category": "Mjesta" }`.
 #### `DELETE /v1/dictionaries/:id/words/:wordId`
 
 `204` bez tijela. Kategorija bez riječi nestaje (kategorije se izvode iz riječi).
-`404 not_found` ako riječi nema u tom rječniku, `400 invalid_id` ako `:wordId` nije cijeli broj veći od 0.
+`404 not_found` ako riječi nema u tom rječniku (i kad ju je netko upravo obrisao), `400 invalid_id`
+ako `:wordId` nije zapisan kao cijeli broj veći od 0 (bez `1e3`, `0x10`, `12.0` ili vodećih nula).
 
 Svaka uspješna izmjena podiže `revision` tog rječnika, pa se mijenjaju i ETag rječnika i ETag popisa.
 
@@ -177,10 +196,12 @@ Svaka uspješna izmjena podiže `revision` tog rječnika, pa se mijenjaju i ETag
 | 404 | `not_found` | nepoznata ruta, rječnik ili riječ |
 | 405 | `method_not_allowed` | poznata ruta, krivi način; zaglavlje `Allow` kaže koji su dopušteni |
 | 409 | `duplicate` | riječ već postoji u rječniku |
+| 429 | `too_many_attempts` | previše krivih PIN-ova; `Retry-After` kaže koliko čekati |
 | 500 | `server` | neočekivana greška |
 | 503 | `pin_not_configured` | `ADMIN_PIN` nije postavljen |
 
-Kodovi su isti kao u staroj web aplikaciji, uz `invalid_body`, `invalid_id` i `method_not_allowed`.
+Kodovi su isti kao u staroj web aplikaciji, uz `invalid_body`, `invalid_id`, `method_not_allowed` i
+`too_many_attempts`.
 
 ### Pravila za riječi
 
@@ -199,8 +220,8 @@ istom rječniku, a brisanje rječnika briše njegove kategorije i riječi.
 
 - **Nema izrade, preimenovanja ni brisanja rječnika preko API-ja.** Rječnici se dodaju u
   `scripts/generate-seed.mjs` i `data/`, a zatim se seed ponovno primijeni.
-- **PIN nema ograničenje broja pokušaja.** Kratki numerički PIN može se pogađati. Ako to smeta,
-  dodaj Cloudflare rate limiting pravilo za `POST /v1/*`.
+- **Ograničenje pokušaja PIN-a živi u D1**, ne u Cloudflare rate limitingu: jednostavno je i
+  testirano, ali svaki krivi PIN je jedan upis u bazu.
 - **Nema CORS zaglavlja**: pozivaju je samo nativne aplikacije.
 - **Engleski rječnik je nacrt** (isti oblik kao hrvatski: 3 kategorije, 50 riječi) i čeka pregled.
 - Sobe za igru (Durable Objects i WebSocket) dolaze u milestonu 6, a protokol u `server/PROTOCOL.md`.
