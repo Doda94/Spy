@@ -122,7 +122,7 @@ private data class BackKey(val look: BackLook, val size: Size, val density: Floa
 
 // Only a few backs are on screen at once (all seats share one); the least-recently used is dropped first.
 private val backs = LinkedHashMap<BackKey, ImageBitmap>()
-private const val MAX_BACKS = 4
+private const val MAX_BACKS = 6
 
 private fun CacheDrawScope.cardBackBitmap(look: BackLook): ImageBitmap {
     val key = BackKey(look, size, density)
