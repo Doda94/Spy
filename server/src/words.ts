@@ -1,19 +1,11 @@
 /**
- * Pravila za riječi i kategorije, zajednička klijentu i Cloudflare funkcijama,
- * da obje strane jednako čiste unos i jednako prepoznaju duplikate.
+ * Pravila za riječi i kategorije: kako se unos čisti i kako se prepoznaju duplikati.
+ * Preseljeno iz web aplikacije (`lib/words.ts` na `main`), gdje su ih dijelili klijent
+ * i Cloudflare funkcije; na `v2` ih koristi samo server.
  */
 
 export const MAX_WORD_LENGTH = 60;
 export const MAX_CATEGORY_LENGTH = 40;
-
-/** Kategorije koje dolaze s aplikacijom; korisnik može dodati svoje. */
-export const DEFAULT_CATEGORY = "Mjesta";
-
-export type Word = {
-  id: number;
-  text: string;
-  category: string;
-};
 
 /** Miče višak razmaka s rubova i iz sredine. */
 export function cleanWord(raw: string): string {
@@ -47,23 +39,4 @@ export function checkCategory(raw: string): CategoryCheck {
     return { ok: false, reason: "category-too-long" };
   }
   return { ok: true, text };
-}
-
-/** Popis kategorija koje postoje u bazi, poredan po abecedi. */
-export function categoriesOf(words: Word[]): string[] {
-  const seen = new Map<string, string>();
-  for (const word of words) {
-    const key = wordKey(word.category);
-    if (!seen.has(key)) seen.set(key, word.category);
-  }
-  return [...seen.values()].sort((a, b) => a.localeCompare(b, "hr"));
-}
-
-/**
- * Ako kategorija već postoji (bez obzira na velika/mala slova), vraća njezin
- * zapisani oblik — tako "mjesta" ne stvara drugu kategoriju uz "Mjesta".
- */
-export function canonicalCategory(candidate: string, existing: string[]): string {
-  const key = wordKey(candidate);
-  return existing.find((c) => wordKey(c) === key) ?? cleanWord(candidate);
 }

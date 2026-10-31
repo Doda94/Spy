@@ -1,9 +1,8 @@
--- Generirano iz data/words.json (node scripts/generate-seed.mjs).
+-- Generirano iz data/words.json (npm run seed:generate u mapi server/).
 -- Ne uređivati ručno; uredi words.json pa ponovno pokreni skriptu.
--- Primjena:  npx wrangler d1 execute spy-words --remote --file=./seed.sql
 --
--- "OR IGNORE" znači da ponovno pokretanje ne stvara duplikate i ne dira
--- riječi koje si u međuvremenu dodao ili obrisao kroz aplikaciju.
+-- "OR IGNORE" znači da ponovno pokretanje ne stvara duplikate. Riječi koje si u
+-- međuvremenu obrisao kroz aplikaciju ponovno se dodaju, jer njihovog retka više nema.
 
 INSERT OR IGNORE INTO words (text, normalized, category) VALUES
   ('Plaža', 'plaža', 'Mjesta'),
