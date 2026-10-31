@@ -336,11 +336,14 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     )
 
     if (askScreenReader) {
-        ScreenReaderWarning { choice ->
-            askScreenReader = false
-            controller.screenReaderReveal = choice
-            flipUp()
-        }
+        ScreenReaderWarning(
+            onChoice = { choice ->
+                askScreenReader = false
+                controller.screenReaderReveal = choice
+                flipUp()
+            },
+            onUnavailable = { askScreenReader = false },
+        )
     }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(c.bg)) {
@@ -505,7 +508,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
 /** Asked once, before the first reveal with a screen reader on (decisions.md §9, screens.md P1·04). */
 @Composable
-private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
+private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit, onUnavailable: () -> Unit = {}) {
     val c = Spy.colors
     if (isIos) {
         NativeAlert(
@@ -516,6 +519,7 @@ private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
                 AlertButton(stringResource(Res.string.a11y_sr_warning_silent), AlertButtonKind.Default) { onChoice(ScreenReaderReveal.Silent) },
             ),
             sheet = false,
+            onUnavailable = onUnavailable,
         )
         return
     }

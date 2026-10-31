@@ -34,8 +34,15 @@ private fun presenterFrom(host: UIViewController?): UIViewController? {
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun NativeAlert(title: String?, message: String, buttons: List<AlertButton>, sheet: Boolean) {
+actual fun NativeAlert(
+    title: String?,
+    message: String,
+    buttons: List<AlertButton>,
+    sheet: Boolean,
+    onUnavailable: (() -> Unit)?,
+) {
     val current by rememberUpdatedState(buttons)
+    val unavailable by rememberUpdatedState(onUnavailable)
     val host = LocalUIViewController.current
     DisposableEffect(title, message, sheet) {
         val alert = UIAlertController.alertControllerWithTitle(
@@ -54,9 +61,11 @@ actual fun NativeAlert(title: String?, message: String, buttons: List<AlertButto
         }
         var disposed = false
         fun cancelOrReset() {
-            (current.firstOrNull { it.kind == AlertButtonKind.Cancel } ?: current.lastOrNull())?.onClick?.invoke()
+            val fallback = unavailable ?: current.firstOrNull { it.kind == AlertButtonKind.Cancel }?.onClick
+            fallback?.invoke()
         }
         fun tryPresent(attemptsLeft: Int) {
+            if (alert.presentingViewController != null || alert.isBeingPresented()) return
             if (disposed) return
             val top = presenterFrom(host)
             if (top == null || top.isBeingPresented() || top.isBeingDismissed() || top.presentedViewController != null) {

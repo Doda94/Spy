@@ -12,4 +12,10 @@ class AlertButton(val label: String, val kind: AlertButtonKind, val onClick: () 
  * [AlertButtonKind.Cancel] button. Android draws Material dialogs instead and never calls this.
  */
 @Composable
-expect fun NativeAlert(title: String?, message: String, buttons: List<AlertButton>, sheet: Boolean)
+expect fun NativeAlert(
+    title: String?,
+    message: String,
+    buttons: List<AlertButton>,
+    sheet: Boolean,
+    onUnavailable: (() -> Unit)? = null,
+)
