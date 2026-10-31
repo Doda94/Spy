@@ -128,8 +128,12 @@ import app.spijun.ui.design.SpyPill
 import app.spijun.ui.design.SpyTable
 import app.spijun.ui.design.cameraRotationFor
 import app.spijun.ui.design.cardShadow
+import app.spijun.ui.platform.AlertButton
+import app.spijun.ui.platform.AlertButtonKind
+import app.spijun.ui.platform.NativeAlert
 import app.spijun.ui.platform.OnAppBackground
 import app.spijun.ui.platform.SecureWhile
+import app.spijun.ui.platform.isIos
 import app.spijun.ui.platform.rememberAnnouncer
 import app.spijun.ui.platform.rememberScreenReaderOn
 import kotlinx.coroutines.Job
@@ -503,6 +507,18 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 @Composable
 private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
     val c = Spy.colors
+    if (isIos) {
+        NativeAlert(
+            title = null,
+            message = stringResource(Res.string.a11y_sr_warning),
+            buttons = listOf(
+                AlertButton(stringResource(Res.string.a11y_sr_warning_aloud), AlertButtonKind.Default) { onChoice(ScreenReaderReveal.Aloud) },
+                AlertButton(stringResource(Res.string.a11y_sr_warning_silent), AlertButtonKind.Default) { onChoice(ScreenReaderReveal.Silent) },
+            ),
+            sheet = false,
+        )
+        return
+    }
     AlertDialog(
         onDismissRequest = {},
         containerColor = c.surface2,

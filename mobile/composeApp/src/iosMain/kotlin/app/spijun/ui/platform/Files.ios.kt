@@ -36,7 +36,7 @@ import platform.CoreGraphics.CGRectMake
 actual fun rememberTextStorage(): TextStorage = remember { IosTextStorage() }
 
 @OptIn(ExperimentalForeignApi::class)
-private class IosTextStorage : TextStorage {
+internal class IosTextStorage : TextStorage {
     private val dir: String by lazy {
         val base = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, true).first() as String
         NSFileManager.defaultManager.createDirectoryAtPath(base, withIntermediateDirectories = true, attributes = null, error = null)
@@ -63,7 +63,7 @@ private class IosTextStorage : TextStorage {
     }
 }
 
-private fun topViewController(): UIViewController? {
+internal fun topViewController(): UIViewController? {
     @Suppress("DEPRECATION")
     var top = UIApplication.sharedApplication.keyWindow?.rootViewController
     while (top?.presentedViewController != null) top = top.presentedViewController

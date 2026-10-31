@@ -12,9 +12,17 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +43,9 @@ import app.spijun.ui.design.SpyMotion
 import app.spijun.ui.design.dashedBorder
 import app.spijun.ui.dictionaries.Toast
 import app.spijun.ui.dictionaries.ToastKind
+import app.spijun.ui.platform.BarAction
+import app.spijun.ui.platform.BarSpec
+import app.spijun.ui.platform.LocalNativeBar
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -78,14 +89,27 @@ fun LanguageTile(language: WordLanguage, size: androidx.compose.ui.unit.Dp = 40.
     }
 }
 
-/** Back (and optional trailing actions) at the top of a pushed screen. */
+/**
+ * Back, an optional title and [actions] at the top of a pushed screen. Where a native navigation
+ * bar is on screen (iOS) they are handed to it and nothing is drawn here. [cancels] makes back a
+ * ✕ that leaves a mode (selection) rather than the screen.
+ */
 @Composable
 fun TopBar(
     onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
     title: String? = null,
-    trailing: @Composable () -> Unit = {},
+    actions: List<BarAction> = emptyList(),
+    cancels: Boolean = false,
 ) {
+    val native = LocalNativeBar.current
+    if (native != null) {
+        val closeLabel = stringResource(Res.string.common_close)
+        val spec = BarSpec(title, actions, if (cancels && onBack != null) BarAction(SpyIcons.Close, "xmark", closeLabel, onClick = onBack) else null)
+        SideEffect { native.show(spec) }
+        DisposableEffect(native) { onDispose { native.show(null) } }
+        return
+    }
     Row(modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
         if (onBack != null) {
             SpyIconButton(if (app.spijun.ui.platform.isIos) SpyIcons.Back else SpyIcons.BackAndroid, stringResource(Res.string.common_back), onBack)
@@ -102,7 +126,30 @@ fun TopBar(
         } else {
             Box(Modifier.weight(1f))
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) { trailing() }
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+            actions.forEach { BarButton(it) }
+        }
+    }
+}
+
+@Composable
+private fun BarButton(action: BarAction) {
+    if (action.menu.isEmpty()) {
+        SpyIconButton(action.icon, action.label, action.onClick)
+        return
+    }
+    val c = Spy.colors
+    var open by remember { mutableStateOf(false) }
+    Box {
+        SpyIconButton(action.icon, action.label, { open = true })
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, containerColor = c.surface2) {
+            action.menu.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item.label, color = if (item.danger) c.danger else c.text) },
+                    onClick = { open = false; item.onClick() },
+                )
+            }
+        }
     }
 }
 

@@ -109,6 +109,11 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         return true
     }
 
+    /** Keeps the list and the first [depth] screens over it (iOS swipe-back pops several at once). */
+    fun popTo(depth: Int) {
+        if (depth + 1 < stack.size) stack = stack.take(depth + 1)
+    }
+
     /**
      * Jumps to a dictionary from outside the tab (setup's "Dodaj riječi"). False, and nothing
      * happens, when it is gone.

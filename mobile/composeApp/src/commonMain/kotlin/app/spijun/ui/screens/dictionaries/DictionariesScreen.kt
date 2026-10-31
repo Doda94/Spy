@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,8 @@ import app.spijun.ui.dictionaries.DictRoute
 import app.spijun.ui.dictionaries.DictSheet
 import app.spijun.ui.dictionaries.DictionariesController
 import app.spijun.ui.dictionaries.ToastKind
+import app.spijun.ui.platform.FileActions
+import app.spijun.ui.platform.LocalNativeBar
 import app.spijun.ui.platform.PlatformBackHandler
 import app.spijun.ui.platform.rememberFileActions
 import org.jetbrains.compose.resources.stringResource
@@ -30,16 +33,27 @@ fun DictionariesScreen(controller: DictionariesController, builtIns: List<Dictio
 
     Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
         Crossfade(targetState = controller.route, label = "dictionaries") { route ->
-            when (route) {
-                DictRoute.List -> DictionaryListScreen(controller, builtIns, onImport = files.pickFile)
-                is DictRoute.BuiltIn -> builtIns.firstOrNull { it.id == route.id }?.let { BuiltInScreen(controller, it) }
-                is DictRoute.Custom -> controller.custom(route.id)?.let { CustomDictionaryScreen(controller, it) }
-                is DictRoute.Category -> controller.custom(route.dictId)?.let { CategoryScreen(controller, it, route.name) }
-            }
+            DictionaryPage(controller, builtIns, route, files)
         }
         ToastHost(controller.toast, controller::dismissToast, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
     }
+    DictionarySheets(controller, files)
+}
 
+/** One screen of the tab. iOS hosts each in its own NavigationStack destination. */
+@Composable
+fun DictionaryPage(controller: DictionariesController, builtIns: List<Dictionary>, route: DictRoute, files: FileActions) {
+    when (route) {
+        DictRoute.List -> DictionaryListScreen(controller, builtIns, onImport = files.pickFile)
+        is DictRoute.BuiltIn -> builtIns.firstOrNull { it.id == route.id }?.let { BuiltInScreen(controller, it) }
+        is DictRoute.Custom -> controller.custom(route.id)?.let { CustomDictionaryScreen(controller, it) }
+        is DictRoute.Category -> controller.custom(route.dictId)?.let { CategoryScreen(controller, it, route.name) }
+    }
+}
+
+/** The tab's sheets, dialogs and full-screen QR, drawn over whichever screen is on top. */
+@Composable
+fun DictionarySheets(controller: DictionariesController, files: FileActions) {
     when (val sheet = controller.sheet) {
         null -> Unit
         DictSheet.Create -> DictionaryFormSheet(
@@ -121,10 +135,13 @@ fun DictionariesScreen(controller: DictionariesController, builtIns: List<Dictio
 }
 
 @Composable
-private fun QrOverlay(dictionary: app.spijun.dictionaries.CustomDictionary, files: app.spijun.ui.platform.FileActions, controller: DictionariesController) {
-    // Covers the whole tab, tab bar included (it is hidden while this is up).
+private fun QrOverlay(dictionary: app.spijun.dictionaries.CustomDictionary, files: FileActions, controller: DictionariesController) {
+    // Covers the whole tab, tab bar included (it is hidden while this is up). On iOS the native
+    // bars hide too, so the QR draws its own back.
     Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-        QrScreen(dictionary, files, onCopied = { controller.showToast(ToastKind.LinkCopied) }, onClose = controller::closeSheet)
+        CompositionLocalProvider(LocalNativeBar provides null) {
+            QrScreen(dictionary, files, onCopied = { controller.showToast(ToastKind.LinkCopied) }, onClose = controller::closeSheet)
+        }
     }
 }
 

@@ -100,6 +100,7 @@ import app.spijun.ui.design.SpySegmented
 import app.spijun.ui.design.SpySpace
 import app.spijun.ui.design.SpyStepperRow
 import app.spijun.ui.design.StickyFooter
+import app.spijun.ui.platform.LocalNativeBar
 import app.spijun.ui.platform.PlatformBackHandler
 import app.spijun.ui.platform.isIos
 import org.jetbrains.compose.resources.pluralStringResource
@@ -131,8 +132,11 @@ fun SetupScreen(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = SpySpace.gutter),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            Box(Modifier.padding(top = 8.dp)) {
-                SpyIconButton(if (isIos) SpyIcons.Back else SpyIcons.BackAndroid, stringResource(Res.string.common_back), onBack)
+            // Under a native navigation bar (iOS) back is the bar's own.
+            if (LocalNativeBar.current == null) {
+                Box(Modifier.padding(top = 8.dp)) {
+                    SpyIconButton(if (isIos) SpyIcons.Back else SpyIcons.BackAndroid, stringResource(Res.string.common_back), onBack)
+                }
             }
             ScreenTitle(stringResource(Res.string.setup_title))
             ModeChip()

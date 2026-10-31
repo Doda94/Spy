@@ -24,7 +24,11 @@ import app.spijun.resources.quit_title
 import app.spijun.ui.AppController
 import app.spijun.ui.design.Spy
 import app.spijun.ui.design.SpyMotion
+import app.spijun.ui.platform.AlertButton
+import app.spijun.ui.platform.AlertButtonKind
+import app.spijun.ui.platform.NativeAlert
 import app.spijun.ui.platform.PlatformBackHandler
+import app.spijun.ui.platform.isIos
 import org.jetbrains.compose.resources.stringResource
 
 /** Immersive in-game flow: no tab bar, every screen has a close button that asks first. */
@@ -51,7 +55,17 @@ fun GameScreen(game: GameState, controller: AppController) {
         }
     }
 
-    if (confirmQuit) {
+    if (confirmQuit && isIos) {
+        NativeAlert(
+            title = stringResource(Res.string.quit_title),
+            message = stringResource(Res.string.quit_body),
+            buttons = listOf(
+                AlertButton(stringResource(Res.string.quit_confirm), AlertButtonKind.Destructive) { confirmQuit = false; controller.goHome() },
+                AlertButton(stringResource(Res.string.quit_keep), AlertButtonKind.Cancel) { confirmQuit = false },
+            ),
+            sheet = true,
+        )
+    } else if (confirmQuit) {
         val c = Spy.colors
         AlertDialog(
             onDismissRequest = { confirmQuit = false },

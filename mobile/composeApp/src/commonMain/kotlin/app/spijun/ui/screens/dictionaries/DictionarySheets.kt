@@ -59,7 +59,11 @@ import app.spijun.ui.design.SpyTextField
 import app.spijun.ui.dictionaries.DictSheet
 import app.spijun.ui.dictionaries.DictionariesController
 import app.spijun.ui.dictionaries.ImportChoice
+import app.spijun.ui.platform.AlertButton
+import app.spijun.ui.platform.AlertButtonKind
 import app.spijun.ui.platform.BrightnessBoost
+import app.spijun.ui.platform.NativeAlert
+import app.spijun.ui.platform.isIos
 import app.spijun.ui.platform.FileActions
 import app.spijun.ui.platform.exportFileName
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
@@ -179,6 +183,18 @@ fun TextPromptSheet(
 @Composable
 fun ConfirmDeleteDialog(title: String, body: String, confirmLabel: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     val c = Spy.colors
+    if (isIos) {
+        NativeAlert(
+            title = title,
+            message = body,
+            buttons = listOf(
+                AlertButton(confirmLabel, AlertButtonKind.Destructive, onConfirm),
+                AlertButton(stringResource(Res.string.common_cancel), AlertButtonKind.Cancel, onDismiss),
+            ),
+            sheet = true,
+        )
+        return
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = c.surface2,

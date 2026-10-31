@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxDefaults
@@ -52,7 +50,6 @@ import app.spijun.ui.design.SectionLabel
 import app.spijun.ui.design.Spy
 import app.spijun.ui.design.SpyButton
 import app.spijun.ui.design.SpyIcon
-import app.spijun.ui.design.SpyIconButton
 import app.spijun.ui.design.SpyIcons
 import app.spijun.ui.design.SpyTextField
 import app.spijun.ui.design.StickyFooter
@@ -63,6 +60,7 @@ import app.spijun.ui.dictionaries.DictionariesController
 import app.spijun.ui.platform.PlatformBackHandler
 import app.spijun.ui.platform.isIos
 import org.jetbrains.compose.resources.pluralStringResource
+import app.spijun.ui.platform.BarAction
 import org.jetbrains.compose.resources.stringResource
 
 private fun builtInLanguage(d: Dictionary) = if (d.id == "en") WordLanguage.English else WordLanguage.Croatian
@@ -76,16 +74,14 @@ private fun builtInName(d: Dictionary) = languageName(builtInLanguage(d))
 fun DictionaryListScreen(controller: DictionariesController, builtIns: List<Dictionary>, onImport: () -> Unit) {
     val c = Spy.colors
     Column(Modifier.fillMaxSize()) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp).heightIn(min = 64.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.weight(1f))
-            // Nothing can be added until the saved dictionaries are in, or the file would replace it.
-            if (controller.loaded) {
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    SpyIconButton(SpyIcons.Import, stringResource(Res.string.dict_import), onImport)
-                    SpyIconButton(SpyIcons.Add, stringResource(Res.string.dict_new), { controller.open(DictSheet.Create) })
-                }
-            }
-        }
+        // Nothing can be added until the saved dictionaries are in, or the file would replace it.
+        TopBar(
+            onBack = null,
+            actions = if (!controller.loaded) emptyList() else listOf(
+                BarAction(SpyIcons.Import, "square.and.arrow.down", stringResource(Res.string.dict_import), onClick = onImport),
+                BarAction(SpyIcons.Add, "plus", stringResource(Res.string.dict_new), onClick = { controller.open(DictSheet.Create) }),
+            ),
+        )
         LazyColumn(Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             item { ScreenTitle(stringResource(Res.string.dict_title)) }
             item { SectionLabel(stringResource(Res.string.dict_section_builtin)) }
@@ -231,30 +227,20 @@ fun BuiltInScreen(controller: DictionariesController, dictionary: Dictionary) {
 @Composable
 fun CustomDictionaryScreen(controller: DictionariesController, dictionary: CustomDictionary) {
     val c = Spy.colors
-    var menu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize()) {
         TopBar(
             onBack = { controller.back() },
-            trailing = {
-                SpyIconButton(SpyIcons.Share, stringResource(Res.string.dict_share), { controller.open(DictSheet.Export(dictionary.id)) })
-                Box {
-                    SpyIconButton(SpyIcons.More, stringResource(Res.string.dict_more), { menu = true })
-                    DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, containerColor = c.surface2) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.dict_edit_details), color = c.text) },
-                            onClick = { menu = false; controller.open(DictSheet.Edit(dictionary.id)) },
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.dict_duplicate_dict), color = c.text) },
-                            onClick = { menu = false; controller.duplicate(dictionary.id) },
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.dict_delete), color = c.danger) },
-                            onClick = { menu = false; controller.open(DictSheet.ConfirmDeleteDictionary(dictionary.id)) },
-                        )
-                    }
-                }
-            },
+            actions = listOf(
+                BarAction(SpyIcons.Share, "square.and.arrow.up", stringResource(Res.string.dict_share), onClick = { controller.open(DictSheet.Export(dictionary.id)) }),
+                BarAction(
+                    SpyIcons.More, "ellipsis", stringResource(Res.string.dict_more),
+                    menu = listOf(
+                        BarAction(SpyIcons.More, "pencil", stringResource(Res.string.dict_edit_details), onClick = { controller.open(DictSheet.Edit(dictionary.id)) }),
+                        BarAction(SpyIcons.More, "plus.square.on.square", stringResource(Res.string.dict_duplicate_dict), onClick = { controller.duplicate(dictionary.id) }),
+                        BarAction(SpyIcons.Delete, "trash", stringResource(Res.string.dict_delete), danger = true, onClick = { controller.open(DictSheet.ConfirmDeleteDictionary(dictionary.id)) }),
+                    ),
+                ),
+            ),
         )
         LazyColumn(Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             item {
@@ -311,7 +297,6 @@ fun CategoryScreen(controller: DictionariesController, dictionary: CustomDiction
     var draft by remember { mutableStateOf("") }
     var problem by remember { mutableStateOf<TextProblem?>(null) }
     var query by remember { mutableStateOf("") }
-    var menu by remember { mutableStateOf(false) }
     // Android: long-press starts a multi-select, shown in a contextual top bar (screens.md P1·09 c).
     var selected by remember { mutableStateOf(setOf<String>()) }
     // System back ends the selection first, like the bar's own back arrow.
@@ -334,32 +319,27 @@ fun CategoryScreen(controller: DictionariesController, dictionary: CustomDiction
             TopBar(
                 onBack = { selected = emptySet() },
                 title = stringResource(Res.string.dict_selected, selected.size),
-                trailing = {
-                    SpyIconButton(SpyIcons.Delete, stringResource(Res.string.dict_delete_short), {
+                actions = listOf(
+                    BarAction(SpyIcons.Delete, "trash", stringResource(Res.string.dict_delete_short), danger = true, onClick = {
                         controller.deleteWords(dictionary.id, category.name, selected)
                         selected = emptySet()
-                    })
-                },
+                    }),
+                ),
+                cancels = true,
             )
         } else {
             TopBar(
                 onBack = { controller.back() },
                 title = category.name + " · " + category.words.size,
-                trailing = {
-                    Box {
-                        SpyIconButton(SpyIcons.More, stringResource(Res.string.dict_more), { menu = true })
-                        DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, containerColor = c.surface2) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(Res.string.dict_rename_category), color = c.text) },
-                                onClick = { menu = false; controller.open(DictSheet.RenameCategory(dictionary.id, category.name)) },
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(Res.string.dict_delete_category), color = c.danger) },
-                                onClick = { menu = false; controller.open(DictSheet.ConfirmDeleteCategory(dictionary.id, category.name)) },
-                            )
-                        }
-                    }
-                },
+                actions = listOf(
+                    BarAction(
+                        SpyIcons.More, "ellipsis", stringResource(Res.string.dict_more),
+                        menu = listOf(
+                            BarAction(SpyIcons.More, "pencil", stringResource(Res.string.dict_rename_category), onClick = { controller.open(DictSheet.RenameCategory(dictionary.id, category.name)) }),
+                            BarAction(SpyIcons.Delete, "trash", stringResource(Res.string.dict_delete_category), danger = true, onClick = { controller.open(DictSheet.ConfirmDeleteCategory(dictionary.id, category.name)) }),
+                        ),
+                    ),
+                ),
             )
         }
         LazyColumn(Modifier.weight(1f), contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
