@@ -48,8 +48,8 @@ Zasad `server/` sadrži samo ono što je preostalo od stare web aplikacije, a tr
 | Datoteka | Što je |
 | --- | --- |
 | [`src/words.ts`](server/src/words.ts) | pravila za riječi i kategorije (čišćenje unosa, ključ za duplikate, ograničenja duljine) |
-| [`scripts/generate-seed.mjs`](server/scripts/generate-seed.mjs) | iz [`data/words.json`](data/words.json) generira `server/seed.sql` (`node scripts/generate-seed.mjs` iz mape `server/`) |
-| `schema.sql`, `seed.sql`, `reset.sql` | SQL stare ravne baze riječi; zamjenjuje ih shema rječnika u sljedećem PR-u |
+| [`scripts/generate-seed.mjs`](server/scripts/generate-seed.mjs) | iz [`data/words.json`](data/words.json) generira `server/seed.sql` (`npm run seed:generate` iz mape `server/`) |
+| `schema.sql`, `seed.sql` | SQL stare ravne baze riječi; zamjenjuje ih shema rječnika u sljedećem PR-u |
 
 Server za `v2` koristi **novi** Worker i **novu** D1 bazu, nikad produkcijske (`spy`, `spy-words`) s
 grane `main`.
