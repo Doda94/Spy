@@ -99,7 +99,9 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
 
     // Navigation
 
-    fun push(route: DictRoute) { stack = stack + route }
+    fun push(route: DictRoute) {
+        if (route != this.route) stack = stack + route
+    }
 
     /** Pops one screen; false when already at the list, so the system back can leave the tab. */
     fun back(): Boolean {
@@ -107,6 +109,12 @@ class DictionariesController(private val newId: () -> String = { "c" + Random.ne
         if (stack.size <= 1) return false
         stack = stack.dropLast(1)
         return true
+    }
+
+    /** Keeps the list and the first [depth] screens over it (iOS swipe-back pops several at once). */
+    fun popTo(depth: Int) {
+        sheet = null
+        if (depth + 1 < stack.size) stack = stack.take(depth + 1)
     }
 
     /**

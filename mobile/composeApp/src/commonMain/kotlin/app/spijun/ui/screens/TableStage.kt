@@ -128,8 +128,12 @@ import app.spijun.ui.design.SpyPill
 import app.spijun.ui.design.SpyTable
 import app.spijun.ui.design.cameraRotationFor
 import app.spijun.ui.design.cardShadow
+import app.spijun.ui.platform.AlertButton
+import app.spijun.ui.platform.AlertButtonKind
+import app.spijun.ui.platform.NativeAlert
 import app.spijun.ui.platform.OnAppBackground
 import app.spijun.ui.platform.SecureWhile
+import app.spijun.ui.platform.isIos
 import app.spijun.ui.platform.rememberAnnouncer
 import app.spijun.ui.platform.rememberScreenReaderOn
 import kotlinx.coroutines.Job
@@ -343,11 +347,14 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
     )
 
     if (askScreenReader) {
-        ScreenReaderWarning { choice ->
-            askScreenReader = false
-            controller.screenReaderReveal = choice
-            flipUp()
-        }
+        ScreenReaderWarning(
+            onChoice = { choice ->
+                askScreenReader = false
+                controller.screenReaderReveal = choice
+                flipUp()
+            },
+            onUnavailable = { askScreenReader = false },
+        )
     }
 
     BoxWithConstraints(Modifier.fillMaxSize().background(c.bg)) {
@@ -513,8 +520,21 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
 
 /** Asked once, before the first reveal with a screen reader on (decisions.md §9, screens.md P1·04). */
 @Composable
-private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit) {
+private fun ScreenReaderWarning(onChoice: (ScreenReaderReveal) -> Unit, onUnavailable: () -> Unit = {}) {
     val c = Spy.colors
+    if (isIos) {
+        NativeAlert(
+            title = null,
+            message = stringResource(Res.string.a11y_sr_warning),
+            buttons = listOf(
+                AlertButton(stringResource(Res.string.a11y_sr_warning_aloud), AlertButtonKind.Default) { onChoice(ScreenReaderReveal.Aloud) },
+                AlertButton(stringResource(Res.string.a11y_sr_warning_silent), AlertButtonKind.Default) { onChoice(ScreenReaderReveal.Silent) },
+            ),
+            sheet = false,
+            onUnavailable = onUnavailable,
+        )
+        return
+    }
     AlertDialog(
         onDismissRequest = {},
         containerColor = c.surface2,
