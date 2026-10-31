@@ -1,6 +1,7 @@
 package app.spijun.ui
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -76,8 +77,9 @@ class AppController {
      */
     fun onCustomsChanged(list: List<CustomDictionary>) {
         customs = list
+        val before = offered
         refreshSources()
-        val kept = SetupSelection.reconcile(offered, picks)
+        val kept = SetupSelection.reconcile(before, offered, picks)
         if (kept != picks) setup = setup.copy(dictionaries = kept.dictionaries, categories = kept.categories)
     }
 
@@ -101,15 +103,22 @@ class AppController {
 
     fun setAllCategories(selected: Boolean) = pick { SetupSelection.setAll(offered, it, selected) }
 
-    fun allCategoriesSelected(): Boolean = SetupSelection.allSelected(offered, picks)
+    // Setup reads these on every recomposition (each keystroke in a name), so they are computed
+    // only when the dictionaries or the picks change, not on every read.
+    private val poolState = derivedStateOf { SetupSelection.pool(offered, picks) }
+    private val categoryCountState = derivedStateOf { SetupSelection.categoryCount(offered, picks) }
+    private val allSelectedState = derivedStateOf { SetupSelection.allSelected(offered, picks) }
+    private val toFillState = derivedStateOf { SetupSelection.withEmptyPick(offered, picks) }
+
+    fun allCategoriesSelected(): Boolean = allSelectedState.value
 
     /** Words from every selected category of every selected dictionary. */
-    fun pool(): List<Word> = SetupSelection.pool(offered, picks)
+    fun pool(): List<Word> = poolState.value
 
-    fun selectedCategoryCount(): Int = SetupSelection.categoryCount(offered, picks)
+    fun selectedCategoryCount(): Int = categoryCountState.value
 
     /** Selected dictionaries where setup offers "add words" because a selected category is empty. */
-    fun dictionariesToFill(): Set<String> = SetupSelection.withEmptyPick(offered, picks)
+    fun dictionariesToFill(): Set<String> = toFillState.value
 
     fun problem(): SetupProblem? = SetupValidation.check(
         setup.players, setup.spies, setup.voting, setup.names, selectedCategoryCount(), pool().size,

@@ -48,8 +48,6 @@ import app.spijun.resources.Res
 import app.spijun.resources.common_cancel
 import app.spijun.resources.common_done
 import app.spijun.resources.common_back
-import app.spijun.resources.dict_name_en
-import app.spijun.resources.dict_name_hr
 import app.spijun.resources.player_default_name
 import app.spijun.resources.words_in_selection
 import app.spijun.resources.setup_categories
@@ -198,16 +196,12 @@ fun SetupScreen(
             }
 
             if (sources != null) {
-                val customNames = controller.customs.associate { it.id to it.name }
-                val builtInNames = mapOf("hr" to stringResource(Res.string.dict_name_hr), "en" to stringResource(Res.string.dict_name_en))
-                fun nameOf(id: String) = builtInNames[id] ?: customNames[id].orEmpty()
-
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     SectionLabel(stringResource(Res.string.setup_dictionaries))
                     SpyChips(
                         options = sources,
                         isSelected = { it.id in s.dictionaries },
-                        label = { nameOf(it.id) },
+                        label = { it.name },
                         onSelect = { controller.toggleDictionary(it.id) },
                     )
                 }
@@ -229,10 +223,9 @@ fun SetupScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         selectedDicts.forEach { dict ->
-                            val builtIn = dict.id in builtInNames
-                            val label = if (builtIn) Res.string.setup_dict_builtin_inline else Res.string.setup_dict_custom_inline
+                            val label = if (dict.builtIn) Res.string.setup_dict_builtin_inline else Res.string.setup_dict_custom_inline
                             Text(
-                                stringResource(label, nameOf(dict.id)),
+                                stringResource(label, dict.name),
                                 style = Spy.type.caption.copy(fontSize = 13.sp),
                                 color = c.textMuted,
                                 modifier = Modifier.padding(horizontal = 6.dp),
@@ -245,7 +238,7 @@ fun SetupScreen(
                                 }
                             }
                             val noCategories = dict.categories.isEmpty()
-                            if (!builtIn && (noCategories || dict.id in toFill)) {
+                            if (!dict.builtIn && (noCategories || dict.id in toFill)) {
                                 EmptyDictionaryCard(
                                     stringResource(if (noCategories) Res.string.setup_dict_no_categories else Res.string.setup_empty_pool_body),
                                     onAddWords = { onAddWords(dict.id) },
@@ -266,10 +259,11 @@ fun SetupScreen(
                 SetupProblem.DuplicateNames -> stringResource(Res.string.setup_names_duplicate) to c.warningText
                 else -> null
             }
+            val poolSize = controller.pool().size
             val text = when {
                 sources == null -> stringResource(Res.string.setup_loading) to c.textMuted
                 reason != null -> reason
-                else -> pluralStringResource(Res.plurals.words_in_selection, controller.pool().size, controller.pool().size) to c.textMuted
+                else -> pluralStringResource(Res.plurals.words_in_selection, poolSize, poolSize) to c.textMuted
             }
             Text(text.first, style = Spy.type.body, color = text.second, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             SpyButton(stringResource(Res.string.setup_start), onClick = { onStart { defaultNames[it - 1] } }, enabled = sources != null && problem == null)

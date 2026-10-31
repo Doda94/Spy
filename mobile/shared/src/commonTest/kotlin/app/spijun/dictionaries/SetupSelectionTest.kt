@@ -7,7 +7,7 @@ import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class SetupSelectionTest {
-    private val hr = SetupSource("hr", listOf(SetupCategory("Mjesta", listOf("Plaža", "Škola")), SetupCategory("Hrana", listOf("Sir"))))
+    private val hr = SetupSource("hr", "Hrvatski", builtIn = true, categories = listOf(SetupCategory("Mjesta", listOf("Plaža", "Škola")), SetupCategory("Hrana", listOf("Sir"))))
     private val party = CustomDictionary(
         id = "c1",
         name = "Party pack",
@@ -21,9 +21,13 @@ class SetupSelectionTest {
 
     private fun key(dict: String, category: String) = SetupSelection.key(dict, category)
 
+    private fun custom(id: String, categories: List<SetupCategory>) = SetupSource(id, "Rječnik $id", builtIn = false, categories = categories)
+
     @Test
     fun customDictionaryBecomesASourceWithItsCategoriesInOrder() {
         assertEquals("c1", party.id)
+        assertEquals("Party pack", party.name)
+        assertEquals(false, party.builtIn)
         assertEquals(listOf("Filmovi", "Sportaši"), party.categories.map { it.name })
         assertEquals(listOf("Titanic", "Shrek"), party.categories.first().words)
     }
@@ -46,7 +50,7 @@ class SetupSelectionTest {
 
     @Test
     fun theSameCategoryNameInTwoDictionariesIsTwoSeparateKeys() {
-        val twin = SetupSource("c2", listOf(SetupCategory("Mjesta", listOf("Park"))))
+        val twin = custom("c2", listOf(SetupCategory("Mjesta", listOf("Park"))))
         val picks = SetupPicks(setOf("hr", "c2"), setOf(key("c2", "Mjesta")))
         assertEquals(listOf(Word("Park", "Mjesta")), SetupSelection.pool(listOf(hr, twin), picks))
         assertEquals(1, SetupSelection.categoryCount(listOf(hr, twin), picks))
@@ -81,7 +85,7 @@ class SetupSelectionTest {
 
     @Test
     fun anEmptyDictionaryContributesNothingAndHasNoCategoriesToTick() {
-        val empty = SetupSource("c9", emptyList())
+        val empty = custom("c9", emptyList())
         val on = SetupSelection.toggleDictionary(listOf(hr, empty), SetupPicks(), "c9")
         assertEquals(SetupPicks(setOf("c9")), on)
         assertEquals(0, SetupSelection.categoryCount(listOf(hr, empty), on))
@@ -105,22 +109,22 @@ class SetupSelectionTest {
     @Test
     fun reconcileDropsADeletedDictionaryWithItsCategories() {
         val picks = SetupPicks(setOf("hr", "c1"), setOf(key("hr", "Mjesta"), key("c1", "Filmovi")))
-        val after = SetupSelection.reconcile(listOf(hr), picks)
+        val after = SetupSelection.reconcile(sources, listOf(hr), picks)
         assertEquals(SetupPicks(setOf("hr"), setOf(key("hr", "Mjesta"))), after)
     }
 
     @Test
     fun reconcileDropsADeletedCategoryButKeepsTheDictionary() {
         val picks = SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi"), key("c1", "Sportaši")))
-        val withoutSports = SetupSource("c1", listOf(party.categories.first()))
-        assertEquals(SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi"))), SetupSelection.reconcile(listOf(withoutSports), picks))
+        val withoutSports = custom("c1", listOf(party.categories.first()))
+        assertEquals(SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi"))), SetupSelection.reconcile(sources, listOf(withoutSports), picks))
     }
 
     @Test
     fun reconcileDropsARenamedCategoryEvenWhenOnlyTheCaseChanged() {
         val picks = SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi")))
-        val renamed = SetupSource("c1", listOf(SetupCategory("Serije", listOf("Dark")), SetupCategory("filmovi", listOf("Shrek"))))
-        val after = SetupSelection.reconcile(listOf(renamed), picks)
+        val renamed = custom("c1", listOf(SetupCategory("Serije", listOf("Dark")), SetupCategory("filmovi", listOf("Shrek"))))
+        val after = SetupSelection.reconcile(sources, listOf(renamed), picks)
         assertEquals(SetupPicks(setOf("c1"), emptySet()), after)
         assertEquals(emptyList(), SetupSelection.pool(listOf(renamed), after))
     }
@@ -128,23 +132,69 @@ class SetupSelectionTest {
     @Test
     fun reconcileKeepsEverythingThatStillExistsAndReturnsTheSameValue() {
         val picks = SetupPicks(setOf("hr", "c1"), setOf(key("hr", "Mjesta"), key("c1", "Filmovi")))
-        assertSame(picks, SetupSelection.reconcile(sources, picks))
+        assertSame(picks, SetupSelection.reconcile(sources, sources, picks))
     }
 
     @Test
     fun reconcileRemovesStrayCategoryKeysOfUntickedDictionaries() {
         val picks = SetupPicks(setOf("hr"), setOf(key("hr", "Mjesta"), key("c1", "Filmovi")))
-        assertEquals(SetupPicks(setOf("hr"), setOf(key("hr", "Mjesta"))), SetupSelection.reconcile(sources, picks))
+        assertEquals(SetupPicks(setOf("hr"), setOf(key("hr", "Mjesta"))), SetupSelection.reconcile(sources, sources, picks))
     }
 
     @Test
     fun withEmptyPickListsEveryDictionaryThatNeedsWords() {
-        val fam = SetupSource("c2", listOf(SetupCategory("Rođaci", emptyList())))
+        val fam = custom("c2", listOf(SetupCategory("Rođaci", emptyList())))
         val all = listOf(hr, party, fam)
         val picks = SetupPicks(setOf("hr", "c1", "c2"), setOf(key("hr", "Mjesta"), key("c1", "Sportaši"), key("c2", "Rođaci")))
         assertEquals(setOf("c1", "c2"), SetupSelection.withEmptyPick(all, picks))
         assertEquals(emptySet(), SetupSelection.withEmptyPick(all, SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi")))))
         // An empty category that is not ticked is no reason to complain.
         assertEquals(emptySet(), SetupSelection.withEmptyPick(all, SetupPicks(setOf("c1"), emptySet())))
+    }
+
+    @Test
+    fun aNewCategoryOfAFullyTickedDictionaryIsTickedToo() {
+        val picks = SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi"), key("c1", "Sportaši")))
+        val grown = custom("c1", party.categories + SetupCategory("Serije", listOf("Dark")))
+        val after = SetupSelection.reconcile(sources, listOf(hr, grown), picks)
+        assertEquals(picks.categories + key("c1", "Serije"), after.categories)
+        assertTrue(SetupSelection.allSelected(listOf(hr, grown), after))
+    }
+
+    @Test
+    fun aNewCategoryOfAPartlyTickedDictionaryStaysUnticked() {
+        val picks = SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi")))
+        val grown = custom("c1", party.categories + SetupCategory("Serije", listOf("Dark")))
+        assertSame(picks, SetupSelection.reconcile(sources, listOf(hr, grown), picks))
+    }
+
+    @Test
+    fun aRenameInAFullyTickedDictionaryKeepsItFullyTicked() {
+        val picks = SetupPicks(setOf("c1"), setOf(key("c1", "Filmovi"), key("c1", "Sportaši")))
+        val renamed = custom("c1", listOf(SetupCategory("Kino", listOf("Titanic")), party.categories[1]))
+        val after = SetupSelection.reconcile(sources, listOf(hr, renamed), picks)
+        assertEquals(setOf(key("c1", "Kino"), key("c1", "Sportaši")), after.categories)
+    }
+
+    @Test
+    fun theFirstCategoriesOfAnEmptyTickedDictionaryAreTicked() {
+        val empty = custom("c9", emptyList())
+        val picks = SetupPicks(setOf("c9"), emptySet())
+        val filled = custom("c9", listOf(SetupCategory("Rođaci", listOf("Teta"))))
+        assertEquals(setOf(key("c9", "Rođaci")), SetupSelection.reconcile(listOf(empty), listOf(filled), picks).categories)
+    }
+
+    @Test
+    fun aDictionaryThatJustAppearedAddsNothingByItself() {
+        val picks = SetupPicks(setOf("hr"), setOf(key("hr", "Mjesta")))
+        assertSame(picks, SetupSelection.reconcile(listOf(hr), sources, picks))
+    }
+
+    @Test
+    fun aWordInTwoTickedDictionariesIsInThePoolOnce() {
+        val copy = custom("c2", listOf(SetupCategory("Mjesta", listOf("plaža", "Park"))))
+        val picks = SetupPicks(setOf("hr", "c2"), setOf(key("hr", "Mjesta"), key("c2", "Mjesta")))
+        val pool = SetupSelection.pool(listOf(hr, copy), picks)
+        assertEquals(listOf("Plaža", "Škola", "Park"), pool.map { it.text })
     }
 }
