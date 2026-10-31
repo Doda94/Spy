@@ -40,6 +40,7 @@ import app.spijun.ui.screens.SetupScreen
 import app.spijun.ui.screens.dictionaries.DictionariesScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 
@@ -82,6 +83,8 @@ fun SpijunApp(
 ) {
     val language = Locale.current.language
     var tab by remember { mutableStateOf(Tab.Play) }
+    /** Set while a dictionary opened from setup's "Dodaj riječi" is on screen; back returns to setup. */
+    var fillingFromSetup by remember { mutableStateOf(false) }
     val storage = rememberTextStorage()
 
     LaunchedEffect(Unit) {
@@ -109,6 +112,15 @@ fun SpijunApp(
     // Setup offers the player's dictionaries too, and drops ticked ones that were deleted or renamed.
     LaunchedEffect(Unit) {
         snapshotFlow { dictionaries.customs }.collect { controller.onCustomsChanged(it) }
+    }
+
+    // Leaving the dictionary that setup sent the player to (back to the list) goes back to setup.
+    LaunchedEffect(fillingFromSetup) {
+        if (!fillingFromSetup) return@LaunchedEffect
+        snapshotFlow { tab == Tab.Dictionaries && dictionaries.route == DictRoute.List }.first { it }
+        fillingFromSetup = false
+        tab = Tab.Play
+        controller.openSetup()
     }
 
     // A dictionary link opens the import preview, but only from the menu screens, never over a game.
@@ -139,9 +151,11 @@ fun SpijunApp(
                         controller,
                         onBack = controller::goHome,
                         onAddWords = { id ->
-                            controller.goHome()
-                            dictionaries.show(id)
-                            tab = Tab.Dictionaries
+                            if (dictionaries.show(id)) {
+                                controller.goHome()
+                                tab = Tab.Dictionaries
+                                fillingFromSetup = true
+                            }
                         },
                         onStart = { controller.startGame(it) },
                     )
