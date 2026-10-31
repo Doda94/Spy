@@ -7,15 +7,6 @@
 export const MAX_WORD_LENGTH = 60;
 export const MAX_CATEGORY_LENGTH = 40;
 
-/** Kategorije koje dolaze s aplikacijom; korisnik može dodati svoje. */
-export const DEFAULT_CATEGORY = "Mjesta";
-
-export type Word = {
-  id: number;
-  text: string;
-  category: string;
-};
-
 /** Miče višak razmaka s rubova i iz sredine. */
 export function cleanWord(raw: string): string {
   return raw.trim().replace(/\s+/g, " ");
@@ -48,23 +39,4 @@ export function checkCategory(raw: string): CategoryCheck {
     return { ok: false, reason: "category-too-long" };
   }
   return { ok: true, text };
-}
-
-/** Popis kategorija koje postoje u bazi, poredan po abecedi. */
-export function categoriesOf(words: Word[]): string[] {
-  const seen = new Map<string, string>();
-  for (const word of words) {
-    const key = wordKey(word.category);
-    if (!seen.has(key)) seen.set(key, word.category);
-  }
-  return [...seen.values()].sort((a, b) => a.localeCompare(b, "hr"));
-}
-
-/**
- * Ako kategorija već postoji (bez obzira na velika/mala slova), vraća njezin
- * zapisani oblik — tako "mjesta" ne stvara drugu kategoriju uz "Mjesta".
- */
-export function canonicalCategory(candidate: string, existing: string[]): string {
-  const key = wordKey(candidate);
-  return existing.find((c) => wordKey(c) === key) ?? cleanWord(candidate);
 }
