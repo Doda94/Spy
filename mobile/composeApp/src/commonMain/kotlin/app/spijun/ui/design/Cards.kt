@@ -75,7 +75,8 @@ fun Modifier.cardShadow(width: Dp, shape: androidx.compose.ui.graphics.Shape = c
 /**
  * Face-down card: dark back with a vermilion lattice and the "Š" medallion. The back itself (fill,
  * lattice, medallion ring, border) is drawn once into a bitmap shared by every card that looks the
- * same, so a deal, a camera turn or a flip only draws an image.
+ * same, so a deal, a camera turn or a flip only draws an image. [alpha] fades that image (not the
+ * medallion letter or [content]); read at draw time, it lets a seat fade without an offscreen layer.
  */
 @Composable
 fun CardBack(
@@ -83,6 +84,7 @@ fun CardBack(
     modifier: Modifier = Modifier,
     lifted: Boolean = false,
     medallion: Boolean = true,
+    alpha: () -> Float = { 1f },
     content: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     val c = Spy.colors
@@ -96,7 +98,7 @@ fun CardBack(
             .drawWithCache {
                 val back = cardBackBitmap(look)
                 val dst = IntSize(size.width.roundToInt(), size.height.roundToInt())
-                onDrawBehind { drawImage(back, dstSize = dst, filterQuality = FilterQuality.Medium) }
+                onDrawBehind { drawImage(back, dstSize = dst, alpha = alpha(), filterQuality = FilterQuality.Medium) }
             }
             // Only added content needs the clip; a bare back (every seat) stays without a layer.
             .then(if (content != null) Modifier.clip(shape) else Modifier),
@@ -165,15 +167,19 @@ private fun DrawScope.drawCardBack(look: BackLook, s: Size) {
     }
 }
 
-/** Dashed outline where a knocked-out player's seat card used to be. */
+/**
+ * Dashed outline where a knocked-out player's seat card used to be. It is a single stroke, so its
+ * 0.7 and [alpha] go on the colour instead of a layer and look the same.
+ */
 @Composable
-fun EmptySeat(width: Dp, modifier: Modifier = Modifier) {
+fun EmptySeat(width: Dp, modifier: Modifier = Modifier, alpha: () -> Float = { 1f }) {
     val c = Spy.colors
-    Canvas(modifier.size(width, width * CARD_ASPECT).graphicsLayer { alpha = 0.7f }) {
+    Canvas(modifier.size(width, width * CARD_ASPECT)) {
         val shape = CutCornerShape(cutFor(width))
         val outline = shape.createOutline(size, androidx.compose.ui.unit.LayoutDirection.Ltr, this)
         val path = Path().apply { addOutline(outline) }
-        drawPath(path, c.tableRing, style = Stroke(1.5f * density, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f * density, 5f * density))))
+        val color = c.tableRing.copy(alpha = c.tableRing.alpha * 0.7f * alpha())
+        drawPath(path, color, style = Stroke(1.5f * density, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f * density, 5f * density))))
     }
 }
 
