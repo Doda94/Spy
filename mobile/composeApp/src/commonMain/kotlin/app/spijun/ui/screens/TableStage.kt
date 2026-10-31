@@ -231,8 +231,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         phase = RevealPhase.Revealed
         faceHidden = false
         val speak = screenReader && controller.screenReaderReveal == ScreenReaderReveal.Aloud
+        val revealHaptic = if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen
         val swap = {
-            haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+            haptics.perform(revealHaptic)
             if (speak) announce(roleAnnouncement)
         }
         scope.launch {
@@ -240,6 +241,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 flip.snapTo(180f)
                 swap()
             } else {
+                haptics.prepare(revealHaptic)
                 flip.animateTo(90f, tween(SpyMotion.FLIP_IN_MS, easing = LinearEasing))
                 swap()
                 flip.animateTo(180f, SpyMotion.card())

@@ -32,15 +32,19 @@ import platform.darwin.dispatch_time
 actual fun rememberSpyHaptics(enabled: Boolean): SpyHaptics = remember(enabled) { IosHaptics(enabled) }
 
 private class IosHaptics(private val enabled: Boolean) : SpyHaptics {
-    private fun impact(style: UIImpactFeedbackStyle, afterMs: Long = 0) = later(afterMs) {
-        UIImpactFeedbackGenerator(style).apply { prepare(); impactOccurred() }
-    }
+    // One generator per style, reused: a new one plus prepare() right before it fires can hold up
+    // the frame it fires in (the reveal fires as the card passes 90°).
+    private val impacts = mutableMapOf<UIImpactFeedbackStyle, UIImpactFeedbackGenerator>()
+    private val notifier by lazy { UINotificationFeedbackGenerator() }
+    private val selector by lazy { UISelectionFeedbackGenerator() }
 
-    private fun notify(type: UINotificationFeedbackType, afterMs: Long = 0) = later(afterMs) {
-        UINotificationFeedbackGenerator().apply { prepare(); notificationOccurred(type) }
-    }
+    private fun impactGenerator(style: UIImpactFeedbackStyle) = impacts.getOrPut(style) { UIImpactFeedbackGenerator(style) }
 
-    private fun selection() = UISelectionFeedbackGenerator().apply { prepare(); selectionChanged() }
+    private fun impact(style: UIImpactFeedbackStyle, afterMs: Long = 0) = later(afterMs) { impactGenerator(style).impactOccurred() }
+
+    private fun notify(type: UINotificationFeedbackType, afterMs: Long = 0) = later(afterMs) { notifier.notificationOccurred(type) }
+
+    private fun selection() = selector.selectionChanged()
 
     private fun later(ms: Long, block: () -> Unit) {
         if (ms == 0L) block()
@@ -72,6 +76,16 @@ private class IosHaptics(private val enabled: Boolean) : SpyHaptics {
                 notify(UINotificationFeedbackType.UINotificationFeedbackTypeError, 900)
             }
             SpyHaptic.Error -> notify(UINotificationFeedbackType.UINotificationFeedbackTypeError)
+        }
+    }
+
+    /** Only the reveal is warmed: it is the one that fires in the middle of an animation. */
+    override fun prepare(h: SpyHaptic) {
+        if (!enabled) return
+        when (h) {
+            SpyHaptic.RevealCitizen -> impactGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleMedium).prepare()
+            SpyHaptic.RevealSpy -> impactGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleHeavy).prepare()
+            else -> Unit
         }
     }
 }
