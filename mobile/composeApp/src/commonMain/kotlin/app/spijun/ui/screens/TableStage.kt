@@ -195,9 +195,15 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         phase = RevealPhase.Turning
         delay(if (reduce) 120 else SpyMotion.TABLE_TURN_MS.toLong())
         phase = RevealPhase.Handoff
+        faceHidden = false
         haptics.perform(SpyHaptic.HideCard)
         if (reduce) { faceAlpha.snapTo(0f); lift.snapTo(1f); faceAlpha.animateTo(1f, tween(SpyMotion.REDUCED_FADE_MS)) }
-        else lift.animateTo(1f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
+        else {
+            // Compose the lifted card and cache its back bitmap before the lift motion begins.
+            lift.snapTo(0.02f)
+            withFrameMillis { }
+            lift.animateTo(1f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
+        }
     }
 
     fun hideAndPass() {
@@ -231,8 +237,9 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         phase = RevealPhase.Revealed
         faceHidden = false
         val speak = screenReader && controller.screenReaderReveal == ScreenReaderReveal.Aloud
+        val revealHaptic = if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen
         val swap = {
-            haptics.perform(if (role == Role.Spy) SpyHaptic.RevealSpy else SpyHaptic.RevealCitizen)
+            haptics.perform(revealHaptic)
             if (speak) announce(roleAnnouncement)
         }
         scope.launch {
@@ -240,6 +247,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 flip.snapTo(180f)
                 swap()
             } else {
+                haptics.prepare(revealHaptic)
                 flip.animateTo(90f, tween(SpyMotion.FLIP_IN_MS, easing = LinearEasing))
                 swap()
                 flip.animateTo(180f, SpyMotion.card())
@@ -265,7 +273,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             phase = RevealPhase.Handoff
             autoHide?.cancel()
             barProgress = 1f
-            scope.launch { flip.snapTo(0f) }
+            scope.launch {
+                flip.snapTo(0f)
+                faceHidden = false
+            }
         }
     }
     SecureWhile(reveal != null)
@@ -395,7 +406,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 if (inDiscussion) DiscussionCentre(total, remaining, tension, game.round, pickMode, unit)
             }
 
-            // The lifted role card (reveal only)
+            // The lifted role card (reveal only). It enters with the lift in Handoff, so the face is
+            // composed and measured while the card still waits for the tap, not during the flip.
             if (reveal != null && lifted) {
                 Box(
                     Modifier

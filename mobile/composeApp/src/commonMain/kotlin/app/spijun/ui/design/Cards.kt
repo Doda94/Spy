@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -25,13 +24,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.CacheDrawScope
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -40,10 +50,14 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.addOutline
+import app.spijun.ui.platform.freeze
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 /** Card size scales everything from the 300 × 420 reveal size. */
 const val CARD_ASPECT = 1.4f
@@ -58,44 +72,41 @@ fun cardShape(width: Dp) = CutCornerShape(cutFor(width))
 fun Modifier.cardShadow(width: Dp, shape: androidx.compose.ui.graphics.Shape = cardShape(width)): Modifier =
     this.shadow(elevation = (width.value / 12f).dp, shape = shape, ambientColor = Color.Black, spotColor = Color.Black)
 
-/** Face-down card: dark back with a vermilion lattice and the "Š" medallion. */
+/**
+ * Face-down card: dark back with a vermilion lattice and the "Š" medallion. The back itself (fill,
+ * lattice, medallion ring, border) is drawn once into a bitmap shared by every card that looks the
+ * same, so a deal, a camera turn or a flip only draws an image. [alpha] fades that image (not the
+ * medallion letter or [content]); read at draw time, it lets a seat fade without an offscreen layer.
+ */
 @Composable
 fun CardBack(
     width: Dp,
     modifier: Modifier = Modifier,
     lifted: Boolean = false,
     medallion: Boolean = true,
+    alpha: () -> Float = { 1f },
     content: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     val c = Spy.colors
     val shape = cardShape(width)
     val unit = width.value / 300f
+    val look = BackLook(width, medallion, c.cardBack, c.cardBackLattice, c.cardBackStroke, c.vermilion)
     Box(
         modifier
             .size(width, width * CARD_ASPECT)
             .then(if (lifted) Modifier.cardShadow(width, shape) else Modifier)
-            .clip(shape)
-            .background(c.cardBack)
-            .border((1.5f * unit.coerceAtLeast(0.7f)).dp, c.cardBackStroke, shape),
+            .drawWithCache {
+                val back = cardBackBitmap(look)
+                val dst = IntSize(size.width.roundToInt(), size.height.roundToInt())
+                onDrawBehind { drawImage(back, dstSize = dst, alpha = alpha(), filterQuality = FilterQuality.Medium) }
+            }
+            // Only added content needs the clip; a bare back (every seat) stays without a layer.
+            .then(if (content != null) Modifier.clip(shape) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(Modifier.fillMaxSize()) {
-            val step = (12f * unit).coerceAtLeast(5f) * density
-            val w = (1.5f * unit).coerceAtLeast(0.7f) * density
-            var x = -size.height
-            while (x < size.width + size.height) {
-                drawLine(c.cardBackLattice, Offset(x, 0f), Offset(x + size.height, size.height), w)
-                drawLine(c.cardBackLattice, Offset(x + size.height, 0f), Offset(x, size.height), w)
-                x += step
-            }
-        }
-        if (medallion) {
-            val d = (62f * unit).dp
-            Box(
-                Modifier.size(d).clip(CircleShape).background(c.cardBack).border((1.5f * unit).coerceAtLeast(0.8f).dp, c.vermilion, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (width > 100.dp) {
+        if (medallion && width > 100.dp) {
+            Box(Modifier.size((62f * unit).dp), contentAlignment = Alignment.Center) {
+                CapDisplayFontScale {
                     Text("Š", fontFamily = Spy.type.titleLarge.fontFamily, fontWeight = FontWeight.ExtraBold, fontSize = (34f * unit).sp, color = c.vermilion)
                 }
             }
@@ -104,15 +115,76 @@ fun CardBack(
     }
 }
 
-/** Dashed outline where a knocked-out player's seat card used to be. */
+/** Everything a bare back's pixels depend on, apart from its size. */
+private data class BackLook(val width: Dp, val medallion: Boolean, val fill: Color, val lattice: Color, val stroke: Color, val ring: Color)
+
+private data class BackKey(val look: BackLook, val size: Size, val density: Float)
+
+// Only a few backs are on screen at once (all seats share one); the least-recently used is dropped first.
+private val backs = LinkedHashMap<BackKey, ImageBitmap>()
+private const val MAX_BACKS = 6
+
+private fun CacheDrawScope.cardBackBitmap(look: BackLook): ImageBitmap {
+    val key = BackKey(look, size, density)
+    backs.remove(key)?.let {
+        backs[key] = it
+        return it
+    }
+    // Seat cards are seen through the camera push and turned, so they get twice the pixels.
+    val oversample = if (look.width < 100.dp) 2 else 1
+    val image = ImageBitmap(size.width.roundToInt() * oversample, size.height.roundToInt() * oversample)
+    val layout = size
+    CanvasDrawScope().draw(this, layoutDirection, Canvas(image), Size(image.width.toFloat(), image.height.toFloat())) {
+        scale(oversample.toFloat(), pivot = Offset.Zero) { drawCardBack(look, layout) }
+    }
+    image.freeze()
+    if (backs.size >= MAX_BACKS) backs.remove(backs.keys.first())
+    backs[key] = image
+    return image
+}
+
+/** The bare back at layout size [s], matching what clip + background + border + children drew. */
+private fun DrawScope.drawCardBack(look: BackLook, s: Size) {
+    val unit = look.width.value / 300f
+    val card = Path().apply { addOutline(CutCornerShape(cutFor(look.width)).createOutline(s, layoutDirection, this@drawCardBack)) }
+    clipPath(card) {
+        drawRect(look.fill, size = s)
+        val step = (12f * unit).coerceAtLeast(5f) * density
+        val w = (1.5f * unit).coerceAtLeast(0.7f) * density
+        var x = -s.height
+        while (x < s.width + s.height) {
+            drawLine(look.lattice, Offset(x, 0f), Offset(x + s.height, s.height), w)
+            drawLine(look.lattice, Offset(x + s.height, 0f), Offset(x, s.height), w)
+            x += step
+        }
+        if (look.medallion) {
+            // Placed and stroked the way Box(Alignment.Center) and Modifier.border would.
+            val d = (62f * unit).dp.roundToPx()
+            val at = Alignment.Center.align(IntSize(d, d), IntSize(s.width.roundToInt(), s.height.roundToInt()), layoutDirection)
+            val centre = Offset(at.x + d / 2f, at.y + d / 2f)
+            val ring = ceil((1.5f * unit).coerceAtLeast(0.8f).dp.toPx())
+            drawCircle(look.fill, radius = d / 2f, center = centre)
+            drawCircle(look.ring, radius = (d - ring) / 2f, center = centre, style = Stroke(ring))
+        }
+        // Modifier.border on a path: a stroke twice as wide, centred on the edge, clipped inside.
+        val border = ceil((1.5f * unit.coerceAtLeast(0.7f)).dp.toPx())
+        drawPath(card, look.stroke, style = Stroke(border * 2))
+    }
+}
+
+/**
+ * Dashed outline where a knocked-out player's seat card used to be. It is a single stroke, so its
+ * 0.7 and [alpha] go on the colour instead of a layer and look the same.
+ */
 @Composable
-fun EmptySeat(width: Dp, modifier: Modifier = Modifier) {
+fun EmptySeat(width: Dp, modifier: Modifier = Modifier, alpha: () -> Float = { 1f }) {
     val c = Spy.colors
-    Canvas(modifier.size(width, width * CARD_ASPECT).graphicsLayer { alpha = 0.7f }) {
+    Canvas(modifier.size(width, width * CARD_ASPECT)) {
         val shape = CutCornerShape(cutFor(width))
         val outline = shape.createOutline(size, androidx.compose.ui.unit.LayoutDirection.Ltr, this)
         val path = Path().apply { addOutline(outline) }
-        drawPath(path, c.tableRing, style = Stroke(1.5f * density, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f * density, 5f * density))))
+        val color = c.tableRing.copy(alpha = c.tableRing.alpha * 0.7f * alpha())
+        drawPath(path, color, style = Stroke(1.5f * density, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f * density, 5f * density))))
     }
 }
 
@@ -310,7 +382,10 @@ private fun TextLayoutResult.breaksInsideAWord(text: String): Boolean =
 
 /**
  * Flip container: rotateY 0→180 swapping to [front] at 90°. Content is mirrored so it reads correctly.
- * [flip] is read in graphicsLayer; only crossing 90° recomposes.
+ * Both faces are composed and laid out up front and 90° only switches which one is drawn, so the
+ * turn never waits on a face being built (the word alone measures up to seven layouts).
+ * [flip] is read in graphicsLayer and draw; nothing recomposes during the turn. [front] is never
+ * drawn before 90°, and callers keep its text out of semantics.
  */
 @Composable
 fun FlipCard(
@@ -330,7 +405,7 @@ fun FlipCard(
                 cameraDistance = 14f * density
             },
     ) {
-        if (!showFront) back()
-        else Box(Modifier.graphicsLayer { rotationY = 180f }) { front() }
+        Box(Modifier.drawWithContent { if (!showFront) drawContent() }) { back() }
+        Box(Modifier.graphicsLayer { rotationY = 180f }.drawWithContent { if (showFront) drawContent() }) { front() }
     }
 }

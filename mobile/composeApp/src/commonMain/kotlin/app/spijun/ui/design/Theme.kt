@@ -169,7 +169,12 @@ object SpyMotion {
 enum class SpyHaptic { StepperTick, RevealCitizen, RevealSpy, HideCard, VoteCast, SuspenseTick, KnockOut, GameOverReveal, ThirtySeconds, TimeUp, Error, ScanFound }
 
 /** expect/actual: iOS → UIKit feedback generators / Core Haptics; Android → HapticFeedbackConstants / VibrationEffect.Composition. See motion.md §7. */
-interface SpyHaptics { fun perform(h: SpyHaptic) }
+interface SpyHaptics {
+    fun perform(h: SpyHaptic)
+
+    /** Hint that [h] fires within a moment, so its first [perform] doesn't stall a frame. */
+    fun prepare(h: SpyHaptic) {}
+}
 
 // ───────────────────────── Theme ─────────────────────────
 

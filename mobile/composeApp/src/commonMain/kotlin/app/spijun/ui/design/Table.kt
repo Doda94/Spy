@@ -14,7 +14,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -165,6 +166,10 @@ private fun Seat(
         }
     }
     val alpha by animateFloatAsState(if (dim) 0.4f else 1f, SpyMotion.standard(), label = "seat-alpha")
+    // Applied to each thing the seat draws, not to its layer: a layer with alpha below 1 is drawn
+    // offscreen every frame, and the dimmed seats stay dimmed through the whole reveal. The card,
+    // the outline and the name don't overlap, so it looks the same.
+    val fade = { (alpha * progress.value).coerceIn(0f, 1f) }
     val lift by animateFloatAsState(if (selected) 1.2f else 1f, SpyMotion.card(), label = "seat-lift")
 
     // Idle tension: drift, quicker when uneasy, tremble when nervous (motion.md §3). [drift] runs
@@ -215,7 +220,6 @@ private fun Seat(
                     Tension.Nervous, Tension.Frozen -> v
                     else -> -1.5f - v * 2.5f
                 }
-                this.alpha = alpha * progress.value
                 val s = (if (reduce) 1f else 0.6f + 0.4f * progress.value) * lift
                 scaleX = s; scaleY = s
             }
@@ -226,26 +230,31 @@ private fun Seat(
         contentAlignment = Alignment.Center,
     ) {
         when {
-            out -> EmptySeat(w)
-            lifted -> EmptySeat(w)
+            out -> EmptySeat(w, alpha = fade)
+            lifted -> EmptySeat(w, alpha = fade)
             else -> CardBack(
                 w,
                 medallion = true,
+                alpha = fade,
                 modifier = Modifier
                     .then(if (selected || ring) Modifier.border(2.dp, c.text, CutCornerShape(5.dp)) else Modifier),
             )
         }
         // Name on the outer edge; wrapContentSize(unbounded) lets it extend past the card.
-        Text(
+        // BasicText (styled as Text would be) because its colour can follow [fade] at draw time.
+        val nameColor = if (out) c.eliminated else c.text
+        BasicText(
             name,
-            fontFamily = Spy.type.body.fontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = (11f * unit).coerceAtLeast(9f).sp,
-            color = if (out) c.eliminated else c.text,
-            textDecoration = if (out) TextDecoration.LineThrough else null,
+            style = LocalTextStyle.current.merge(
+                fontFamily = Spy.type.body.fontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = (11f * unit).coerceAtLeast(9f).sp,
+                textDecoration = if (out) TextDecoration.LineThrough else null,
+                textAlign = TextAlign.Center,
+            ),
+            color = { nameColor.copy(alpha = nameColor.alpha * fade()) },
             maxLines = 1,
             softWrap = false,
-            textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .wrapContentSize(unbounded = true)
