@@ -395,7 +395,8 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 if (inDiscussion) DiscussionCentre(total, remaining, tension, game.round, pickMode, unit)
             }
 
-            // The lifted role card (reveal only)
+            // The lifted role card (reveal only). It enters with the lift in Handoff, so the face is
+            // composed and measured while the card still waits for the tap, not during the flip.
             if (reveal != null && lifted) {
                 Box(
                     Modifier

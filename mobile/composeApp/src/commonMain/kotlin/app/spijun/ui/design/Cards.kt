@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -310,7 +311,10 @@ private fun TextLayoutResult.breaksInsideAWord(text: String): Boolean =
 
 /**
  * Flip container: rotateY 0→180 swapping to [front] at 90°. Content is mirrored so it reads correctly.
- * [flip] is read in graphicsLayer; only crossing 90° recomposes.
+ * Both faces are composed and laid out up front and 90° only switches which one is drawn, so the
+ * turn never waits on a face being built (the word alone measures up to seven layouts).
+ * [flip] is read in graphicsLayer and draw; nothing recomposes during the turn. [front] is never
+ * drawn before 90°, and callers keep its text out of semantics.
  */
 @Composable
 fun FlipCard(
@@ -330,7 +334,7 @@ fun FlipCard(
                 cameraDistance = 14f * density
             },
     ) {
-        if (!showFront) back()
-        else Box(Modifier.graphicsLayer { rotationY = 180f }) { front() }
+        Box(Modifier.drawWithContent { if (!showFront) drawContent() }) { back() }
+        Box(Modifier.graphicsLayer { rotationY = 180f }.drawWithContent { if (showFront) drawContent() }) { front() }
     }
 }
