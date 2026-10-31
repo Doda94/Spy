@@ -4,6 +4,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+// Ista pravila čišćenja i usporedbe kao na serveru (Node pokreće .ts bez prevođenja).
+import { cleanWord, wordKey } from "../src/words.ts";
 
 // server/scripts/ -> server/ (mapa u koju se piše seed.sql) -> korijen repozitorija (data/).
 const serverDir = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -17,7 +19,6 @@ const DICTIONARIES = [
 ];
 
 const quote = (value) => `'${value.replace(/'/g, "''")}'`;
-const clean = (value) => String(value).trim().replace(/\s+/g, " ");
 
 const statements = [];
 const summary = [];
@@ -37,15 +38,15 @@ DICTIONARIES.forEach((dictionary, position) => {
   let wordCount = 0;
 
   Object.entries(byCategory).forEach(([rawCategory, words]) => {
-    const category = clean(rawCategory);
+    const category = cleanWord(String(rawCategory));
     if (!category || !Array.isArray(words)) return;
-    const categoryKey = category.toLocaleLowerCase(language);
+    const categoryKey = wordKey(category, language);
 
     const rows = [];
     for (const raw of words) {
-      const text = clean(raw);
+      const text = cleanWord(String(raw));
       if (!text) continue;
-      const key = text.toLocaleLowerCase(language);
+      const key = wordKey(text, language);
       // Riječ je jedinstvena u cijelom rječniku, ne samo unutar kategorije.
       if (seen.has(key)) continue;
       seen.add(key);
