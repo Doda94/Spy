@@ -52,6 +52,10 @@ data class SpyColors(
     val cardBack: Color = Color(0xFF2A221C),
     val cardBackStroke: Color = Color(0xFF4A3D33),
     val cardBackLattice: Color = Color(0xFFFF6B3D).copy(alpha = 0.22f),
+    // The same back as it sits on the table: warmer and rimmed in dark, so seats stand off the table.
+    val seatBack: Color = cardBack,
+    val seatBackStroke: Color = cardBackStroke,
+    val seatBackLattice: Color = cardBackLattice,
     val roomCodeCard: Color = Color(0xFFF3EDE2),
     val vermilion: Color = Color(0xFFFF6B3D),
     val onVermilionFill: Color = Color(0xFF1A0905),
@@ -64,11 +68,13 @@ val SpyDarkColors = SpyColors(
     spy = Color(0xFFFF6B3D), citizen = Color(0xFF6E9BFF),
     success = Color(0xFF4CC38A), warning = Color(0xFFF5B83D), onWarning = Color(0xFF1A1206), warningText = Color(0xFFF5B83D),
     danger = Color(0xFFFF6B78), dangerFill = Color(0xFFC42B3A), onDangerFill = Color.White,
-    table = Color(0xFF1A1816), tableRing = Color(0xFF34302C),
+    table = Color(0xFF221E1A), tableRing = Color(0xFF34302C),
     disabledFill = Color(0xFF4A443F), checkboxOutline = Color(0xFF6B645C),
     glass = Color.White.copy(alpha = 0.08f), glassLine = Color.White.copy(alpha = 0.16f), glassHighlight = Color.White.copy(alpha = 0.20f),
     tabSelected = Color.White.copy(alpha = 0.14f), optionFill = Color.White.copy(alpha = 0.06f),
     scrim = Color.Black.copy(alpha = 0.60f), sheetGlass = Color(0xFF262320).copy(alpha = 0.86f),
+    seatBack = Color(0xFF33291F), seatBackStroke = Color(0xFFF3EDE2).copy(alpha = 0.34f),
+    seatBackLattice = Color(0xFFFF6B3D).copy(alpha = 0.30f),
 )
 
 val SpyLightColors = SpyColors(

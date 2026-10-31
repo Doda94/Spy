@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -346,6 +347,13 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         label = "camera-scale",
     )
 
+    // The time arc drains at the pace of the clock: one linear second per tick, so +1 min eases it back up.
+    val timeLeft = animateFloatAsState(
+        if (inDiscussion && total != null && left != null) left.toFloat() / (total + extraSeconds) else 1f,
+        if (reduce) snap() else tween(1000, easing = LinearEasing),
+        label = "time-arc",
+    )
+
     if (askScreenReader) {
         ScreenReaderWarning(
             onChoice = { choice ->
@@ -405,6 +413,7 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
                 ringSeat = if (reduce && reveal != null && phase != RevealPhase.Dealing) seat else null,
                 dimOthers = reveal != null && focusing && !reduce,
                 tension = tension,
+                progress = if (inDiscussion && total != null) ({ timeLeft.value }) else null,
                 idle = inDiscussion && !pickMode,
                 deal = reveal != null && !dealt,
                 selectedSeat = picked,
@@ -603,19 +612,27 @@ private fun DiscussionCentre(total: Int?, remaining: Int?, tension: Tension, rou
     val c = Spy.colors
     val reduce = LocalReduceMotion.current
     val warn = tension == Tension.Uneasy || tension == Tension.Nervous || tension == Tension.Frozen
-    val tone = if (warn) c.warning else c.text
+    val tone = if (warn) c.warningText else c.text
     val pulse by animateFloatAsState(
         if (tension == Tension.Nervous && !reduce && (remaining ?: 0) % 2 == 0) SpyMotion.PULSE_SCALE else 1f,
         tween(SpyMotion.DIGIT_MS * 3), label = "pulse",
     )
+    val centreBody = Spy.type.body.copy(fontSize = 13.sp, lineHeight = 17.sp)
+    val centreWidth = Modifier.widthIn(max = (130 * unit).dp)
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(stringResource(Res.string.round_label, round), style = Spy.type.label, color = c.textMuted)
+        // The free circle inside the seats is about 170 wide, and the 3 and 9 o'clock cards reach into
+        // it at text height, so the one-line labels use the smaller title and stay within it.
         if (total == null || remaining == null) {
-            Text(stringResource(Res.string.round_talk), style = Spy.type.titleLarge, color = c.text, textAlign = TextAlign.Center)
-            Text(stringResource(Res.string.round_no_timer), style = Spy.type.body, color = c.textMuted)
+            CapDisplayFontScale {
+                Text(stringResource(Res.string.round_talk), style = Spy.type.titleMedium, color = c.text, textAlign = TextAlign.Center, maxLines = 1)
+            }
+            Text(stringResource(Res.string.round_no_timer), style = centreBody, color = c.textMuted, modifier = centreWidth, textAlign = TextAlign.Center)
         } else if (remaining <= 0) {
-            Text(stringResource(Res.string.round_time_up), style = Spy.type.titleLarge, color = c.warning)
-            if (pickMode) Text(stringResource(Res.string.round_loud_vote), style = Spy.type.body, color = c.textMuted)
+            CapDisplayFontScale {
+                Text(stringResource(Res.string.round_time_up), style = Spy.type.titleMedium, color = c.warningText, textAlign = TextAlign.Center, maxLines = 1)
+            }
+            if (pickMode) Text(stringResource(Res.string.round_loud_vote), style = centreBody, color = c.textMuted, modifier = centreWidth, textAlign = TextAlign.Center)
         } else {
             val text = "${remaining / 60}:${(remaining % 60).toString().padStart(2, '0')}"
             AnimatedContent(
@@ -630,7 +647,7 @@ private fun DiscussionCentre(total: Int?, remaining: Int?, tension: Tension, rou
                 CapDisplayFontScale {
                     Text(
                         t,
-                        style = Spy.type.countdown.copy(fontSize = (64 * unit).sp, lineHeight = (64 * unit).sp),
+                        style = Spy.type.countdown.copy(fontSize = (68 * unit).sp, lineHeight = (68 * unit).sp),
                         color = tone,
                         modifier = Modifier.graphicsLayer { scaleX = pulse; scaleY = pulse },
                     )
@@ -638,8 +655,10 @@ private fun DiscussionCentre(total: Int?, remaining: Int?, tension: Tension, rou
             }
             Text(
                 if (warn) stringResource(Res.string.round_almost) else stringResource(Res.string.round_who),
-                style = Spy.type.body.copy(fontWeight = if (warn) FontWeight.Bold else FontWeight.Normal),
-                color = if (warn) c.warning else c.textMuted,
+                style = centreBody.copy(fontWeight = if (warn) FontWeight.Bold else FontWeight.Normal),
+                color = if (warn) c.warningText else c.textMuted,
+                modifier = centreWidth,
+                textAlign = TextAlign.Center,
             )
         }
     }

@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.LocalTextStyle
@@ -24,14 +25,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,9 +51,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 const val TABLE_RADIUS = 172f
-const val SEAT_RADIUS = 130f
-const val SEAT_W = 56f
-const val SEAT_H = 78f
+const val SEAT_RADIUS = 128f
+const val SEAT_W = 60f
+const val SEAT_H = 84f
 
 /** Angle (degrees, clockwise from +x, y down) of [seat] before the camera turns the table. 90° = bottom. */
 fun seatAngle(seat: Int, n: Int): Float = 90f + 360f / n * seat
@@ -58,6 +67,7 @@ fun cameraRotationFor(seat: Int, n: Int): Float = -(360f / n) * seat
  * passed as lambdas and read only in graphicsLayer, so turning it doesn't recompose the table.
  *
  * @param unit layout scale: screen width / 390.
+ * @param progress share of the round's time left (1 → 0), drawn as an arc round the rim; null leaves the rim plain.
  */
 @Composable
 fun SpyTable(
@@ -71,6 +81,7 @@ fun SpyTable(
     ringSeat: Int? = null,
     dimOthers: Boolean = false,
     tension: Tension = Tension.Calm,
+    progress: (() -> Float)? = null,
     idle: Boolean = false,
     deal: Boolean = false,
     selectedSeat: Int? = null,
@@ -93,7 +104,11 @@ fun SpyTable(
             ambient.animateTo(from + 360f, tween(SpyMotion.AMBIENT_TURN_MS, easing = LinearEasing))
         }
     }
-    val ringColor = if (tension == Tension.Uneasy || tension == Tension.Nervous || tension == Tension.Frozen) c.warning else c.tableRing
+    val warn = tension == Tension.Uneasy || tension == Tension.Nervous || tension == Tension.Frozen
+    // With a time arc the arc carries the warning and the rim stays neutral.
+    val ringColor = if (warn && progress == null) c.warning else c.tableRing
+    // Names stay upright: each plate turns against the table.
+    val tableRotation = { cameraRotation() + ambient.value }
 
     Box(
         modifier
@@ -127,6 +142,22 @@ fun SpyTable(
                     selected = selectedSeat == i,
                     onSeatTap = onSeatTap,
                     description = seatDescription(i),
+                    tableRotation = tableRotation,
+                )
+            }
+        }
+        if (progress != null) {
+            val arcColor = if (warn) c.warningText else c.text.copy(alpha = 0.75f)
+            Canvas(Modifier.fillMaxSize()) {
+                val w = 3f * density * unit.coerceAtLeast(0.8f)
+                drawArc(
+                    arcColor,
+                    startAngle = -90f,
+                    sweepAngle = 360f * progress().coerceIn(0f, 1f),
+                    useCenter = false,
+                    topLeft = Offset(w / 2f, w / 2f),
+                    size = Size(size.width - w, size.height - w),
+                    style = Stroke(w, cap = StrokeCap.Round),
                 )
             }
         }
@@ -152,6 +183,7 @@ private fun Seat(
     selected: Boolean,
     onSeatTap: ((Int) -> Unit)?,
     description: String,
+    tableRotation: () -> Float,
 ) {
     val c = Spy.colors
     val reduce = LocalReduceMotion.current
@@ -176,7 +208,9 @@ private fun Seat(
     // -1 ↔ 1 and is read only in graphicsLayer; Frozen stops it in place, keeping the last pose.
     val drift = remember { Animatable(0f) }
     var pose by remember { mutableStateOf<Tension?>(null) }
-    val drifting = idle && !reduce && !out && !lifted
+    // While the table is calm only every third seat breathes: it reads less busy and draws less each
+    // frame. Unease and nerves reach every seat.
+    val drifting = idle && !reduce && !out && !lifted && (tension != Tension.Calm || index % 3 == 0)
     LaunchedEffect(drifting, tension) {
         if (!drifting) {
             pose = null
@@ -203,6 +237,8 @@ private fun Seat(
     val w = (SEAT_W * unit).dp
     val h = (SEAT_H * unit).dp
     val tappable = onSeatTap != null && !out
+    // Position, deal-in scale and drift live on this box; the card turns inside it to face the centre,
+    // while the name plate turns against the table so it always reads upright.
     Box(
         Modifier
             .offset {
@@ -212,53 +248,79 @@ private fun Seat(
             }
             .size(w, h)
             .graphicsLayer {
-                val v = drift.value
-                val amp = if (pose == Tension.Calm || pose == Tension.Uneasy) 1.4f else 1f
-                rotationZ = angleDeg - 90f + if (pose != null) v * amp else 0f
-                translationY = density * when (pose) {
-                    null -> 0f
-                    Tension.Nervous, Tension.Frozen -> v
-                    else -> -1.5f - v * 2.5f
-                }
+                translationY = driftY(pose, drift.value)
                 val s = (if (reduce) 1f else 0.6f + 0.4f * progress.value) * lift
                 scaleX = s; scaleY = s
-            }
-            .then(
-                if (tappable) Modifier.clickable(role = Role.Button) { onSeatTap(index) }.semantics { contentDescription = description }
-                else Modifier,
-            ),
+            },
         contentAlignment = Alignment.Center,
     ) {
-        when {
-            out -> EmptySeat(w, alpha = fade)
-            lifted -> EmptySeat(w, alpha = fade)
-            else -> CardBack(
-                w,
-                medallion = true,
-                alpha = fade,
+        Box(
+            Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    val amp = if (pose == Tension.Calm || pose == Tension.Uneasy) 1.4f else 1f
+                    rotationZ = angleDeg - 90f + if (pose != null) drift.value * amp else 0f
+                }
+                .then(
+                    if (tappable) Modifier.clickable(role = Role.Button) { onSeatTap(index) }.semantics { contentDescription = description }
+                    else Modifier,
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            when {
+                out -> EmptySeat(w, alpha = fade)
+                lifted -> EmptySeat(w, alpha = fade)
+                else -> CardBack(
+                    w,
+                    medallion = true,
+                    onTable = true,
+                    alpha = fade,
+                    modifier = Modifier
+                        .then(if (selected || ring) Modifier.border(2.dp, c.text, CutCornerShape(5.dp)) else Modifier),
+                )
+            }
+        }
+        // A knocked-out or lifted seat has no card under its name, so the name goes without a plate.
+        // BasicText (styled as Text would be) because its colour can follow [fade] at draw time.
+        val plain = out || lifted
+        val nameColor = if (out) c.eliminated else if (lifted) c.text else c.cardCitizenFace
+        val plate = c.cardSpyFace.copy(alpha = 0.86f)
+        Box(
+            Modifier
+                .graphicsLayer { rotationZ = -tableRotation() }
+                // The card carries the seat's description when it can be tapped.
+                .then(if (tappable) Modifier.clearAndSetSemantics {} else Modifier),
+        ) {
+            BasicText(
+                name,
+                style = LocalTextStyle.current.merge(
+                    fontFamily = Spy.type.body.fontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = (12f * unit).coerceAtLeast(9f).sp,
+                    textDecoration = if (out) TextDecoration.LineThrough else null,
+                    textAlign = TextAlign.Center,
+                ),
+                color = { nameColor.copy(alpha = nameColor.alpha * fade()) },
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .then(if (selected || ring) Modifier.border(2.dp, c.text, CutCornerShape(5.dp)) else Modifier),
+                    .widthIn(max = w)
+                    .then(
+                        if (plain) Modifier
+                        else Modifier.drawBehind {
+                            drawRoundRect(plate.copy(alpha = plate.alpha * fade()), cornerRadius = CornerRadius(8.dp.toPx()))
+                        },
+                    )
+                    .padding(horizontal = (6f * unit).dp, vertical = (2f * unit).dp),
             )
         }
-        // Name on the outer edge; wrapContentSize(unbounded) lets it extend past the card.
-        // BasicText (styled as Text would be) because its colour can follow [fade] at draw time.
-        val nameColor = if (out) c.eliminated else c.text
-        BasicText(
-            name,
-            style = LocalTextStyle.current.merge(
-                fontFamily = Spy.type.body.fontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = (11f * unit).coerceAtLeast(9f).sp,
-                textDecoration = if (out) TextDecoration.LineThrough else null,
-                textAlign = TextAlign.Center,
-            ),
-            color = { nameColor.copy(alpha = nameColor.alpha * fade()) },
-            maxLines = 1,
-            softWrap = false,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .wrapContentSize(unbounded = true)
-                .offset(y = (13 * unit).dp),
-        )
     }
+}
+
+/** Seat drift's vertical share: Calm and Uneasy float up and down, Nervous and Frozen tremble. */
+private fun GraphicsLayerScope.driftY(pose: Tension?, v: Float): Float = density * when (pose) {
+    null -> 0f
+    Tension.Nervous, Tension.Frozen -> v
+    else -> -1.5f - v * 2.5f
 }
