@@ -169,7 +169,7 @@ private fun Seat(
     // Applied to each thing the seat draws, not to its layer: a layer with alpha below 1 is drawn
     // offscreen every frame, and the dimmed seats stay dimmed through the whole reveal. The card,
     // the outline and the name don't overlap, so it looks the same.
-    val fade = { alpha * progress.value }
+    val fade = { (alpha * progress.value).coerceIn(0f, 1f) }
     val lift by animateFloatAsState(if (selected) 1.2f else 1f, SpyMotion.card(), label = "seat-lift")
 
     // Idle tension: drift, quicker when uneasy, tremble when nervous (motion.md §3). [drift] runs

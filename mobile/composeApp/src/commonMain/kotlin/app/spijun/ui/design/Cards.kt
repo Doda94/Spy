@@ -106,7 +106,9 @@ fun CardBack(
     ) {
         if (medallion && width > 100.dp) {
             Box(Modifier.size((62f * unit).dp), contentAlignment = Alignment.Center) {
-                Text("Š", fontFamily = Spy.type.titleLarge.fontFamily, fontWeight = FontWeight.ExtraBold, fontSize = (34f * unit).sp, color = c.vermilion)
+                CapDisplayFontScale {
+                    Text("Š", fontFamily = Spy.type.titleLarge.fontFamily, fontWeight = FontWeight.ExtraBold, fontSize = (34f * unit).sp, color = c.vermilion)
+                }
             }
         }
         content?.invoke(this)
@@ -118,13 +120,16 @@ private data class BackLook(val width: Dp, val medallion: Boolean, val fill: Col
 
 private data class BackKey(val look: BackLook, val size: Size, val density: Float)
 
-// Only a few backs are on screen at once (all seats share one); the oldest is dropped first.
+// Only a few backs are on screen at once (all seats share one); the least-recently used is dropped first.
 private val backs = LinkedHashMap<BackKey, ImageBitmap>()
-private const val MAX_BACKS = 8
+private const val MAX_BACKS = 4
 
 private fun CacheDrawScope.cardBackBitmap(look: BackLook): ImageBitmap {
     val key = BackKey(look, size, density)
-    backs[key]?.let { return it }
+    backs.remove(key)?.let {
+        backs[key] = it
+        return it
+    }
     // Seat cards are seen through the camera push and turned, so they get twice the pixels.
     val oversample = if (look.width < 100.dp) 2 else 1
     val image = ImageBitmap(size.width.roundToInt() * oversample, size.height.roundToInt() * oversample)

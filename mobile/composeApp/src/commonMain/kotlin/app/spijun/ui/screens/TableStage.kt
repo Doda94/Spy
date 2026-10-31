@@ -195,9 +195,15 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         phase = RevealPhase.Turning
         delay(if (reduce) 120 else SpyMotion.TABLE_TURN_MS.toLong())
         phase = RevealPhase.Handoff
+        faceHidden = false
         haptics.perform(SpyHaptic.HideCard)
         if (reduce) { faceAlpha.snapTo(0f); lift.snapTo(1f); faceAlpha.animateTo(1f, tween(SpyMotion.REDUCED_FADE_MS)) }
-        else lift.animateTo(1f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
+        else {
+            // Compose the lifted card and cache its back bitmap before the lift motion begins.
+            lift.snapTo(0.02f)
+            withFrameMillis { }
+            lift.animateTo(1f, tween(SpyMotion.LIFT_MS, easing = SpyMotion.Emphasized))
+        }
     }
 
     fun hideAndPass() {
@@ -267,7 +273,10 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
             phase = RevealPhase.Handoff
             autoHide?.cancel()
             barProgress = 1f
-            scope.launch { flip.snapTo(0f) }
+            scope.launch {
+                flip.snapTo(0f)
+                faceHidden = false
+            }
         }
     }
     SecureWhile(reveal != null)
