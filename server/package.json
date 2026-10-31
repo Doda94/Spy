@@ -3,6 +3,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "seed:generate": "node scripts/generate-seed.mjs"
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build:check": "wrangler deploy --dry-run --outdir dist",
+    "seed:generate": "node scripts/generate-seed.mjs",
+    "seed:check": "node scripts/generate-seed.mjs && git diff --exit-code -- seed.sql",
+    "db:setup:local": "wrangler d1 migrations apply spy-dictionaries --local && wrangler d1 execute spy-dictionaries --local --file=./seed.sql",
+    "db:setup:remote": "wrangler d1 migrations apply spy-dictionaries --remote && wrangler d1 execute spy-dictionaries --remote --file=./seed.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.5",
+    "@cloudflare/workers-types": "^5.20261019.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.12",
+    "wrangler": "^4.151.2"
   }
 }

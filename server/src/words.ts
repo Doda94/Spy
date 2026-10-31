@@ -1,7 +1,7 @@
 /**
  * Pravila za riječi i kategorije: kako se unos čisti i kako se prepoznaju duplikati.
- * Preseljeno iz web aplikacije (`lib/words.ts` na `main`), gdje su ih dijelili klijent
- * i Cloudflare funkcije; na `v2` ih koristi samo server.
+ * Preseljeno iz web aplikacije (`lib/words.ts` na `main`); ovdje je ključ za usporedbu
+ * ovisan o jeziku rječnika, jer rječnici više nisu samo hrvatski.
  */
 
 export const MAX_WORD_LENGTH = 60;
@@ -12,9 +12,12 @@ export function cleanWord(raw: string): string {
   return raw.trim().replace(/\s+/g, " ");
 }
 
-/** Ključ za usporedbu — "Plaža" i "plaža" su isto, i za riječi i za kategorije. */
-export function wordKey(text: string): string {
-  return cleanWord(text).toLocaleLowerCase("hr");
+/**
+ * Ključ za usporedbu — "Plaža" i "plaža" su isto, i za riječi i za kategorije.
+ * `locale` je jezik rječnika (npr. "hr", "en").
+ */
+export function wordKey(text: string, locale: string): string {
+  return cleanWord(text).toLocaleLowerCase(locale);
 }
 
 export type WordCheck =
