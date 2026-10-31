@@ -58,8 +58,8 @@ Four independent signals plus hue: **card lightness** (dark spy face vs ivory ci
 
 | Tension | Trigger | Cards | Table / digits | Haptic |
 |---|---|---|---|---|
-| **Calm** | > 30 s (or timer off) | each drifts ±1.4° rotate and +1 → −4 px y, 3.2–4.6 s per card, phase offset −0.6 s × i, alternate — never in unison | table turns once every 90 s (linear); digits `text` | — |
-| **Uneasy** | ≤ 30 s | drift speeds up to 1.3–1.9 s (phase −0.3 s × i) | table ring + digits turn `warning`; sub-line "Još malo!" | `ThirtySeconds` once |
+| **Calm** | > 30 s (or timer off) | every third seat (0, 3, 6 …) drifts ±1.4° rotate and +1 → −4 px y, 3.2–4.6 s per card, phase offset −0.6 s × i, alternate — never in unison | table turns once every 90 s (linear); digits `text` | — |
+| **Uneasy** | ≤ 30 s | every seat now drifts, speeding up to 1.3–1.9 s (phase −0.3 s × i) | time arc + digits turn `warning` (the ring too when there is no timer); sub-line "Još malo!" | `ThirtySeconds` once |
 | **Nervous** | ≤ 10 s | tremble ±1 px / ±1°, 0.26–0.32 s linear | digits pulse 1.0 → 1.07 each second | — |
 | **Frozen / time up** | 0 | everything stops | "Vrijeme!", `warning` edge flashes twice | `TimeUp` alarm (iOS `.error` + Core Haptics 1.2 s; Android 3-pulse waveform) + bell sound |
 

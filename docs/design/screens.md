@@ -406,7 +406,7 @@ Board: `frames/P3-05-Round.png` · source `source/P3-05-Round.dc.html`
 - Footer (host): **+1 min** secondary (compact, ~92 wide) + **Završi raspravu** primary (flex). Guests: no controls; `round_vote_opens` hint + **Pogledaj svoju kartu** secondary (own phone).
 
 **States**
-- a · timer on, calm: cards drift (see motion.md); table turns 1×/90 s.
+- a · timer on, calm: every third card drifts (see motion.md); table turns 1×/90 s; the time arc drains round the rim. The frames below predate the lighter table, the rimmed seat cards, the upright name plates and the arc.
 - b · ≤30 s: table ring + digits switch to `warning`; sub-line `round_almost` "Još malo!" in `warning`; one `ThirtySeconds` haptic. ≤10 s: cards tremble, digits pulse 1.0→1.07 each second. 0: "Vrijeme!" (`round_time_up`), ring flashes twice, `TimeUp` haptic; in-app voting opens automatically; out-loud waits for the host.
 - c · timer off: centre shows "Razgovarajte" (`round_talk`, Bricolage 34/800) + "bez timera"; table still turns slowly; host button **Na glasanje** (`round_to_vote`).
 - d · guest own phone: synced countdown from the server clock, own seat at the bottom with 1.5 px ivory ring; no host controls.
