@@ -347,9 +347,11 @@ fun TableStage(game: GameState, controller: AppController, onQuit: () -> Unit) {
         label = "camera-scale",
     )
 
-    // The time arc drains at the pace of the clock: one linear second per tick, so +1 min eases it back up.
+    // The time arc drains at the pace of the clock: `left` is rounded up, so within a second the true
+    // time left runs from `left` down to `left - 1`. Aiming at the latter and easing linearly over that
+    // second keeps the arc empty exactly when "Vrijeme!" shows; +1 min eases it back up.
     val timeLeft = animateFloatAsState(
-        if (inDiscussion && total != null && left != null) left.toFloat() / (total + extraSeconds) else 1f,
+        if (inDiscussion && total != null && left != null) (left - 1).coerceAtLeast(0).toFloat() / (total + extraSeconds) else 1f,
         if (reduce) snap() else tween(1000, easing = LinearEasing),
         label = "time-arc",
     )

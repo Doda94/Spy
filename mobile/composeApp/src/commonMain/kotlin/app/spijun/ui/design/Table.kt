@@ -150,10 +150,13 @@ fun SpyTable(
             val arcColor = if (warn) c.warningText else c.text.copy(alpha = 0.75f)
             Canvas(Modifier.fillMaxSize()) {
                 val w = 3f * density * unit.coerceAtLeast(0.8f)
+                val sweep = 360f * progress().coerceIn(0f, 1f)
+                // An empty arc draws nothing; a zero sweep would still leave the round cap's dot.
+                if (sweep <= 0f) return@Canvas
                 drawArc(
                     arcColor,
                     startAngle = -90f,
-                    sweepAngle = 360f * progress().coerceIn(0f, 1f),
+                    sweepAngle = sweep,
                     useCenter = false,
                     topLeft = Offset(w / 2f, w / 2f),
                     size = Size(size.width - w, size.height - w),
