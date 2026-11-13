@@ -84,13 +84,15 @@ fun CardBack(
     modifier: Modifier = Modifier,
     lifted: Boolean = false,
     medallion: Boolean = true,
+    onTable: Boolean = false,
     alpha: () -> Float = { 1f },
     content: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     val c = Spy.colors
     val shape = cardShape(width)
     val unit = width.value / 300f
-    val look = BackLook(width, medallion, c.cardBack, c.cardBackLattice, c.cardBackStroke, c.vermilion)
+    val look = if (onTable) BackLook(width, medallion, c.seatBack, c.seatBackLattice, c.seatBackStroke, c.vermilion)
+    else BackLook(width, medallion, c.cardBack, c.cardBackLattice, c.cardBackStroke, c.vermilion)
     Box(
         modifier
             .size(width, width * CARD_ASPECT)

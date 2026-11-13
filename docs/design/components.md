@@ -179,8 +179,8 @@ EmptyState(glyph, title, body, primary, secondary?)
 RoleCard(face = Back | Citizen | Spy | SpyWithOthers | KnockedOut,
          name, word, category, others: List<String>, flipped, onFlip)
 ```
-- Size 300×420 in reveal (scales: 164×226 home hero, 150×210 result, 120×165 game-over fan, 56×78 seat). Shape `SpyShape.card()` = `CutCornerShape(22)` (scale cut with size: 5 at 56 wide). Inner frame `CutCornerShape(14)` inset 12, 1–1.5 pt stroke.
-- **Back:** `card.back` #2A221C + lattice (two 45°/−45° repeating 1.5 px lines every 12, vermilion @22–25 %), centre medallion 62 circle `card.back` with 1.5 vermilion ring + "Š" 34/800 vermilion; stroke `card.backStroke`.
+- Size 300×420 in reveal (scales: 164×226 home hero, 150×210 result, 120×165 game-over fan, 60×84 seat). Shape `SpyShape.card()` = `CutCornerShape(22)` (scale cut with size: 4 at 60 wide). Inner frame `CutCornerShape(14)` inset 12, 1–1.5 pt stroke.
+- **Back:** `card.back` #2A221C + lattice (two 45°/−45° repeating 1.5 px lines every 12, vermilion @22–25 %), centre medallion 62 circle `card.back` with 1.5 vermilion ring + "Š" 34/800 vermilion; stroke `card.backStroke`. **On the table (seats), dark theme:** fill `card.seatBack` #33291F, stroke `card.seatBackStroke` (ivory @ 34 %), lattice `card.seatBackLattice` (vermilion @ 30 %); light theme seats keep `card.back`.
 - **Citizen:** `card.citizenFace` ivory; frame stroke `citizenInk` @45 %; whole diamond 40×54 `citizenInk`; label `reveal_secret_word` (12/700 +12 % `#6B645C`); word `wordDisplay` (auto-fit 56→40, 2 lines, break between words only) `citizenText`; dashed divider; "Kategorija · **Mjesta**" 15 (muted 5.0:1 on ivory).
 - **Spy:** `card.spyFace` #0F0D0B, frame stroke vermilion @55 %; split diamond 40×54 vermilion; label `reveal_you_are` (`#A39C94`); "Špijun" `roleDisplay` 64 ivory; category line with category in vermilion.
 - **Spy + others:** + dashed divider + `reveal_other_spies` label + name chips (radius full, fill `#26221E`, split glyph 10×14 vermilion + name 17/700). Up to 11 names; above 3 → 2-column wrap.
@@ -194,10 +194,10 @@ RoleCard(face = Back | Citizen | Spy | SpyWithOthers | KnockedOut,
 SpyTable(seats, currentSeat, camera = Overview | Focus,
          tension = Calm | Uneasy | Nervous | Frozen, onSeatTap)
 ```
-- Disc radius 172, fill `table`, 1.5 px `tableRing` (→ `warning` at ≤30 s). Seats on radius 130, 56×78 cards rotated 45°·i to face the centre; names 11/700 on the outer edge. Up to 12 seats (angle = 360/n).
+- Disc radius 172, fill `table` (#221E1A dark, one step above the background), 1.5 px `tableRing`. With a timer a 3 px **time arc** runs round the rim from 12 o'clock: `text` @ 75 % draining clockwise with the time left, `warningText` at ≤30 s, easing one second at a time; without a timer the ring itself turns `warning` at tension. Seats on radius 128, 60×84 cards rotated 45°·i to face the centre. Names 12/700 on a plate (`card.spyFace` @ 86 %, radius 8, max one card wide, ellipsis) centred on the card that turns against the table so it stays upright; knocked-out and lifted seats show the name without a plate. Up to 12 seats (angle = 360/n).
 - Camera: `graphicsLayer { rotationZ = −(360/n)·seat; scale = 1.3 (Focus) }`, origin = table centre; non-current seats α 0.4.
 - Seat states: face-down · current (lifted out → RoleCard) · looked (own-phone: small neutral tick) · knocked-out (empty dashed outline + name) · dropped (dashed `warning`) · selectable (out-loud host: tap lifts 1.2× with 2 pt ivory outline) · game-over (flip face-up in place, spies first).
-- Centre slot: countdown / "Razgovarajte" / "Vrijeme!" / "pauzirano".
+- Centre slot: countdown (68 sp) / "Razgovarajte" / "Vrijeme!" (title 24, one line) / "pauzirano". The free circle inside the seats is about 170 wide, so sub-lines are 13 sp and at most 130 wide.
 - A11y: seats exposed as a list in seat order. Reduce Motion: no turn/drift; current seat gets an ivory ring.
 
 ### Countdown — Shared
